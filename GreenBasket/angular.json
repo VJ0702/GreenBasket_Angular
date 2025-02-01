@@ -23,13 +23,40 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "src/assets"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/vendor/gicons.css",
+              "src/assets/css/plugins/animate.css",
+              "src/assets/css/plugins/swiper-bundle.min.css",
+              "src/assets/css/plugins/bootstrap.css",
+              "src/assets/css/plugins/bootstrap-select.min.css",
+              "src/assets/css/plugins/owl.carousel.min.css",
+              "src/assets/css/plugins/owl.theme.default.min.css",
+              "src/assets/css/plugins/slick.min.css",
+              "src/assets/css/plugins/nouislider.css",
+              "src/assets/css/demo-1.css",
+              "src/assets/css/responsive.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "src/assets/js/plugins/popper.min.js",
+              "src/assets/js/plugins/bootstrap.bundle.min.js",
+              "src/assets/js/plugins/bootstrap-select.min.js",
+              "src/assets/js/plugins/swiper-bundle.min.js",
+              "src/assets/js/plugins/fontawesome.js",
+              "src/assets/js/plugins/owl.carousel.min.js",
+              "src/assets/js/plugins/countdownTimer.js",
+              "src/assets/js/plugins/infiniteslidev2.js",
+              "src/assets/js/plugins/jquery.zoom.min.js",
+              "src/assets/js/plugins/slick.min.js",
+              "src/assets/js/plugins/nouislider.js",
+              "src/assets/js/plugins/wow.js",
+              "src/assets/js/plugins/smoothscroll.min.js",
+              "src/assets/js/main.js",
+              "src/assets/js/demo-1.js"
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
@@ -41,8 +68,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "5MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
