@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule } from '@angular/common';
+import { ConfigService } from '../../../services/common-services/config.service';
 
 @Component({
   selector: 'app-home-page-latest-arrival',
@@ -14,23 +15,21 @@ export class HomePageLatestArrivalComponent implements OnDestroy {
   private getProductSubscription?: Subscription;
   products: any[] = [];
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService, private configService: ConfigService) { }
 
   ngOnInit(): void {
     this.fetchProducts();
   }
 
   fetchProducts(): void {
-    // console.log('fetchProducts function called');
     this.productService.getProducts().subscribe(productData => {
+      //console.log(productData);
       this.products = productData;  // Assign fetched categories to the categories array
-      // console.log(this.products);
     });
+  }
 
-    // this.apiService.get<any[]>('api/Product/productList').subscribe({
-    //   next: (data) => (this.products = data),
-    //   error: (err) => console.error('Error fetching products:', err),
-    // });
+  getFullImageUrl(imageUrl: string): string {
+    return `${this.configService.baseImageUrl}${imageUrl}`;
   }
 
   ngOnDestroy(): void {
