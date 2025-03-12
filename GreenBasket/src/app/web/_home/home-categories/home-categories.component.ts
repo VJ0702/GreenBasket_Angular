@@ -23,8 +23,7 @@ export class HomeCategoriesComponent implements OnDestroy {
 
   fetchCategories(): void {
     this.categoryService.getCategories().subscribe(categoryData => {
-      //console.log(categoryData);
-      this.categories = categoryData;  // Assign fetched categories to the categories array
+      this.categories = categoryData.filter(category => category.parentCategoryId === 0 || category.parentCategoryId === null);  // Filter categories with parentId 0 or null
     });
   }
 
