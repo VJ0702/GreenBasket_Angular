@@ -12,6 +12,7 @@ export class ApiService {
 
   //Generic GET method
   get<T>(endpoint: string): Observable<T> {
+    //console.log(`${this.baseUrl}${endpoint}`);
     return this.http.get<T>(`${this.baseUrl}${endpoint}`);
   }
 
