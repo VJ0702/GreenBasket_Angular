@@ -182,12 +182,39 @@
                             <i class="fi-rr-angle-small-down d-1199 gi-angle" aria-hidden="true"></i>
                         </div>
                     </div>
-                    <div class="gi-cat-dropdown">
+                    <div class="gi-cat-dropdown" style="width: auto !important; min-width: 600px !important;">
                         <div class="gi-cat-block">
                             <div class="gi-cat-tab">
                                 <div class="gi-tab-list nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                                     aria-orientation="vertical">
-                                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
+                                    <!-- <button *ngFor="let item of categories" class="nav-link"
+                                        id="v-pills-{{item.id}}-tab" [attr.data-bs-toggle]="'pill'"
+                                        attr.data-bs-target="#v-pills-{{item.id}}" type="button" role="tab"
+                                        attr.aria-controls="v-pills-{{item.id}}" aria-selected="true"><i
+                                            class="{{item.gearIconClass}}"></i>{{item.name}}</button> -->
+
+                                    <ng-container *ngFor="let item of categories; let i = index">
+                                        <!-- <button *ngIf="item.subCategories?.length > 0" class="nav-link"
+                                            id="v-pills-{{item.id}}-tab" [attr.data-bs-toggle]="'pill'"
+                                            attr.data-bs-target="#v-pills-{{item.id}}" type="button" role="tab"
+                                            attr.aria-controls="v-pills-{{item.id}}" aria-selected="true">
+                                            <i class="{{item.gearIconClass}}"></i>{{item.name}}
+                                        </button> -->
+                                        <button *ngIf="item.subCategories?.length > 0" class="nav-link"
+                                            id="v-pills-{{item.id}}-tab" [attr.data-bs-toggle]="'pill'"
+                                            attr.data-bs-target="#v-pills-{{item.id}}" type="button" role="tab"
+                                            attr.aria-controls="v-pills-{{item.id}}" [ngClass]="{'active': i === 0}"
+                                            aria-selected="i === 0">
+                                            <i class="{{item.gearIconClass}}"></i>{{item.name}}
+                                        </button>
+                                        <button *ngIf="!item.subCategories?.length" class="nav-link"
+                                            [ngClass]="{'active': i === 0}">
+                                            <a [href]="item.urlHandle">
+                                                <i class="{{item.gearIconClass}}"></i>{{item.name}}
+                                            </a>
+                                        </button>
+                                    </ng-container>
+                                    <!-- <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
                                         data-bs-target="#v-pills-home" type="button" role="tab"
                                         aria-controls="v-pills-home" aria-selected="true"><i
                                             class="fi-rr-cupcake"></i>Dairy & Bakery</button>
@@ -202,10 +229,29 @@
                                     <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill"
                                         data-bs-target="#v-pills-settings" type="button" role="tab"
                                         aria-controls="v-pills-settings" aria-selected="false"><i
-                                            class="fi fi-rr-drink-alt"></i>Juice & Drinks </button>
+                                            class="fi fi-rr-drink-alt"></i>Juice & Drinks </button> -->
                                 </div>
                                 <div class="tab-content" id="v-pills-tabContent">
-                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                    <div *ngFor="let item of categories; let i = index" class="tab-pane fade show"
+                                        [ngClass]="{' active': i === 0}" id="v-pills-{{item.id}}" role="tabpanel"
+                                        [attr.aria-labelledby]="'v-pills-' + item.id + '-tab'">
+                                        <div class="tab-list row">
+                                            <div class="col" *ngFor="let subCategory of item.subCategories">
+                                                <a href="{{subCategory.urlHandle}}">
+                                                    <h6 class="gi-col-title">
+                                                        {{subCategory.name}}</h6>
+                                                </a>
+                                                <ul class="cat-list">
+                                                    <li *ngFor="let subItem of subCategory.subCategories">
+                                                        <a href="{{subItem.urlHandle}}">{{subItem.name}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                                         aria-labelledby="v-pills-home-tab">
                                         <div class="tab-list row">
                                             <div class="col">
@@ -313,7 +359,7 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
