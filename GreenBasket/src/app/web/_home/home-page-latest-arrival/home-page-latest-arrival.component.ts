@@ -3,11 +3,12 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule } from '@angular/common';
 import { ConfigService } from '../../../services/common-services/config.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home-page-latest-arrival',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home-page-latest-arrival.component.html',
   styleUrl: './home-page-latest-arrival.component.css'
 })

@@ -64,10 +64,11 @@
                                             </div>
                                         </div>
                                         <div class="gi-pro-content">
-                                            <a href="{{item.seName}}">
+                                            <a [routerLink]="['/product', item.seName]">
                                                 <h6 class="gi-pro-stitle">{{item.sku}}</h6>
                                             </a>
-                                            <h5 class="gi-pro-title"><a href="{{item.seName}}">{{item.name}}</a></h5>
+                                            <h5 class="gi-pro-title"><a
+                                                    [routerLink]="['/product', item.seName]">{{item.name}}</a></h5>
                                             <div class="gi-pro-rat-price">
                                                 <span class="gi-pro-rating">
                                                     <i class="gicon gi-star fill"></i>
