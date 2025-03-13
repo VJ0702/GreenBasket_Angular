@@ -117,7 +117,18 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/vendor/gicons.css",
+              "src/assets/css/plugins/animate.css",
+              "src/assets/css/plugins/swiper-bundle.min.css",
+              "src/assets/css/plugins/bootstrap.css",
+              "src/assets/css/plugins/bootstrap-select.min.css",
+              "src/assets/css/plugins/owl.carousel.min.css",
+              "src/assets/css/plugins/owl.theme.default.min.css",
+              "src/assets/css/plugins/slick.min.css",
+              "src/assets/css/plugins/nouislider.css",
+              "src/assets/css/demo-1.css",
+              "src/assets/css/responsive.css"
             ],
             "scripts": []
           }
