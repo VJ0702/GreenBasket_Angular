@@ -9,7 +9,7 @@
                             <span *ngIf="item.categoryDiscount" class="gi-lbl">{{item.categoryDiscount}}%</span>
                             <i class="{{item.gearIconClass}}"></i>
                             <div class="gi-cat-detail">
-                                <a href="{{item.urlHandle}}">
+                                <a [routerLink]="['/category', item.urlHandle]">
                                     <h4 class="gi-cat-title">{{item.name}}</h4>
                                 </a>
                                 <p class="items">{{item.categoryProductCount}} Items</p>

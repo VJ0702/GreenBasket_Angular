@@ -3,11 +3,12 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../../services/common-services/config.service';
 import { CategoryService } from '../../../services/category-service/category.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home-categories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home-categories.component.html',
   styleUrl: './home-categories.component.css'
 })
