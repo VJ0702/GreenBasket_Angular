@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of } from 'rxjs';
 import { ApiService } from '../common-services/api.service';
+import { ProductDetailsRequest } from '../../models/product-models/product-details-request';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class ProductService {
   constructor(private http: HttpClient, private apiService: ApiService) { }
   // private productEndpoint = 'https://fakestoreapi.com/products';
   private productEndpoint = 'api/Product/productList';
+  private productDetailEndpoint = 'api/Product/productDetail';
 
   // Method to get data from API
   // getProducts(): Observable<any> {
@@ -35,4 +37,10 @@ export class ProductService {
       })
     );
   }
+
+  getProductDetails(request: ProductDetailsRequest): Observable<any> {
+
+    return this.apiService.post<any>(this.productDetailEndpoint, request);
+  }
+
 }

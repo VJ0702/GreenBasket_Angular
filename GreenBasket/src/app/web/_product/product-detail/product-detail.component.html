@@ -5,13 +5,13 @@
             <div class="col-12">
                 <div class="row gi_breadcrumb_inner">
                     <div class="col-md-6 col-sm-12">
-                        <h2 class="gi-breadcrumb-title">Product Page</h2>
+                        <h2 class="gi-breadcrumb-title">{{ product?.name || 'Product Page' }}</h2>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <!-- gi-breadcrumb-list start -->
                         <ul class="gi-breadcrumb-list">
-                            <li class="gi-breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="gi-breadcrumb-item active">Product Page</li>
+                            <li class="gi-breadcrumb-item"><a routerLink="/">Home</a></li>
+                            <li class="gi-breadcrumb-item active">{{ product?.name || 'Product Page' }}</li>
                         </ul>
                         <!-- gi-breadcrumb-list end -->
                     </div>
@@ -34,72 +34,48 @@
                             <div class="single-pro-img single-pro-img-no-sidebar">
                                 <div class="single-product-scroll">
                                     <div class="single-product-cover">
-                                        <div class="single-slide zoom-image-hover">
-                                            <img class="img-responsive" src="images/product-images/4_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide zoom-image-hover">
-                                            <img class="img-responsive" src="images/product-images/2_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide zoom-image-hover">
-                                            <img class="img-responsive" src="images/product-images/3_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide zoom-image-hover">
-                                            <img class="img-responsive" src="images/product-images/1_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide zoom-image-hover">
-                                            <img class="img-responsive" src="images/product-images/5_1.jpg" alt="">
+                                        <div class="single-slide zoom-image-hover"
+                                            *ngFor="let image of product?.productImages">
+                                            <img class="img-responsive" [src]="getFullImageUrl(image.imageUrl)"
+                                                [alt]="product?.name">
                                         </div>
                                     </div>
                                     <div class="single-nav-thumb">
-                                        <div class="single-slide">
-                                            <img class="img-responsive" src="images/product-images/4_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide">
-                                            <img class="img-responsive" src="images/product-images/2_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide">
-                                            <img class="img-responsive" src="images/product-images/3_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide">
-                                            <img class="img-responsive" src="images/product-images/1_1.jpg" alt="">
-                                        </div>
-                                        <div class="single-slide">
-                                            <img class="img-responsive" src="images/product-images/5_1.jpg" alt="">
+                                        <div class="single-slide" *ngFor="let image of product?.productImages">
+                                            <img class="img-responsive" [src]="getFullImageUrl(image.imageUrl)"
+                                                [alt]="product?.name">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="single-pro-desc single-pro-desc-no-sidebar m-t-991">
                                 <div class="single-pro-content">
-                                    <h5 class="gi-single-title">Potato Chips 52g, American Cream & Onion Flavour,
-                                        Crunchy Chips & Snacks.</h5>
+                                    <h5 class="gi-single-title">{{product?.name}}</h5>
                                     <div class="gi-single-rating-wrap">
                                         <div class="gi-single-rating">
-                                            <i class="gicon gi-star fill"></i>
-                                            <i class="gicon gi-star fill"></i>
-                                            <i class="gicon gi-star fill"></i>
-                                            <i class="gicon gi-star fill"></i>
-                                            <i class="gicon gi-star-o"></i>
+                                            <i class="gicon gi-star fill"
+                                                *ngFor="let star of [1,2,3,4,5]; let i = index"
+                                                [class.fill]="i < product?.rating.rate"></i>
                                         </div>
                                         <span class="gi-read-review">
-                                            |&nbsp;&nbsp;<a href="#gi-spt-nav-review">992 Ratings</a>
+                                            |&nbsp;&nbsp;<a (click)="activateReviewTab($event)">{{ product?.rating.count
+                                                }}
+                                                Ratings</a>
                                         </span>
                                     </div>
-
                                     <div class="gi-single-price-stoke">
                                         <div class="gi-single-price">
-                                            <div class="final-price">$664.00<span class="price-des">-78%</span>
+                                            <div class="final-price">${{product?.price}}<span
+                                                    class="price-des">-78%</span>
                                             </div>
                                             <div class="mrp">M.R.P. : <span>$2,999.00</span></div>
                                         </div>
                                         <div class="gi-single-stoke">
-                                            <span class="gi-single-sku">SKU#: WH12</span>
+                                            <span class="gi-single-sku">SKU#: {{product?.sku}}</span>
                                             <span class="gi-single-ps-title">IN STOCK</span>
                                         </div>
                                     </div>
-                                    <div class="gi-single-desc">Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                        text ever since the 1990.</div>
+                                    <div class="gi-single-desc">{{product?.shortDescription}}</div>
 
                                     <div class="gi-single-list">
                                         <ul>
@@ -264,7 +240,10 @@
                         </div>
                         <div class="tab-content  gi-single-pro-tab-content">
                             <div id="gi-spt-nav-details" class="tab-pane fade show active">
-                                <div class="gi-single-pro-tab-desc">
+                                <div class="gi-single-pro-tab-desc" [innerHTML]="product?.fullDescription">
+
+                                </div>
+                                <!-- <div class="gi-single-pro-tab-desc">
                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                         Lorem Ipsum has been the industry's standard dummy text ever since the
                                         1500s, when an unknown printer took a galley of type and scrambled it to
@@ -300,7 +279,7 @@
                                         Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore
                                         always
                                         free from repetition, injected humour, or non-characteristic words etc.</p>
-                                </div>
+                                </div> -->
                             </div>
                             <div id="gi-spt-nav-info" class="tab-pane fade">
                                 <div class="gi-single-pro-tab-moreinfo">
@@ -310,7 +289,7 @@
                                         make a type specimen book. It has survived not only five centuries.
                                     </p>
                                     <ul>
-                                        <li><span>Model</span> SKU140</li>
+                                        <li><span>Model</span> {{product?.sku}}</li>
                                         <li><span>Weight</span> 500 g</li>
                                         <li><span>Dimensions</span> 35 × 30 × 7 cm</li>
                                         <li><span>Color</span> Black, Pink, Red, White</li>
@@ -356,52 +335,21 @@
                             <div id="gi-spt-nav-review" class="tab-pane fade">
                                 <div class="row">
                                     <div class="gi-t-review-wrapper">
-                                        <div class="gi-t-review-item">
+                                        <div class="gi-t-review-item" *ngFor="let review of product?.productReviews">
                                             <div class="gi-t-review-avtar">
                                                 <img src="images/user/1.jpg" alt="user">
                                             </div>
                                             <div class="gi-t-review-content">
                                                 <div class="gi-t-review-top">
-                                                    <div class="gi-t-review-name">Mariya Lykra</div>
+                                                    <div class="gi-t-review-name">{{ review.title }}</div>
                                                     <div class="gi-t-review-rating">
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star-o"></i>
+                                                        <i class="gicon gi-star fill"
+                                                            *ngFor="let star of [1,2,3,4,5]; let i = index"
+                                                            [class.fill]="i < review.rating"></i>
                                                     </div>
                                                 </div>
                                                 <div class="gi-t-review-bottom">
-                                                    <p>Lorem Ipsum is simply dummy text of the printing and
-                                                        typesetting industry. Lorem Ipsum has been the industry's
-                                                        standard dummy text ever since the 1500s, when an unknown
-                                                        printer took a galley of type and scrambled it to make a
-                                                        type specimen.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="gi-t-review-item">
-                                            <div class="gi-t-review-avtar">
-                                                <img src="images/user/2.jpg" alt="user">
-                                            </div>
-                                            <div class="gi-t-review-content">
-                                                <div class="gi-t-review-top">
-                                                    <div class="gi-t-review-name">Moris Willson</div>
-                                                    <div class="gi-t-review-rating">
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star fill"></i>
-                                                        <i class="gicon gi-star-o"></i>
-                                                        <i class="gicon gi-star-o"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="gi-t-review-bottom">
-                                                    <p>Lorem Ipsum has been the industry's
-                                                        standard dummy text ever since the 1500s, when an unknown
-                                                        printer took a galley of type and scrambled it to make a
-                                                        type specimen.
-                                                    </p>
+                                                    <p>{{ review.reviewText }}</p>
                                                 </div>
                                             </div>
                                         </div>
