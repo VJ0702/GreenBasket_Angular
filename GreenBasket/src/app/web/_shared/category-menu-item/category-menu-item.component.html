@@ -1,5 +1,5 @@
 <li class="dropdown" *ngIf="category">
-    <a [href]="category.urlHandle" class="">
+    <a [routerLink]="['/category', category.urlHandle]" class="">
         {{category.name}}
         <span *ngIf="category.subCategories?.length > 0" class="arrow">></span>
     </a>

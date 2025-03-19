@@ -6,10 +6,11 @@
                 <div class="gi-bnr-body">
                     <div class="gi-bnr-img">
                         <span class="lbl">70% Off</span>
+                        <!-- <img [src]="getFullImageUrl(category?.imageUrl)" alt="banner"> -->
                         <img src="images/banner/5.jpg" alt="banner">
                     </div>
                     <div class="gi-bnr-detail">
-                        <h5>Fresh Fruits & veggies</h5>
+                        <h5>{{category?.name}}</h5>
                         <p>The flavor of something special.</p>
                         <a href="shop-left-sidebar-col-3.html" class="gi-btn-2">Shop Now</a>
                     </div>
@@ -24,7 +25,7 @@
                         <img src="images/banner/6.jpg" alt="banner">
                     </div>
                     <div class="gi-bnr-detail">
-                        <h5>Tasty Snack & Fastfood</h5>
+                        <h5>{{category?.name}}</h5>
                         <p>A healthy meal for every one.</p>
                         <a href="shop-left-sidebar-col-3.html" class="gi-btn-2">Shop Now</a>
                     </div>

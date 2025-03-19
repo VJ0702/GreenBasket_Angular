@@ -9,11 +9,10 @@
                     <div class="header-top-social">
                         <ul class="mb-0">
                             <li class="list-inline-item">
-                                <a href="javascript:void(0)"><i class="fi fi-rr-phone-call"></i></a>+91 987 654 3210
+                                <a href="javascript:void(0)"><i class="fi fi-rr-phone-call"></i></a>+91 969 454 9559
                             </li>
                             <li class="list-inline-item">
-                                <a href="javascript:void(0)"><i class="fi fi-brands-whatsapp"></i></a>+91 987 654
-                                3210
+                                <a href="javascript:void(0)"><i class="fi fi-brands-whatsapp"></i></a>+91 969 454 9559
                             </li>
                         </ul>
                     </div>
@@ -22,7 +21,7 @@
                 <!-- Header Top Message Start -->
                 <div class="col text-center header-top-center">
                     <div class="header-top-message">
-                        World's Fastest Online Shopping Destination
+                        India's Largest Organic Fruits & Vegs Store
                     </div>
                 </div>
                 <!-- Header Top Message End -->
@@ -44,11 +43,12 @@
                         <!-- Language End -->
                         <!-- Currency Start -->
                         <div class="header-top-lan-curr header-top-curr dropdown">
-                            <button class="dropdown-toggle" data-bs-toggle="dropdown">Dollar
+                            <button class="dropdown-toggle" data-bs-toggle="dropdown">INR
                                 <i class="fi-rr-angle-small-down" aria-hidden="true"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="active"><a class="dropdown-item" href="#">USD $</a></li>
+                                <li class="active"><a class="dropdown-item" href="#">INR ₹</a></li>
+                                <li><a class="dropdown-item" href="#">USD $</a></li>
                                 <li><a class="dropdown-item" href="#">EUR €</a></li>
                             </ul>
                         </div>
@@ -203,7 +203,7 @@
                                         </button>
                                         <button *ngIf="!item.subCategories?.length" class="nav-link"
                                             [ngClass]="{'active': i === 0}">
-                                            <a [href]="item.urlHandle">
+                                            <a [routerLink]="['/category', item.urlHandle]">
                                                 <i class="{{item.gearIconClass}}"></i>{{item.name}}
                                             </a>
                                         </button>
@@ -215,13 +215,14 @@
                                         [attr.aria-labelledby]="'v-pills-' + item.id + '-tab'">
                                         <div class="tab-list row">
                                             <div class="col" *ngFor="let subCategory of item.subCategories">
-                                                <a href="{{subCategory.urlHandle}}">
+                                                <a [routerLink]="['/category', subCategory.urlHandle]">
                                                     <h6 class="gi-col-title">
                                                         {{subCategory.name}}</h6>
                                                 </a>
                                                 <ul class="cat-list">
                                                     <li *ngFor="let subItem of subCategory.subCategories">
-                                                        <a href="{{subItem.urlHandle}}">{{subItem.name}}</a>
+                                                        <a
+                                                            [routerLink]="['/category', subItem.urlHandle]">{{subItem.name}}</a>
                                                     </li>
                                                 </ul>
                                             </div>

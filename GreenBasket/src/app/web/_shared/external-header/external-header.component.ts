@@ -4,11 +4,12 @@ import { ConfigService } from '../../../services/common-services/config.service'
 import { CategoryService } from '../../../services/category-service/category.service';
 import { CommonModule } from '@angular/common';
 import { CategoryMenuItemComponent } from '../category-menu-item/category-menu-item.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-external-header',
   standalone: true,
-  imports: [CommonModule, CategoryMenuItemComponent],
+  imports: [CommonModule, RouterModule, CategoryMenuItemComponent],
   templateUrl: './external-header.component.html',
   styleUrl: './external-header.component.css'
 })
