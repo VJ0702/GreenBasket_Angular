@@ -199,12 +199,12 @@
                                             attr.data-bs-target="#v-pills-{{item.id}}" type="button" role="tab"
                                             attr.aria-controls="v-pills-{{item.id}}" [ngClass]="{'active': i === 0}"
                                             aria-selected="i === 0">
-                                            <i class="{{item.gearIconClass}}"></i>{{item.name}}
+                                            <i class="{{item.iconClass}}"></i>{{item.name}}
                                         </button>
                                         <button *ngIf="!item.subCategories?.length" class="nav-link"
                                             [ngClass]="{'active': i === 0}">
                                             <a [routerLink]="['/category', item.urlHandle]">
-                                                <i class="{{item.gearIconClass}}"></i>{{item.name}}
+                                                <i class="{{item.iconClass}}"></i>{{item.name}}
                                             </a>
                                         </button>
                                     </ng-container>

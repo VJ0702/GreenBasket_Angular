@@ -24,9 +24,13 @@ export class ExternalHeaderComponent implements OnDestroy {
   }
 
   fetchCategories(): void {
-    this.categoryService.getCategories().subscribe(categoryData => {
-      //console.log(categoryData);
-      this.categories = categoryData;  // Assign fetched categories to the categories array
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        console.log('Error in loading categories ', err);
+      }
     });
   }
 

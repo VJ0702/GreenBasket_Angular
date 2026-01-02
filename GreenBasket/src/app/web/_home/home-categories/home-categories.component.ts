@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 export class HomeCategoriesComponent implements OnDestroy {
   private getCategorySubscription?: Subscription;
   categories: any[] = [];
+  loading = false;
 
   constructor(private configService: ConfigService, private categoryService: CategoryService) { }
 
@@ -23,8 +24,19 @@ export class HomeCategoriesComponent implements OnDestroy {
   }
 
   fetchCategories(): void {
-    this.categoryService.getCategories().subscribe(categoryData => {
-      this.categories = categoryData.filter(category => category.parentCategoryId === 0 || category.parentCategoryId === null);  // Filter categories with parentId 0 or null
+    // this.categoryService.getCategories().subscribe(categoryData => {
+    //   this.categories = categoryData.filter(category => category.parentCategoryId === 0 || category.parentCategoryId === null);  // Filter categories with parentId 0 or null
+    // });
+    this.loading = true;
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.log('Error in loading categories ', err);
+        this.loading = false;
+      }
     });
   }
 

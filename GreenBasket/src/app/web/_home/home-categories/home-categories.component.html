@@ -6,13 +6,13 @@
                 <div class="gi-category-block owl-carousel">
                     <div *ngFor="let item of categories; let i = index" class="gi-cat-box gi-cat-box-{{(i % 6) + 1}}">
                         <div class="gi-cat-icon">
-                            <span *ngIf="item.categoryDiscount" class="gi-lbl">{{item.categoryDiscount}}%</span>
-                            <i class="{{item.gearIconClass}}"></i>
+                            <span *ngIf="item.discountRate" class="gi-lbl">{{item.discountRate}}%</span>
+                            <i class="{{item.iconClass}}"></i>
                             <div class="gi-cat-detail">
                                 <a [routerLink]="['/category', item.urlHandle]">
                                     <h4 class="gi-cat-title">{{item.name}}</h4>
                                 </a>
-                                <p class="items">{{item.categoryProductCount}} Items</p>
+                                <p class="items">{{item.productCount}} Items</p>
                             </div>
                         </div>
                     </div>
