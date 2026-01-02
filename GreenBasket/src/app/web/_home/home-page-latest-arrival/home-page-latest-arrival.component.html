@@ -41,11 +41,11 @@
                                                         <span class="dot"></span>
                                                     </span>
                                                     <img class="main-image"
-                                                        [src]="getFullImageUrl(item.primaryImageUrl)" alt="Product"
-                                                        style="width: 294px;height: 297px;">
+                                                        [src]="utilityService.getFullImageUrl(item.primaryImageUrl)"
+                                                        alt="Product" style="width: 294px;height: 297px;">
                                                     <img class="hover-image"
-                                                        [src]="getFullImageUrl(item.primaryImageUrl)" alt="Product"
-                                                        style="width: 294px;height: 297px;">
+                                                        [src]="utilityService.getFullImageUrl(item.primaryImageUrl)"
+                                                        alt="Product" style="width: 294px;height: 297px;">
                                                 </a>
                                                 <span class="flags">
                                                     <span class="sale">Sale</span>
@@ -75,15 +75,15 @@
                                                 <span class="gi-pro-rating">
                                                     <!-- Filled stars -->
                                                     <i class="gicon gi-star fill"
-                                                        *ngFor="let star of getFilledStars(item.rating.averageRating)"></i>
+                                                        *ngFor="let star of utilityService.getFilledStars(item.rating.averageRating)"></i>
 
                                                     <!-- Half star (if applicable) -->
                                                     <i class="gicon gi-star-half fill"
-                                                        *ngIf="hasHalfStar(item.rating.averageRating)"></i>
+                                                        *ngIf="utilityService.hasHalfStar(item.rating.averageRating)"></i>
 
                                                     <!-- Empty stars -->
                                                     <i class="gicon gi-star"
-                                                        *ngFor="let star of getEmptyStars(item.rating.averageRating)"></i>
+                                                        *ngFor="let star of utilityService.getEmptyStars(item.rating.averageRating)"></i>
 
                                                     <!-- Review count (optional) -->
                                                     <span class="review-count" *ngIf="item.rating.reviewCount > 0">

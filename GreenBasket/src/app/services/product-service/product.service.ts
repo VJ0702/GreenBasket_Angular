@@ -22,8 +22,8 @@ export class ProductService {
       .pipe(
         // Debug: Log the full response
         tap(response => {
-          console.log('Full API Response:', response);
-          console.log('Products:', response.data.products);
+          //console.log('Full API Response:', response);
+          //console.log('Products:', response.data.products);
         }),
         map(response => response.data.products)
       );
