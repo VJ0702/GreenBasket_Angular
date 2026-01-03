@@ -22,8 +22,8 @@
 </div>
 <!-- Breadcrumb end -->
 
-<!-- Sart Single Product -->
-<section class="gi-single-product padding-tb-40">
+<!-- Start Single Product -->
+<section class="gi-single-product padding-tb-40" *ngIf="!loading && product">
     <div class="container">
         <div class="row">
             <div class="gi-pro-rightside gi-common-rightside col-md-12">
@@ -34,72 +34,104 @@
                             <div class="single-pro-img single-pro-img-no-sidebar">
                                 <div class="single-product-scroll">
                                     <div class="single-product-cover">
-                                        <div class="single-slide zoom-image-hover"
-                                            *ngFor="let image of product?.images">
+                                        <div class="single-slide zoom-image-hover" *ngFor="let image of product.images"
+                                            (click)="selectImage(image.url)">
                                             <img class="img-responsive"
-                                                [src]="utilityService.getFullImageUrl(image.url)" [alt]="product?.name">
+                                                [src]="utilityService.getFullImageUrl(selectedImage || image.url)"
+                                                [alt]="image.altAttribute">
                                         </div>
                                     </div>
                                     <div class="single-nav-thumb">
-                                        <div class="single-slide" *ngFor="let image of product?.images">
+                                        <div class="single-slide" *ngFor="let image of product.images"
+                                            (click)="selectImage(image.url)"
+                                            [class.active]="selectedImage === image.url">
                                             <img class="img-responsive"
-                                                [src]="utilityService.getFullImageUrl(image.url)" [alt]="product?.name">
+                                                [src]="utilityService.getFullImageUrl(image.url)"
+                                                [alt]="image.altAttribute">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="single-pro-desc single-pro-desc-no-sidebar m-t-991">
                                 <div class="single-pro-content">
-                                    <h5 class="gi-single-title">{{product?.name}}</h5>
+                                    <h5 class="gi-single-title">{{product.name}}</h5>
                                     <div class="gi-single-rating-wrap">
                                         <div class="gi-single-rating">
                                             <i class="gicon gi-star fill"
-                                                *ngFor="let star of [1,2,3,4,5]; let i = index"
-                                                [class.fill]="i < (product?.rating?.averageRating ?? 0)"></i>
+                                                *ngFor="let star of utilityService.getFilledStars(product.rating.averageRating || 0)"></i>
+                                            <i class="gicon gi-star-half fill"
+                                                *ngIf="utilityService.hasHalfStar(product.rating.averageRating || 0)"></i>
+                                            <i class="gicon gi-star"
+                                                *ngFor="let star of utilityService.getEmptyStars(product.rating.averageRating || 0)"></i>
                                         </div>
                                         <span class="gi-read-review">
-                                            |&nbsp;&nbsp;<a (click)="activateReviewTab($event)">{{
-                                                product?.rating?.reviewCount
-                                                }}
-                                                Ratings</a>
+                                            |&nbsp;&nbsp;<a (click)="activateReviewTab($event)">
+                                                {{ product.rating.reviewCount || 0 }} Ratings
+                                            </a>
                                         </span>
                                     </div>
                                     <div class="gi-single-price-stoke">
                                         <div class="gi-single-price">
-                                            <div class="final-price">${{product?.price}}<span
-                                                    class="price-des">-78%</span>
+                                            <div class="final-price">
+                                                ${{selectedVariant?.price || product.price}}
+                                                <span class="price-des"
+                                                    *ngIf="selectedVariant?.mrp && selectedVariant?.price">
+                                                    -{{((selectedVariant?.mrp! - selectedVariant?.price!) /
+                                                    selectedVariant?.mrp! * 100).toFixed(0)}}%
+                                                </span>
                                             </div>
-                                            <div class="mrp">M.R.P. : <span>$2,999.00</span></div>
+                                            <div class="mrp" *ngIf="selectedVariant?.mrp || product.oldPrice">
+                                                M.R.P. : <span>${{selectedVariant?.mrp || product.oldPrice}}</span>
+                                            </div>
                                         </div>
                                         <div class="gi-single-stoke">
-                                            <span class="gi-single-sku">SKU#: {{product?.sku}}</span>
-                                            <span class="gi-single-ps-title">IN STOCK</span>
+                                            <span class="gi-single-sku">SKU#: {{selectedVariant?.sku ||
+                                                product.sku}}</span>
+                                            <span class="gi-single-ps-title"
+                                                [class.out-of-stock]="product.stockQuantity === 0">
+                                                {{product.stockQuantity > 0 ? 'IN STOCK' : 'OUT OF STOCK'}}
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="gi-single-desc">{{product?.shortDescription}}</div>
+                                    <div class="gi-single-desc">{{product.shortDescription}}</div>
 
-                                    <div class="gi-single-list">
+                                    <!-- <div class="gi-single-list">
                                         <ul>
                                             <li><strong>Closure :</strong> Hook & Loop</li>
                                             <li><strong>Sole :</strong> Polyvinyl Chloride</li>
                                             <li><strong>Width :</strong> Medium</li>
                                             <li><strong>Outer Material :</strong> A-Grade Standard Quality</li>
                                         </ul>
+                                    </div> -->
+
+                                    <div class="gi-single-list"
+                                        *ngIf="product.categories && product.categories.length > 0">
+                                        <ul>
+                                            <li><strong>Categories:</strong>
+                                                <span *ngFor="let cat of product.categories; let last = last">
+                                                    <a [routerLink]="['/category', cat.urlHandle]">{{cat.name}}</a>
+                                                    <span *ngIf="!last">, </span>
+                                                </span>
+                                            </li>
+                                        </ul>
                                     </div>
 
-                                    <div class="gi-pro-variation">
+                                    <div class="gi-pro-variation"
+                                        *ngIf="product.variants && product.variants.length > 0">
                                         <div class="gi-pro-variation-inner gi-pro-variation-size">
-                                            <span>Weight</span>
+                                            <span>Select Variant</span>
                                             <div class="gi-pro-variation-content">
                                                 <ul>
-                                                    <li class="active"><span>250g</span></li>
-                                                    <li><span>500g</span></li>
-                                                    <li><span>1kg</span></li>
-                                                    <li><span>2kg</span></li>
+                                                    <li *ngFor="let variant of product.variants"
+                                                        [class.active]="selectedVariant?.id === variant.id"
+                                                        (click)="selectVariant(variant)">
+                                                        <span>{{variant.variantName}} - ${{variant.price}}</span>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="gi-single-qty">
                                         <div class="qty-plus-minus">
                                             <input class="qty-input" type="text" name="ms_qtybtn" value="1">
@@ -241,7 +273,7 @@
                         </div>
                         <div class="tab-content  gi-single-pro-tab-content">
                             <div id="gi-spt-nav-details" class="tab-pane fade show active">
-                                <div class="gi-single-pro-tab-desc" [innerHTML]="product?.fullDescription">
+                                <div class="gi-single-pro-tab-desc" [innerHTML]="product.fullDescription">
 
                                 </div>
                                 <!-- <div class="gi-single-pro-tab-desc">
@@ -282,7 +314,7 @@
                                         free from repetition, injected humour, or non-characteristic words etc.</p>
                                 </div> -->
                             </div>
-                            <div id="gi-spt-nav-info" class="tab-pane fade">
+                            <!-- <div id="gi-spt-nav-info" class="tab-pane fade">
                                 <div class="gi-single-pro-tab-moreinfo">
                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                         Lorem Ipsum has been the industry's standard dummy text ever since the
@@ -297,7 +329,22 @@
                                         <li><span>Size</span> 10 X 20</li>
                                     </ul>
                                 </div>
+                            </div> -->
+
+
+                            <!-- 8. UPDATE SPECIFICATIONS TAB -->
+                            <div id="gi-spt-nav-info" class="tab-pane fade">
+                                <div class="gi-single-pro-tab-moreinfo">
+                                    <p>{{product.shortDescription}}</p>
+                                    <ul>
+                                        <li><span>Model</span> {{product.sku}}</li>
+                                        <li><span>Stock</span> {{product.stockQuantity}} units</li>
+                                        <li *ngIf="product.metaKeywords"><span>Keywords</span>
+                                            {{product.metaKeywords}}</li>
+                                    </ul>
+                                </div>
                             </div>
+
                             <div id="gi-spt-nav-vendor" class="tab-pane fade">
                                 <div class="gi-single-pro-tab-moreinfo">
                                     <div class="gi-product-vendor">
@@ -336,25 +383,33 @@
                             <div id="gi-spt-nav-review" class="tab-pane fade">
                                 <div class="row">
                                     <div class="gi-t-review-wrapper">
-                                        <div class="gi-t-review-item" *ngFor="let review of product?.reviews">
+                                        <!-- Show message if no reviews -->
+                                        <div *ngIf="!product.reviews || product.reviews.length === 0"
+                                            class="no-reviews">
+                                            <p>No reviews yet. Be the first to review this product!</p>
+                                        </div>
+
+                                        <!-- Loop through reviews -->
+                                        <div class="gi-t-review-item" *ngFor="let review of product.reviews">
                                             <div class="gi-t-review-avtar">
-                                                <img src="images/user/1.jpg" alt="user">
+                                                <img src="images/user/2.jpg" alt="user">
                                             </div>
                                             <div class="gi-t-review-content">
                                                 <div class="gi-t-review-top">
-                                                    <div class="gi-t-review-name">{{ review.title }}</div>
+                                                    <div class="gi-t-review-name">{{review.reviewerName || 'Anonymous'}}
+                                                    </div>
                                                     <div class="gi-t-review-rating">
                                                         <i class="gicon gi-star fill"
-                                                            *ngFor="let star of [1,2,3,4,5]; let i = index"
-                                                            [class.fill]="i < review.rating"></i>
+                                                            *ngFor="let star of utilityService.getFilledStars(review.rating)"></i>
+                                                        <i class="gicon gi-star"
+                                                            *ngFor="let star of utilityService.getEmptyStars(review.rating)"></i>
                                                     </div>
                                                 </div>
                                                 <div class="gi-t-review-bottom">
-                                                    <p>{{ review.reviewText }}</p>
+                                                    <p>{{review.reviewText}}</p>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="gi-ratting-content">
                                         <h3>Add a Review</h3>
@@ -396,6 +451,18 @@
     </div>
 </section>
 <!-- End Single Product -->
+
+<!-- Loading indicator -->
+<div class="loading-spinner" *ngIf="loading">
+    <div class="loader"></div>
+    <p>Loading product details...</p>
+</div>
+
+<!-- Error state -->
+<div class="error-message" *ngIf="!loading && !product">
+    <p>Product not found</p>
+    <a routerLink="/" class="gi-btn-1">Go to Home</a>
+</div>
 
 <!-- Related product section -->
 <section class="gi-related-product gi-new-product padding-tb-40">

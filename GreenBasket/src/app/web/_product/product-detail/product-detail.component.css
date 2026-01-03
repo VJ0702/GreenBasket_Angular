@@ -1,0 +1,53 @@
+/* Active variant styling */
+.gi-pro-variation-content ul li.active {
+    background-color: #5caf90;
+    color: #fff;
+    border-color: #5caf90;
+}
+
+.gi-pro-variation-content ul li {
+    cursor: pointer;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    margin: 5px;
+    display: inline-block;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.gi-pro-variation-content ul li:hover {
+    border-color: #5caf90;
+}
+
+/* Out of stock styling */
+.gi-single-stoke .out-of-stock {
+    color: #ff0000;
+}
+
+/* Active thumbnail image */
+.single-nav-thumb .single-slide.active {
+    border: 2px solid #5caf90;
+}
+
+.single-nav-thumb .single-slide {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+/* No reviews message */
+.no-reviews {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+/* Loading state */
+.loading-spinner {
+    text-align: center;
+    padding: 100px 0;
+}
+
+.gi-pro-rating .gi-star-half.fill {
+    color: #ffa500;
+}

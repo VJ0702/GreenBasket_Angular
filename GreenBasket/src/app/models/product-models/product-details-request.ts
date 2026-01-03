@@ -1,3 +1,5 @@
+import { DecimalPipe } from "@angular/common";
+
 export interface ProductDetailsRequest {
     id: number;
     name: string;
