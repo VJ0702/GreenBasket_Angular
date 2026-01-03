@@ -5,6 +5,6 @@ import { CategoryDetailComponent } from './web/_category/category-detail/categor
 
 export const routes: Routes = [
     { path: '', component: HomeIndexComponent }, // Default route
-    { path: 'product/:seName', component: ProductDetailComponent },
+    { path: 'product/:urlHandle', component: ProductDetailComponent },
     { path: 'category/:seName', component: CategoryDetailComponent }
 ];

@@ -35,15 +35,15 @@
                                 <div class="single-product-scroll">
                                     <div class="single-product-cover">
                                         <div class="single-slide zoom-image-hover"
-                                            *ngFor="let image of product?.productImages">
-                                            <img class="img-responsive" [src]="getFullImageUrl(image.imageUrl)"
-                                                [alt]="product?.name">
+                                            *ngFor="let image of product?.images">
+                                            <img class="img-responsive"
+                                                [src]="utilityService.getFullImageUrl(image.url)" [alt]="product?.name">
                                         </div>
                                     </div>
                                     <div class="single-nav-thumb">
-                                        <div class="single-slide" *ngFor="let image of product?.productImages">
-                                            <img class="img-responsive" [src]="getFullImageUrl(image.imageUrl)"
-                                                [alt]="product?.name">
+                                        <div class="single-slide" *ngFor="let image of product?.images">
+                                            <img class="img-responsive"
+                                                [src]="utilityService.getFullImageUrl(image.url)" [alt]="product?.name">
                                         </div>
                                     </div>
                                 </div>
@@ -55,10 +55,11 @@
                                         <div class="gi-single-rating">
                                             <i class="gicon gi-star fill"
                                                 *ngFor="let star of [1,2,3,4,5]; let i = index"
-                                                [class.fill]="i < product?.rating.rate"></i>
+                                                [class.fill]="i < (product?.rating?.averageRating ?? 0)"></i>
                                         </div>
                                         <span class="gi-read-review">
-                                            |&nbsp;&nbsp;<a (click)="activateReviewTab($event)">{{ product?.rating.count
+                                            |&nbsp;&nbsp;<a (click)="activateReviewTab($event)">{{
+                                                product?.rating?.reviewCount
                                                 }}
                                                 Ratings</a>
                                         </span>
@@ -335,7 +336,7 @@
                             <div id="gi-spt-nav-review" class="tab-pane fade">
                                 <div class="row">
                                     <div class="gi-t-review-wrapper">
-                                        <div class="gi-t-review-item" *ngFor="let review of product?.productReviews">
+                                        <div class="gi-t-review-item" *ngFor="let review of product?.reviews">
                                             <div class="gi-t-review-avtar">
                                                 <img src="images/user/1.jpg" alt="user">
                                             </div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule } from '@angular/common';
-import { ProductDetailsRequest } from '../../../models/product-models/product-details-request';
-import { ConfigService } from '../../../services/common-services/config.service';
+import { ProductDetail, ProductDetailsRequest, ProductVariant } from '../../../models/product-models/product-details-request';
+import { Subscription } from 'rxjs';
+import { UtilityService } from '../../../services/common-services/utility.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -12,70 +13,81 @@ import { ConfigService } from '../../../services/common-services/config.service'
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'] // Corrected property name
 })
-export class ProductDetailComponent implements OnInit {
-  product: any;
+export class ProductDetailComponent implements OnInit, OnDestroy {
+  product?: ProductDetail;
+  loading = false;
+  selectedVariant?: ProductVariant;
+  selectedImage?: string;
+  private productSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private configService: ConfigService
+    public utilityService: UtilityService
   ) { }
 
   ngOnInit(): void {
-    const seName = this.route.snapshot.paramMap.get('seName');
-    if (seName) {
-      const request: ProductDetailsRequest = {
-        id: 0,
-        name: '',
-        slug: seName
-      };
-      this.getProductDetails(request);
+    const urlHandle = this.route.snapshot.paramMap.get('urlHandle');
+
+    if (urlHandle) {
+      this.getProductDetails(urlHandle);
     } else {
-      console.error('seName parameter is missing');
-      // Handle the case where seName is not available
+      console.error('Product urlHandle parameter is missing');
     }
   }
 
-  getProductDetails(request: ProductDetailsRequest): void {
-    this.productService.getProductDetails(request).subscribe(
-      (data) => {
-        //console.log('Product details:', data);
+  getProductDetails(slug: string): void {
+    this.loading = true;
+    this.productSubscription = this.productService.getProductDetailsBySlug(slug).subscribe({
+      next: (data) => {
+        console.log('Product details:', data);
         this.product = data;
+
+        // Set default selected variant (first one)
+        if (data.variants && data.variants.length > 0) {
+          this.selectedVariant = data.variants[0];
+        }
+
+        // Set primary image as selected
+        const primaryImage = data.images.find(img => img.isPrimary);
+        this.selectedImage = primaryImage ? primaryImage.url : data.images[0]?.url;
+
+        this.loading = false;
       },
-      (error) => {
-        console.error('Error fetching product details', error);
+      error: (error) => {
+        console.error('Error fetching product details:', error);
+        this.loading = false;
       }
-    );
+    });
+  }
+  selectVariant(variant: ProductVariant): void {
+    this.selectedVariant = variant;
   }
 
-  getFullImageUrl(imageUrl: string): string {
-    return `${this.configService.baseImageUrl}${imageUrl}`;
+  selectImage(imageUrl: string): void {
+    this.selectedImage = imageUrl;
   }
 
   activateReviewTab(event: Event): void {
-
-    console.log('Activating review tab  ' + event);
     event.preventDefault();
     const reviewTab = document.querySelector('#review-tab');
     const reviewTabContent = document.querySelector('#gi-spt-nav-review');
-    if (reviewTab && reviewTabContent) {
-      // Activate the tab
-      (reviewTab as HTMLElement).classList.add('active');
-      (reviewTabContent as HTMLElement).classList.add('show', 'active');
 
-      // Deactivate other tabs
-      const otherTabs = document.querySelectorAll('.nav-link');
-      const otherTabContents = document.querySelectorAll('.tab-pane');
-      otherTabs.forEach(tab => {
-        if (tab !== reviewTab) {
-          (tab as HTMLElement).classList.remove('active');
-        }
+    if (reviewTab && reviewTabContent) {
+      reviewTab.classList.add('active');
+      reviewTabContent.classList.add('show', 'active');
+
+      document.querySelectorAll('.nav-link:not(#review-tab)').forEach(tab => {
+        tab.classList.remove('active');
       });
-      otherTabContents.forEach(tabContent => {
-        if (tabContent !== reviewTabContent) {
-          (tabContent as HTMLElement).classList.remove('show', 'active');
-        }
+
+      document.querySelectorAll('.tab-pane:not(#gi-spt-nav-review)').forEach(content => {
+        content.classList.remove('show', 'active');
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.productSubscription?.unsubscribe();
   }
 }
