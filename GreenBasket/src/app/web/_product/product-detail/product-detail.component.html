@@ -107,7 +107,7 @@
                                     <div class="gi-single-list"
                                         *ngIf="product.categories && product.categories.length > 0">
                                         <ul>
-                                            <li><strong>Categories:</strong>
+                                            <li><strong>Categories: </strong>
                                                 <span *ngFor="let cat of product.categories; let last = last">
                                                     <a [routerLink]="['/category', cat.urlHandle]">{{cat.name}}</a>
                                                     <span *ngIf="!last">, </span>

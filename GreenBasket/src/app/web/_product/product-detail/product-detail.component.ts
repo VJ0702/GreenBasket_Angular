@@ -2,16 +2,18 @@ import { Component, OnDestroy, OnInit, PLATFORM_ID, Inject } from '@angular/core
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ProductDetail, ProductDetailsRequest, ProductSpecification, ProductVariant } from '../../../models/product-models/product-details-request';
+import { ProductDetail, ProductSpecification, ProductVariant } from '../../../models/product-models/product-details-request';
 import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../services/common-services/utility.service';
+
+declare const $: any; // Declare jQuery globally
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css'] // Corrected property name
+  styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
   product?: ProductDetail;
@@ -19,88 +21,91 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   selectedVariant?: ProductVariant;
   selectedImage?: string;
   topSpecifications?: ProductSpecification[];
+
   private productSubscription?: Subscription;
+  private readonly isBrowser: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     public utilityService: UtilityService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
     const urlHandle = this.route.snapshot.paramMap.get('urlHandle');
 
     if (urlHandle) {
-      this.getProductDetails(urlHandle);
+      this.loadProductDetails(urlHandle);
     } else {
-      console.error('Product urlHandle parameter is missing');
+      console.error('Product URL handle is missing');
     }
   }
 
-  getProductDetails(slug: string): void {
+  ngOnDestroy(): void {
+    this.productSubscription?.unsubscribe();
+    this.destroySlickSliders();
+  }
+
+  private loadProductDetails(slug: string): void {
     this.loading = true;
+
     this.productSubscription = this.productService.getProductDetailsBySlug(slug).subscribe({
       next: (data) => {
-        //console.log('Product details:', data);
         this.product = data;
-
-        // Set default selected variant (first one)
-        if (data.variants && data.variants.length > 0) {
-          this.selectedVariant = data.variants[0];
-        }
-
-        // Set primary image as selected
-        const primaryImage = data.images.find(img => img.isPrimary);
-        this.selectedImage = primaryImage ? primaryImage.url : data.images[0]?.url;
-
-        // Get top 3 specifications
-        if (data.specifications && data.specifications.length > 0) {
-          this.topSpecifications = data.specifications
-            .slice().sort((a, b) => a.displayOrder - b.displayOrder)
-            .slice(0, 3);
-        }
-
+        this.initializeProductData(data);
         this.loading = false;
 
-        // Initialize Slick slider after images are loaded
-        setTimeout(() => {
-          this.initializeProductSlider();
-        }, 100);
+        // Initialize sliders after DOM update
+        if (this.isBrowser) {
+          setTimeout(() => this.initializeSlickSliders(), 100);
+        }
       },
       error: (error) => {
-        console.error('Error fetching product details:', error);
+        console.error('Error loading product:', error);
         this.loading = false;
       }
     });
   }
 
-  initializeProductSlider(): void {
-    // Only run in browser environment
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
+  private initializeProductData(data: ProductDetail): void {
+    // Set default variant
+    if (data.variants?.length > 0) {
+      this.selectedVariant = data.variants[0];
     }
 
-    // Destroy existing slick if it exists
-    const $cover: any = (window as any).$('.single-product-cover');
-    const $thumb: any = (window as any).$('.single-nav-thumb');
+    // Set primary image
+    const primaryImage = data.images.find(img => img.isPrimary);
+    this.selectedImage = primaryImage?.url || data.images[0]?.url;
 
-    if ($cover.hasClass('slick-initialized')) {
-      $cover.slick('unslick');
+    // Get top specifications
+    if (data.specifications?.length > 0) {
+      this.topSpecifications = data.specifications
+        .sort((a, b) => a.displayOrder - b.displayOrder)
+        .slice(0, 3);
     }
-    if ($thumb.hasClass('slick-initialized')) {
-      $thumb.slick('unslick');
-    }
+  }
 
-    // Initialize Slick slider for product images
+  private initializeSlickSliders(): void {
+    if (!this.isBrowser || typeof $ === 'undefined') return;
+
+    this.destroySlickSliders();
+
+    const $cover = $('.single-product-cover');
+    const $thumb = $('.single-nav-thumb');
+
+    // Initialize main product image slider
     $cover.slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       arrows: false,
       fade: false,
-      asNavFor: '.single-nav-thumb',
+      asNavFor: '.single-nav-thumb'
     });
 
+    // Initialize thumbnail slider
     $thumb.slick({
       slidesToShow: 4,
       slidesToScroll: 1,
@@ -109,64 +114,48 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       arrows: true,
       focusOnSelect: true,
       responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 3,
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 2,
-          }
-        }
+        { breakpoint: 768, settings: { slidesToShow: 3 } },
+        { breakpoint: 480, settings: { slidesToShow: 2 } }
       ]
     });
   }
+
+  private destroySlickSliders(): void {
+    if (!this.isBrowser || typeof $ === 'undefined') return;
+
+    const sliders = ['.single-product-cover', '.single-nav-thumb'];
+
+    sliders.forEach(selector => {
+      const $slider = $(selector);
+      if ($slider.hasClass('slick-initialized')) {
+        $slider.slick('unslick');
+      }
+    });
+  }
+
   selectVariant(variant: ProductVariant): void {
     this.selectedVariant = variant;
   }
 
-  // selectImage(imageUrl: string): void {
-  //   this.selectedImage = imageUrl;
-  // }
-
   activateReviewTab(event: Event): void {
     event.preventDefault();
+
     const reviewTab = document.querySelector('#review-tab');
-    const reviewTabContent = document.querySelector('#gi-spt-nav-review');
+    const reviewContent = document.querySelector('#gi-spt-nav-review');
 
-    if (reviewTab && reviewTabContent) {
-      reviewTab.classList.add('active');
-      reviewTabContent.classList.add('show', 'active');
+    if (!reviewTab || !reviewContent) return;
 
-      document.querySelectorAll('.nav-link:not(#review-tab)').forEach(tab => {
-        tab.classList.remove('active');
-      });
+    // Activate review tab
+    reviewTab.classList.add('active');
+    reviewContent.classList.add('show', 'active');
 
-      document.querySelectorAll('.tab-pane:not(#gi-spt-nav-review)').forEach(content => {
-        content.classList.remove('show', 'active');
-      });
-    }
-  }
+    // Deactivate other tabs
+    document.querySelectorAll('.nav-link:not(#review-tab)').forEach(tab =>
+      tab.classList.remove('active')
+    );
 
-  ngOnDestroy(): void {
-    this.productSubscription?.unsubscribe();
-
-    // Destroy Slick slider instances (only in browser)
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    const $cover: any = (window as any).$('.single-product-cover');
-    const $thumb: any = (window as any).$('.single-nav-thumb');
-
-    if ($cover.hasClass('slick-initialized')) {
-      $cover.slick('unslick');
-    }
-    if ($thumb.hasClass('slick-initialized')) {
-      $thumb.slick('unslick');
-    }
+    document.querySelectorAll('.tab-pane:not(#gi-spt-nav-review)').forEach(pane =>
+      pane.classList.remove('show', 'active')
+    );
   }
 }
