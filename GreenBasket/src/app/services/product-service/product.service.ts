@@ -39,9 +39,9 @@ export class ProductService {
     return this.apiService
       .get<ApiResponse<ProductDetail>>(`${this.productDetailBySlugEndpoint}/${slug}`)
       .pipe(
-        tap(response => {
-          console.log('Product Detail Response:', response);
-        }),
+        // tap(response => {
+        //   console.log('Product Detail Response:', response);
+        // }),
         map(response => response.data)
       );
   }

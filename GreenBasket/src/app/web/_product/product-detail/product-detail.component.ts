@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule } from '@angular/common';
-import { ProductDetail, ProductDetailsRequest, ProductVariant } from '../../../models/product-models/product-details-request';
+import { ProductDetail, ProductDetailsRequest, ProductSpecification, ProductVariant } from '../../../models/product-models/product-details-request';
 import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../services/common-services/utility.service';
 
@@ -18,6 +18,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   loading = false;
   selectedVariant?: ProductVariant;
   selectedImage?: string;
+  topSpecifications?: ProductSpecification[];
   private productSubscription?: Subscription;
 
   constructor(
@@ -40,7 +41,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.productSubscription = this.productService.getProductDetailsBySlug(slug).subscribe({
       next: (data) => {
-        console.log('Product details:', data);
+        //console.log('Product details:', data);
         this.product = data;
 
         // Set default selected variant (first one)
@@ -51,6 +52,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         // Set primary image as selected
         const primaryImage = data.images.find(img => img.isPrimary);
         this.selectedImage = primaryImage ? primaryImage.url : data.images[0]?.url;
+
+        // Get top 3 specifications
+        if (data.specifications && data.specifications.length > 0) {
+          this.topSpecifications = data.specifications
+            .slice().sort((a, b) => a.displayOrder - b.displayOrder)
+            .slice(0, 3);
+        }
 
         this.loading = false;
       },

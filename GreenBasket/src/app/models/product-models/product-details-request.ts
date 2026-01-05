@@ -81,6 +81,7 @@ export interface ProductDetail {
     reviews: ProductReview[];
     categories: ProductCategory[];
     variants: ProductVariant[];
+    specifications: ProductSpecification[];
     metaTitle: string | null;
     metaDescription: string | null;
     metaKeywords: string | null;
@@ -107,4 +108,12 @@ export interface ProductImage {
     seoFilename: string;
     displayOrder: number;
     isPrimary: boolean;
+}
+
+export interface ProductSpecification {
+    id: number;
+    name: string;
+    value: string;
+    displayOrder: number;
+    isVisible: boolean;
 }

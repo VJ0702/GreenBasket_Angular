@@ -95,14 +95,17 @@
                                     </div>
                                     <div class="gi-single-desc">{{product.shortDescription}}</div>
 
-                                    <!-- <div class="gi-single-list">
-                                        <ul>
-                                            <li><strong>Closure :</strong> Hook & Loop</li>
+                                    <div class="gi-single-list">
+                                        <ul *ngIf="topSpecifications && topSpecifications.length > 0">
+                                            <li *ngFor="let spec of topSpecifications">
+                                                <strong>{{spec.name}} :</strong> {{spec.value}}
+                                            </li>
+                                            <!-- <li><strong>Closure :</strong> Hook & Loop</li>
                                             <li><strong>Sole :</strong> Polyvinyl Chloride</li>
                                             <li><strong>Width :</strong> Medium</li>
-                                            <li><strong>Outer Material :</strong> A-Grade Standard Quality</li>
+                                            <li><strong>Outer Material :</strong> A-Grade Standard Quality</li> -->
                                         </ul>
-                                    </div> -->
+                                    </div>
 
                                     <div class="gi-single-list"
                                         *ngIf="product.categories && product.categories.length > 0">
@@ -336,11 +339,10 @@
                             <div id="gi-spt-nav-info" class="tab-pane fade">
                                 <div class="gi-single-pro-tab-moreinfo">
                                     <p>{{product.shortDescription}}</p>
-                                    <ul>
-                                        <li><span>Model</span> {{product.sku}}</li>
-                                        <li><span>Stock</span> {{product.stockQuantity}} units</li>
-                                        <li *ngIf="product.metaKeywords"><span>Keywords</span>
-                                            {{product.metaKeywords}}</li>
+                                    <ul *ngIf="product.specifications && product.specifications.length > 0">
+                                        <li *ngFor="let spec of product.specifications">
+                                            <span>{{spec.name}}</span> {{spec.value}}
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
