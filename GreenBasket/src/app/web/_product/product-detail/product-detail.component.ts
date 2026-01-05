@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product-service/product.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ProductDetail, ProductDetailsRequest, ProductSpecification, ProductVariant } from '../../../models/product-models/product-details-request';
 import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../services/common-services/utility.service';
@@ -24,7 +24,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    public utilityService: UtilityService
+    public utilityService: UtilityService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
@@ -61,6 +62,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         }
 
         this.loading = false;
+
+        // Initialize Slick slider after images are loaded
+        setTimeout(() => {
+          this.initializeProductSlider();
+        }, 100);
       },
       error: (error) => {
         console.error('Error fetching product details:', error);
@@ -68,13 +74,63 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  initializeProductSlider(): void {
+    // Only run in browser environment
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Destroy existing slick if it exists
+    const $cover: any = (window as any).$('.single-product-cover');
+    const $thumb: any = (window as any).$('.single-nav-thumb');
+
+    if ($cover.hasClass('slick-initialized')) {
+      $cover.slick('unslick');
+    }
+    if ($thumb.hasClass('slick-initialized')) {
+      $thumb.slick('unslick');
+    }
+
+    // Initialize Slick slider for product images
+    $cover.slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      fade: false,
+      asNavFor: '.single-nav-thumb',
+    });
+
+    $thumb.slick({
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      asNavFor: '.single-product-cover',
+      dots: false,
+      arrows: true,
+      focusOnSelect: true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 3,
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 2,
+          }
+        }
+      ]
+    });
+  }
   selectVariant(variant: ProductVariant): void {
     this.selectedVariant = variant;
   }
 
-  selectImage(imageUrl: string): void {
-    this.selectedImage = imageUrl;
-  }
+  // selectImage(imageUrl: string): void {
+  //   this.selectedImage = imageUrl;
+  // }
 
   activateReviewTab(event: Event): void {
     event.preventDefault();
@@ -97,5 +153,20 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.productSubscription?.unsubscribe();
+
+    // Destroy Slick slider instances (only in browser)
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const $cover: any = (window as any).$('.single-product-cover');
+    const $thumb: any = (window as any).$('.single-nav-thumb');
+
+    if ($cover.hasClass('slick-initialized')) {
+      $cover.slick('unslick');
+    }
+    if ($thumb.hasClass('slick-initialized')) {
+      $thumb.slick('unslick');
+    }
   }
 }

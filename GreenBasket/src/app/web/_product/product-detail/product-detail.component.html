@@ -34,17 +34,14 @@
                             <div class="single-pro-img single-pro-img-no-sidebar">
                                 <div class="single-product-scroll">
                                     <div class="single-product-cover">
-                                        <div class="single-slide zoom-image-hover" *ngFor="let image of product.images"
-                                            (click)="selectImage(image.url)">
+                                        <div class="single-slide zoom-image-hover" *ngFor="let image of product.images">
                                             <img class="img-responsive"
-                                                [src]="utilityService.getFullImageUrl(selectedImage || image.url)"
+                                                [src]="utilityService.getFullImageUrl(image.url)"
                                                 [alt]="image.altAttribute">
                                         </div>
                                     </div>
                                     <div class="single-nav-thumb">
-                                        <div class="single-slide" *ngFor="let image of product.images"
-                                            (click)="selectImage(image.url)"
-                                            [class.active]="selectedImage === image.url">
+                                        <div class="single-slide" *ngFor="let image of product.images">
                                             <img class="img-responsive"
                                                 [src]="utilityService.getFullImageUrl(image.url)"
                                                 [alt]="image.altAttribute">
