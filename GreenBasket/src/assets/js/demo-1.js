@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
 
     });
-    
+
     /*--------------------- Language and Currency Click to Active ---------------------- */
     $(document).ready(function () {
         $(".header-top-lan li").click(function () {
@@ -59,70 +59,70 @@ $(document).ready(function () {
                 }
             },
             {
-              breakpoint: 992,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
-              }
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
             },
             {
-              breakpoint: 768,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2,
-              }
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                }
             },
             {
-              breakpoint: 421,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-              }
+                breakpoint: 421,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
             },
             {
-              breakpoint: 0,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-              }
+                breakpoint: 0,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
             }
-          ]
-      });
+        ]
+    });
 
-    /*--------------------- Trending, Top Rated Start Slider ----------------------- */    
+    /*--------------------- Trending, Top Rated Start Slider ----------------------- */
     $('.gi-trending-slider, .gi-rated-slider').slick({
         rows: 3,
         dots: false,
         arrows: true,
         infinite: true,
-        autoplay:false,
+        autoplay: false,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
         responsive: [
-        {
-            breakpoint: 1200,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    rows: 2,
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 540,
+                settings: {
+                    rows: 2,
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                }
             }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                rows: 2,
-                slidesToScroll: 1,
-                slidesToShow: 1,
-            }
-        },
-        {
-            breakpoint: 540,
-            settings: {
-                rows: 2,
-                slidesToScroll: 1,
-                slidesToShow: 1,
-            }
-        }
         ]
     });
 
@@ -159,17 +159,17 @@ $(document).ready(function () {
     });
 
     /*--------------------- Newsletter popup Homepage ---------------------- */
-    setTimeout( function(){ 
-        $("#gi-popnews-bg").fadeIn();
-        $("#gi-popnews-box").fadeIn();
-    }, 5000);
-    $("#gi-popnews-close").click(() => {
-        $("#gi-popnews-bg").fadeOut();
-        $("#gi-popnews-box").fadeOut();
-    });
+    // setTimeout( function(){ 
+    //     $("#gi-popnews-bg").fadeIn();
+    //     $("#gi-popnews-box").fadeIn();
+    // }, 5000);
+    // $("#gi-popnews-close").click(() => {
+    //     $("#gi-popnews-bg").fadeOut();
+    //     $("#gi-popnews-box").fadeOut();
+    // });
 
-    $("#gi-popnews-bg").click(() => {
-        $("#gi-popnews-bg").fadeOut();
-        $("#gi-popnews-box").fadeOut();
-    });
+    // $("#gi-popnews-bg").click(() => {
+    //     $("#gi-popnews-bg").fadeOut();
+    //     $("#gi-popnews-box").fadeOut();
+    // });
 });
