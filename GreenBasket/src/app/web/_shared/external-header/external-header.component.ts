@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../../services/common-services/config.service';
 import { CategoryService } from '../../../services/category-service/category.service';
@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './external-header.component.html',
   styleUrl: './external-header.component.css'
 })
-export class ExternalHeaderComponent implements OnDestroy {
+export class ExternalHeaderComponent implements OnInit, OnDestroy {
   private getCategorySubscription?: Subscription;
   categories: any[] = [];
 

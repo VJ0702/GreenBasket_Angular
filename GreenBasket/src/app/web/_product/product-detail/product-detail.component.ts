@@ -138,29 +138,33 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   selectVariant(variant: ProductVariant): void {
-    if (!variant) return;
+    if (!variant || !variant.id) {
+      console.warn('Invalid variant:', variant);
+      return;
+    }
 
-    console.log('Before selection:', {
-      oldVariant: this.selectedVariant?.variantName,
-      oldPrice: this._currentPrice,
-      oldMRP: this._currentMRP,
-      oldSKU: this._currentSKU
+    console.log('Selecting variant:', {
+      variantId: variant.id,
+      variantName: variant.variantName,
+      price: variant.price,
+      mrp: variant.mrp
     });
 
-    this.selectedVariant = { ...variant };
+    // Update selected variant - create a new reference to ensure change detection
+    this.selectedVariant = variant;
 
     // Recalculate variant details
     this.calculateVariantDetails();
 
-    console.log('After selection:', {
-      newVariant: variant.variantName,
-      newPrice: this._currentPrice,
-      newMRP: this._currentMRP,
-      newSKU: this._currentSKU,
+    console.log('Variant selected, new values:', {
+      currentPrice: this._currentPrice,
+      currentMRP: this._currentMRP,
+      currentSKU: this._currentSKU,
       discount: this._discountPercentage
     });
 
-    // Trigger change detection
+    // Force change detection
+    this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
 
