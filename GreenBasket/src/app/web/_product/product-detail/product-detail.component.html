@@ -70,6 +70,27 @@
                                     <div class="gi-single-price-stoke">
                                         <div class="gi-single-price">
                                             <div class="final-price">
+                                                ${{ currentPrice | number:'1.2-2' }}
+                                                <span class="price-des" *ngIf="discountPercentage > 0">
+                                                    -{{ discountPercentage }}%
+                                                </span>
+                                            </div>
+                                            <div class="mrp" *ngIf="currentMRP">
+                                                M.R.P. : <span>${{ currentMRP | number:'1.2-2' }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="gi-single-stoke">
+                                            <span class="gi-single-sku">SKU#: {{ currentSKU }}</span>
+                                            <span class="gi-single-ps-title"
+                                                [class.out-of-stock]="product.stockQuantity === 0">
+                                                {{ product.stockQuantity && product.stockQuantity > 0 ? 'IN STOCK' :
+                                                'OUT OF STOCK' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="gi-single-price-stoke">
+                                        <div class="gi-single-price">
+                                            <div class="final-price">
                                                 ${{selectedVariant?.price || product.price}}
                                                 <span class="price-des"
                                                     *ngIf="selectedVariant?.mrp && selectedVariant?.price">
@@ -89,7 +110,7 @@
                                                 {{product.stockQuantity > 0 ? 'IN STOCK' : 'OUT OF STOCK'}}
                                             </span>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="gi-single-desc">{{product.shortDescription}}</div>
 
                                     <div class="gi-single-list">
@@ -124,7 +145,7 @@
                                                 <ul>
                                                     <li *ngFor="let variant of product.variants"
                                                         [class.active]="selectedVariant?.id === variant.id"
-                                                        (click)="selectVariant(variant)">
+                                                        (click)="selectVariant(variant)" style="cursor: pointer;">
                                                         <span>{{variant.variantName}} - ${{variant.price}}</span>
                                                     </li>
                                                 </ul>

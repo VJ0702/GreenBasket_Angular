@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, PLATFORM_ID, Inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../services/product-service/product.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -6,7 +6,7 @@ import { ProductDetail, ProductSpecification, ProductVariant } from '../../../mo
 import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../services/common-services/utility.service';
 
-declare const $: any; // Declare jQuery globally
+declare const $: any;
 
 @Component({
   selector: 'app-product-detail',
@@ -22,6 +22,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   selectedImage?: string;
   topSpecifications?: ProductSpecification[];
 
+  // Cached computed values
+  private _currentPrice?: number;
+  private _currentMRP?: number;
+  private _currentSKU?: string;
+  private _discountPercentage?: number;
+
   private productSubscription?: Subscription;
   private readonly isBrowser: boolean;
 
@@ -29,6 +35,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private productService: ProductService,
     public utilityService: UtilityService,
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -58,7 +65,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.initializeProductData(data);
         this.loading = false;
 
-        // Initialize sliders after DOM update
         if (this.isBrowser) {
           setTimeout(() => this.initializeSlickSliders(), 100);
         }
@@ -71,21 +77,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   private initializeProductData(data: ProductDetail): void {
-    // Set default variant
     if (data.variants?.length > 0) {
       this.selectedVariant = data.variants[0];
     }
 
-    // Set primary image
     const primaryImage = data.images.find(img => img.isPrimary);
     this.selectedImage = primaryImage?.url || data.images[0]?.url;
 
-    // Get top specifications
     if (data.specifications?.length > 0) {
       this.topSpecifications = data.specifications
         .sort((a, b) => a.displayOrder - b.displayOrder)
         .slice(0, 3);
     }
+
+    // Calculate initial values
+    this.calculateVariantDetails();
   }
 
   private initializeSlickSliders(): void {
@@ -96,7 +102,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     const $cover = $('.single-product-cover');
     const $thumb = $('.single-nav-thumb');
 
-    // Initialize main product image slider
     $cover.slick({
       slidesToShow: 1,
       slidesToScroll: 1,
@@ -105,7 +110,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       asNavFor: '.single-nav-thumb'
     });
 
-    // Initialize thumbnail slider
     $thumb.slick({
       slidesToShow: 4,
       slidesToScroll: 1,
@@ -134,7 +138,63 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   selectVariant(variant: ProductVariant): void {
-    this.selectedVariant = variant;
+    if (!variant) return;
+
+    console.log('Before selection:', {
+      oldVariant: this.selectedVariant?.variantName,
+      oldPrice: this._currentPrice,
+      oldMRP: this._currentMRP,
+      oldSKU: this._currentSKU
+    });
+
+    this.selectedVariant = { ...variant };
+
+    // Recalculate variant details
+    this.calculateVariantDetails();
+
+    console.log('After selection:', {
+      newVariant: variant.variantName,
+      newPrice: this._currentPrice,
+      newMRP: this._currentMRP,
+      newSKU: this._currentSKU,
+      discount: this._discountPercentage
+    });
+
+    // Trigger change detection
+    this.cdr.detectChanges();
+  }
+
+  // Calculate all variant-related values once
+  private calculateVariantDetails(): void {
+    this._currentPrice = this.selectedVariant?.price || this.product?.price || 0;
+    this._currentMRP = this.selectedVariant?.mrp || this.product?.oldPrice || 0;
+    this._currentSKU = this.selectedVariant?.sku || this.product?.sku || 'N/A';
+
+    // Calculate discount
+    if (this._currentMRP && this._currentPrice && this._currentMRP > this._currentPrice) {
+      this._discountPercentage = Math.round(
+        ((this._currentMRP - this._currentPrice) / this._currentMRP) * 100
+      );
+    } else {
+      this._discountPercentage = 0;
+    }
+  }
+
+  // Getters that return cached values (called only once per change detection)
+  get currentPrice(): number {
+    return this._currentPrice || 0;
+  }
+
+  get currentMRP(): number | undefined {
+    return this._currentMRP;
+  }
+
+  get currentSKU(): string {
+    return this._currentSKU || 'N/A';
+  }
+
+  get discountPercentage(): number {
+    return this._discountPercentage || 0;
   }
 
   activateReviewTab(event: Event): void {
@@ -145,11 +205,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     if (!reviewTab || !reviewContent) return;
 
-    // Activate review tab
     reviewTab.classList.add('active');
     reviewContent.classList.add('show', 'active');
 
-    // Deactivate other tabs
     document.querySelectorAll('.nav-link:not(#review-tab)').forEach(tab =>
       tab.classList.remove('active')
     );
