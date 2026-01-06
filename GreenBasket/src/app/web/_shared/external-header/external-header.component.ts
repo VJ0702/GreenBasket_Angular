@@ -7,6 +7,7 @@ import { CategoryMenuItemComponent } from '../category-menu-item/category-menu-i
 import { Category } from '../../../models/category-models/category-search-request';
 import { AuthService } from '../../../services/auth-service/auth.service';
 import { UserProfile } from '../../../models/auth-models/login-request-model';
+import { ToastService } from '../../../services/common-services/toast.service';
 
 @Component({
   selector: 'app-external-header',
@@ -26,6 +27,7 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   constructor(private categoryService: CategoryService
     , public authService: AuthService
     , private cdr: ChangeDetectorRef
+    , private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +68,7 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   logout(): void {
     if (confirm('Are you sure you want to logout?')) {
       this.authService.logout();
+      this.toastService.success('You have been logged out successfully!');
     }
   }
 

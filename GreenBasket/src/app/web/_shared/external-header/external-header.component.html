@@ -61,7 +61,8 @@
                     <div class="gi-header-buttons">
                         <div class="right-icons">
                             <!-- Header User Start -->
-                            <a href="login.html" class="gi-header-btn gi-header-user">
+                            <a [routerLink]="isLoggedIn ? '/user/profile' : '/login'"
+                                class="gi-header-btn gi-header-user" [title]="isLoggedIn ? userDisplayName : 'Login'">
                                 <div class="header-icon"><i class="fi-rr-user"></i></div>
                             </a>
                             <!-- Header User End -->
@@ -128,13 +129,34 @@
                                     </div>
                                     <div class="gi-btn-desc">
                                         <span class="gi-btn-title">Account</span>
-                                        <span class="gi-btn-stitle">Login</span>
+                                        <span class="gi-btn-stitle" *ngIf="!isLoggedIn">Login</span>
+                                        <span class="gi-btn-stitle" *ngIf="isLoggedIn">{{ userDisplayName }}</span>
                                     </div>
                                 </a>
                                 <ul class="gi-dropdown-menu">
-                                    <li><a class="dropdown-item" href="register.html">Register</a></li>
-                                    <li><a class="dropdown-item" href="checkout.html">Checkout</a></li>
-                                    <li><a class="dropdown-item" routerLink="/login">Login</a></li>
+                                    <!-- Guest Menu -->
+                                    <ng-container *ngIf="!isLoggedIn">
+                                        <li><a class="dropdown-item" routerLink="/login"><i
+                                                    class="fi-rr-sign-in-alt"></i> Login</a></li>
+                                        <li><a class="dropdown-item" href="register.html"><i class="fi-rr-user-add"></i>
+                                                Register</a></li>
+                                    </ng-container>
+                                    <!-- Logged In Menu -->
+                                    <ng-container *ngIf="isLoggedIn">
+                                        <li><a class="dropdown-item" href="user-profile.html"><i class="fi-rr-user"></i>
+                                                My Profile</a></li>
+                                        <li><a class="dropdown-item" href="user-orders.html"><i
+                                                    class="fi-rr-shopping-cart"></i> My Orders</a></li>
+                                        <li><a class="dropdown-item" href="wishlist.html"><i class="fi-rr-heart"></i>
+                                                Wishlist</a></li>
+                                        <li><a class="dropdown-item" href="user-addresses.html"><i
+                                                    class="fi-rr-marker"></i> Addresses</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="javascript:void(0)"
+                                                (click)="logout()"><i class="fi-rr-sign-out-alt"></i> Logout</a></li>
+                                    </ng-container>
                                 </ul>
                             </div>
                             <!-- Header User End -->
@@ -389,7 +411,9 @@
                                                 <li><a href="checkout.html">Checkout</a></li>
                                                 <li><a href="compare.html">Compare</a></li>
                                                 <li><a href="faq.html">FAQ</a></li>
-                                                <li><a href="login.html">Login</a></li>
+                                                <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+                                                <li *ngIf="isLoggedIn"><a href="javascript:void(0)"
+                                                        (click)="logout()">Logout</a></li>
                                             </ul>
                                         </li>
                                         <li class="non-drop"><a href="shop-banner-left-sidebar-col-3.html">
@@ -554,7 +578,9 @@
                             <li><a href="checkout.html">Checkout</a></li>
                             <li><a href="compare.html">Compare</a></li>
                             <li><a href="faq.html">FAQ</a></li>
-                            <li><a href="login.html">Login</a></li>
+                            <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+                            <li *ngIf="isLoggedIn"><a href="javascript:void(0)" (click)="logout()">Logout ({{
+                                    userDisplayName }})</a></li>
                         </ul>
                     </li>
                 </ul>
