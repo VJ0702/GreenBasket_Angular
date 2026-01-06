@@ -1,0 +1,312 @@
+/* Main login section */
+.gi-login {
+    background-color: #f8f9fa;
+}
+
+.padding-tb-40 {
+    padding: 40px 0;
+}
+
+/* Section title */
+.section-title-2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title-2 h2.gi-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.section-title-2 p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Login content layout */
+.gi-login-content {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.gi-login-box {
+    flex: 1;
+    max-width: 500px;
+}
+
+.gi-login-box.d-n-991 {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Login form container */
+.gi-login-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+}
+
+.gi-login-container {
+    width: 100%;
+}
+
+/* Form styles */
+.gi-login-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gi-login-wrap {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.gi-login-wrap label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.gi-login-wrap input[type="email"],
+.gi-login-wrap input[type="password"],
+.gi-login-wrap input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.gi-login-wrap input:focus {
+    outline: none;
+    border-color: #64b496;
+}
+
+.gi-login-wrap input::placeholder {
+    color: #999;
+}
+
+/* Error states */
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 4px;
+    padding: 12px 15px;
+    color: #c33;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.error-message i {
+    font-size: 18px;
+}
+
+.gi-login-wrap input.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Password wrapper with toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 45px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-btn:hover {
+    opacity: 0.7;
+}
+
+/* Remember me checkbox */
+.gi-login-remember {
+    margin-bottom: 0;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: normal;
+    color: #666;
+    font-size: 14px;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #64b496;
+}
+
+/* Forgot password */
+.gi-login-fp {
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.gi-login-fp label {
+    margin: 0;
+}
+
+.gi-login-fp a {
+    color: #64b496;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gi-login-fp a:hover {
+    text-decoration: underline;
+}
+
+/* Login button section */
+.gi-login-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.gi-login-btn span a {
+    color: #64b496;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gi-login-btn span a:hover {
+    text-decoration: underline;
+}
+
+.gi-login-btn button.gi-btn-1 {
+    background-color: #5a6c7d;
+    color: #ffffff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: 120px;
+}
+
+.gi-login-btn button.gi-btn-1:hover:not(:disabled) {
+    background-color: #5caf90;
+    color: #fff;
+}
+
+.gi-login-btn button.gi-btn-1:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Login image */
+.gi-login-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gi-login-img img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 991px) {
+    .d-n-991 {
+        display: none !important;
+    }
+
+    .gi-login-content {
+        justify-content: center;
+    }
+
+    .gi-login-box {
+        max-width: 100%;
+    }
+
+    .gi-login-wrapper {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 575px) {
+    .section-title-2 h2.gi-title {
+        font-size: 24px;
+    }
+
+    .gi-login-btn {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .gi-login-btn button.gi-btn-1 {
+        width: 100%;
+    }
+}

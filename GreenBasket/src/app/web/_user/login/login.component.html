@@ -1,1 +1,85 @@
-<p>login works!</p>
+<!-- Login section -->
+<section class="gi-login padding-tb-40">
+    <div class="container">
+        <div class="section-title-2">
+            <h2 class="gi-title">Login<span></span></h2>
+            <p>Get access to your Orders, Wishlist and Recommendations.</p>
+        </div>
+        <div class="gi-login-content">
+            <div class="gi-login-box">
+                <div class="gi-login-wrapper">
+                    <div class="gi-login-container">
+                        <div class="gi-login-form">
+                            <!-- Error Message -->
+                            <div *ngIf="errorMessage" class="error-message">
+                                <i class="fi fi-rr-exclamation"></i> {{ errorMessage }}
+                            </div>
+
+                            <!-- Login Form -->
+                            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                                <span class="gi-login-wrap">
+                                    <label>Email Address*</label>
+                                    <input type="email" formControlName="username"
+                                        placeholder="Enter your email address..." (input)="clearError()"
+                                        [class.is-invalid]="submitted && f['username'].errors">
+                                    <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+                                        <div *ngIf="f['username'].errors['required']">Email is required</div>
+                                        <div *ngIf="f['username'].errors['email']">Please enter a valid email</div>
+                                    </div>
+                                </span>
+
+                                <span class="gi-login-wrap">
+                                    <label>Password*</label>
+                                    <div class="password-wrapper">
+                                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                                            placeholder="Enter your password" (input)="clearError()"
+                                            [class.is-invalid]="submitted && f['password'].errors">
+                                        <button type="button" class="password-toggle-btn"
+                                            (click)="togglePasswordVisibility()"
+                                            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                                            <span *ngIf="!showPassword">👁️</span>
+                                            <span *ngIf="showPassword">🙈</span>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                                        <div *ngIf="f['password'].errors['required']">Password is required</div>
+                                        <div *ngIf="f['password'].errors['minlength']">Password must be at least 6
+                                            characters</div>
+                                    </div>
+                                </span>
+
+                                <span class="gi-login-wrap gi-login-remember">
+                                    <label class="remember-me">
+                                        <input type="checkbox" formControlName="rememberme">
+                                        <span>Remember Me</span>
+                                    </label>
+                                </span>
+
+                                <span class="gi-login-wrap gi-login-fp">
+                                    <label><a routerLink="/forgot-password">Forgot Password?</a></label>
+                                </span>
+
+                                <span class="gi-login-wrap gi-login-btn">
+                                    <span><a routerLink="/register" class="">Create Account?</a></span>
+                                    <button class="gi-btn-1 btn" type="submit" [disabled]="loading">
+                                        <span *ngIf="!loading" style="color: #fff;">Login</span>
+                                        <span *ngIf="loading">
+                                            Logging in...
+                                            <span class="loading-spinner"></span>
+                                        </span>
+                                    </button>
+                                </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gi-login-box d-n-991">
+                <div class="gi-login-img">
+                    <img src="/images/common/login.png" alt="login">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Login section End -->

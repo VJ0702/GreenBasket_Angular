@@ -52,7 +52,15 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  clearError(): void {
+    if (this.errorMessage) {
+      this.errorMessage = '';
+    }
+  }
+
   onSubmit(): void {
+    console.log('Form submitted');
+    console.log('Form values:', this.loginForm.value);
     this.submitted = true;
     this.errorMessage = '';
 
@@ -102,12 +110,5 @@ export class LoginComponent implements OnInit {
           }
         }
       });
-  }
-
-  // Clear error message when user starts typing
-  clearError(): void {
-    if (this.errorMessage) {
-      this.errorMessage = '';
-    }
   }
 }
