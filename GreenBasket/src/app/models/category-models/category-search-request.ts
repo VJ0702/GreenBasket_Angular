@@ -16,6 +16,7 @@ export interface Category {
     discountRate: number;
     productCount: number;
     iconClass: string | null;
+    urlHandle: string;
     includeInTopMenu: boolean;
     includeInFooter: boolean;
     createdOnUtc: string;
