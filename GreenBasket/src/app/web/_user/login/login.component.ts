@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth-service/auth.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginRequest } from '../../../models/auth-models/login-request-model';
+import { ToastService } from '../../../services/common-services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +25,11 @@ export class LoginComponent implements OnInit {
     , private authService: AuthService
     , private router: Router
     , private route: ActivatedRoute
+    , private toastService: ToastService
   ) {
     // Redirect to home if already logged in
     if (this.authService.isLoggedIn) {
+      this.toastService.info('You are already logged in!');
       this.router.navigate(['/']);
     }
   }
@@ -82,6 +85,9 @@ export class LoginComponent implements OnInit {
         next: (response) => {
           console.log('Login successful, redirecting to:', this.returnUrl);
           this.loading = false;
+
+          // Show success message
+          this.toastService.success('Welcome back! Login successful.');
 
           // Navigate to return url or home
           this.router.navigate([this.returnUrl]);
