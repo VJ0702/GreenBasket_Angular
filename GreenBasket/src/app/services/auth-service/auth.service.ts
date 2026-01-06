@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
 import { ApiService } from '../common-services/api.service';
@@ -20,12 +21,17 @@ export class AuthService {
   private refreshTokenKey = 'refresh_token';
   private userKey = 'current_user';
 
+  private isBrowser: boolean;
+
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
   ) {
-    // Initialize with user from localStorage if exists
-    const storedUser = localStorage.getItem(this.userKey);
+    this.isBrowser = isPlatformBrowser(platformId);
+
+    // Initialize with user from localStorage if exists (only in browser)
+    const storedUser = this.isBrowser ? this.getStorageItem(this.userKey) : null;
     this.currentUserSubject = new BehaviorSubject<UserProfile | null>(
       storedUser ? JSON.parse(storedUser) : null
     );
@@ -88,9 +94,9 @@ export class AuthService {
     console.log('Logging out...');
 
     // Clear local storage
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
-    localStorage.removeItem(this.userKey);
+    this.removeStorageItem(this.tokenKey);
+    this.removeStorageItem(this.refreshTokenKey);
+    this.removeStorageItem(this.userKey);
 
     // Clear current user subject
     this.currentUserSubject.next(null);
@@ -100,25 +106,25 @@ export class AuthService {
     console.log('Logged out successfully');
   }
 
-  // Token management
+  // Token management with browser check
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.getStorageItem(this.tokenKey);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
+    return this.getStorageItem(this.refreshTokenKey);
   }
 
   private setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    this.setStorageItem(this.tokenKey, token);
   }
 
   private setRefreshToken(token: string): void {
-    localStorage.setItem(this.refreshTokenKey, token);
+    this.setStorageItem(this.refreshTokenKey, token);
   }
 
   private setUser(user: UserProfile): void {
-    localStorage.setItem(this.userKey, JSON.stringify(user));
+    this.setStorageItem(this.userKey, JSON.stringify(user));
   }
 
   // Get user profile from API
@@ -162,9 +168,41 @@ export class AuthService {
     return userRoles.includes(role.toLowerCase());
   }
 
-  // Geet user ID
+  // Get user ID
   getUserId(): string | null {
     return this.currentUserValue?.userId || null;
   }
 
+  // Safe localStorage methods with browser check
+  private getStorageItem(key: string): string | null {
+    if (this.isBrowser) {
+      try {
+        return localStorage.getItem(key);
+      } catch (error) {
+        console.error('Error reading from localStorage:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private setStorageItem(key: string, value: string): void {
+    if (this.isBrowser) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (error) {
+        console.error('Error writing to localStorage:', error);
+      }
+    }
+  }
+
+  private removeStorageItem(key: string): void {
+    if (this.isBrowser) {
+      try {
+        localStorage.removeItem(key);
+      } catch (error) {
+        console.error('Error removing from localStorage:', error);
+      }
+    }
+  }
 }
