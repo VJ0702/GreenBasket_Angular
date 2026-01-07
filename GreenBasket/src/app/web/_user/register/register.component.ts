@@ -37,7 +37,6 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('✅ RegisterComponent initialized');
 
     // Initialize form with validation including async validators
     this.registerForm = this.formBuilder.group({
