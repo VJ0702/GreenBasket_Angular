@@ -232,4 +232,69 @@ export class AuthService {
         })
       );
   }
+
+  // Check if username is available
+  checkUsernameAvailability(username: string): Observable<boolean> {
+    //debugger;
+    return this.apiService.get<ApiResponse<boolean>>(
+      `api/Auth/check-username?username=${encodeURIComponent(username)}`
+    ).pipe(
+      map(response => {
+        if (response.success && response.data !== undefined) {
+          // data: true means username EXISTS (not available)
+          // data: false means username is AVAILABLE
+          // So we need to INVERT the boolean
+          return !response.data;
+        }
+        // If something goes wrong, assume it's taken (safer approach)
+        return false;
+      }),
+      catchError(error => {
+        console.error('Error checking username:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Check if email is available
+  checkEmailAvailability(email: string): Observable<boolean> {
+    return this.apiService.get<ApiResponse<boolean>>(
+      `api/Auth/check-email?email=${encodeURIComponent(email)}`
+    ).pipe(
+      map(response => {
+        if (response.success && response.data !== undefined) {
+          // data: true means email EXISTS (not available)
+          // data: false means email is AVAILABLE
+          // So we need to INVERT the boolean
+          return !response.data;
+        }
+        return false;
+      }),
+      catchError(error => {
+        console.error('Error checking email:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Check if phone number is available
+  checkPhoneAvailability(phoneNumber: string): Observable<boolean> {
+    return this.apiService.get<ApiResponse<boolean>>(
+      `api/Auth/check-phone?phoneNumber=${encodeURIComponent(phoneNumber)}`
+    ).pipe(
+      map(response => {
+        if (response.success && response.data !== undefined) {
+          // data: true means phone number EXISTS (not available)
+          // data: false means phone number is AVAILABLE
+          // So we need to INVERT the boolean
+          return !response.data;
+        }
+        return false;
+      }),
+      catchError(error => {
+        console.error('Error checking phone:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

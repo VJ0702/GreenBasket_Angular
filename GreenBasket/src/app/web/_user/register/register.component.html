@@ -56,12 +56,26 @@
                                     <input type="text" formControlName="username"
                                         placeholder="Choose a username (letters, numbers, underscore only)"
                                         (input)="clearError()" [class.is-invalid]="submitted && f['username'].errors">
+
+                                    <!-- Show loading indicator while checking -->
+                                    <div *ngIf="f['username'].pending" class="validation-checking">
+                                        <i class="fi fi-rr-spinner"></i> Checking availability...
+                                    </div>
+
                                     <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
                                         <div *ngIf="f['username'].errors['required']">Username is required</div>
                                         <div *ngIf="f['username'].errors['minlength']">Minimum 3 characters required
                                         </div>
                                         <div *ngIf="f['username'].errors['pattern']">Only letters, numbers and
                                             underscore allowed</div>
+                                        <div *ngIf="f['username'].errors['usernameTaken']">❌ This username is already
+                                            taken</div>
+                                    </div>
+
+                                    <!-- Show success message if available -->
+                                    <div *ngIf="!f['username'].errors && f['username'].touched && f['username'].value && !f['username'].pending"
+                                        class="validation-success">
+                                        ✓ Username is available
                                     </div>
                                 </span>
 
@@ -73,9 +87,23 @@
                                             <input type="email" formControlName="email"
                                                 placeholder="Enter your email address" (input)="clearError()"
                                                 [class.is-invalid]="submitted && f['email'].errors">
+
+                                            <!-- Show loading indicator while checking -->
+                                            <div *ngIf="f['email'].pending" class="validation-checking">
+                                                <i class="fi fi-rr-spinner"></i> Checking availability...
+                                            </div>
+
                                             <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
                                                 <div *ngIf="f['email'].errors['required']">Email is required</div>
                                                 <div *ngIf="f['email'].errors['email']">Please enter a valid email</div>
+                                                <div *ngIf="f['email'].errors['emailTaken']">❌ This email is already
+                                                    registered</div>
+                                            </div>
+
+                                            <!-- Show success message if available -->
+                                            <div *ngIf="!f['email'].errors && f['email'].touched && f['email'].value && !f['email'].pending"
+                                                class="validation-success">
+                                                ✓ Email is available
                                             </div>
                                         </span>
                                     </div>
@@ -85,11 +113,25 @@
                                             <input type="tel" formControlName="phoneNumber"
                                                 placeholder="Enter 10-digit phone number" (input)="clearError()"
                                                 [class.is-invalid]="submitted && f['phoneNumber'].errors">
+
+                                            <!-- Show loading indicator while checking -->
+                                            <div *ngIf="f['phoneNumber'].pending" class="validation-checking">
+                                                <i class="fi fi-rr-spinner"></i> Checking availability...
+                                            </div>
+
                                             <div *ngIf="submitted && f['phoneNumber'].errors" class="invalid-feedback">
                                                 <div *ngIf="f['phoneNumber'].errors['required']">Phone number is
                                                     required</div>
                                                 <div *ngIf="f['phoneNumber'].errors['pattern']">Please enter a valid
                                                     10-digit phone number</div>
+                                                <div *ngIf="f['phoneNumber'].errors['phoneTaken']">❌ This phone number
+                                                    is already registered</div>
+                                            </div>
+
+                                            <!-- Show success message if available -->
+                                            <div *ngIf="!f['phoneNumber'].errors && f['phoneNumber'].touched && f['phoneNumber'].value && !f['phoneNumber'].pending"
+                                                class="validation-success">
+                                                ✓ Phone number is available
                                             </div>
                                         </span>
                                     </div>

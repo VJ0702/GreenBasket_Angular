@@ -271,6 +271,51 @@
     color: #fff !important;
 }
 
+/* Validation checking state */
+.validation-checking {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.validation-checking i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Validation success state */
+.validation-success {
+    color: #28a745;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Update input border color for success */
+.gi-register-wrap input.ng-valid.ng-touched:not(.ng-pristine) {
+    border-color: #28a745;
+}
+
+/* Update input border color for error */
+.gi-register-wrap input.ng-invalid.ng-touched:not(.ng-pristine) {
+    border-color: #dc3545;
+}
+
+/* Pending state (checking) */
+.gi-register-wrap input.ng-pending {
+    border-color: #6c757d;
+}
+
+
+
 /* Loading spinner */
 .loading-spinner {
     display: inline-block;
