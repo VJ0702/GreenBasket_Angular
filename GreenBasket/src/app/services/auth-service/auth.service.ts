@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
+import { RegisterRequest, RegisterResponse } from '../../models/auth-models/register-request';
 
 @Injectable({
   providedIn: 'root'
@@ -204,5 +205,31 @@ export class AuthService {
         console.error('Error removing from localStorage:', error);
       }
     }
+  }
+
+  // Add this method to auth.service.ts
+  register(registerRequest: RegisterRequest): Observable<RegisterResponse> {
+    console.log('Registration attempt for:', registerRequest.email);
+
+    // Set default role to Customer if not provided
+    if (!registerRequest.roleName) {
+      registerRequest.roleName = 'Customer';
+    }
+
+    return this.apiService.post<ApiResponse<RegisterResponse>>('api/Auth/register', registerRequest)
+      .pipe(
+        map(response => {
+          if (response.success && response.data) {
+            console.log('Registration successful', response);
+            return response.data;
+          } else {
+            throw new Error(response.message || 'Registration failed');
+          }
+        }),
+        catchError(error => {
+          console.error('Registration error:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }

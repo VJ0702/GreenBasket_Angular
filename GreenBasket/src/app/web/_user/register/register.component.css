@@ -1,0 +1,312 @@
+/* Main register section */
+.gi-register {
+    background-color: #f8f9fa;
+}
+
+.padding-tb-40 {
+    padding: 40px 0;
+}
+
+/* Section title */
+.section-title-2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title-2 h2.gi-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.section-title-2 p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Register form container */
+.gi-register-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+}
+
+.gi-register-container {
+    width: 100%;
+}
+
+/* Form styles */
+.gi-register-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.gi-register-wrap {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.gi-register-wrap label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.gi-register-wrap input[type="text"],
+.gi-register-wrap input[type="email"],
+.gi-register-wrap input[type="tel"],
+.gi-register-wrap input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    background-color: #ffffff;
+}
+
+.gi-register-wrap input:focus {
+    outline: none;
+    border-color: #64b496;
+}
+
+.gi-register-wrap input::placeholder {
+    color: #999;
+}
+
+/* Error states */
+.error-message {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: 4px;
+    padding: 12px 15px;
+    color: #c33;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.error-message i {
+    font-size: 18px;
+}
+
+.gi-register-wrap input.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Password wrapper with toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #777;
+    font-size: 16px;
+    padding: 0;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+/* Password strength indicator */
+.password-strength {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.strength-bar .strength-fill {
+    height: 100%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-bar.weak .strength-fill {
+    width: 33%;
+    background-color: #dc3545;
+}
+
+.strength-bar.medium .strength-fill {
+    width: 66%;
+    background-color: #ffc107;
+}
+
+.strength-bar.strong .strength-fill {
+    width: 100%;
+    background-color: #28a745;
+}
+
+.strength-text {
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 60px;
+}
+
+.strength-text.weak {
+    color: #dc3545;
+}
+
+.strength-text.medium {
+    color: #ffc107;
+}
+
+.strength-text.strong {
+    color: #28a745;
+}
+
+/* Terms checkbox */
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: normal;
+    color: #666;
+    font-size: 14px;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #64b496;
+}
+
+.terms-checkbox a {
+    color: #64b496;
+    text-decoration: none;
+}
+
+.terms-checkbox a:hover {
+    text-decoration: underline;
+}
+
+/* Register button section */
+.gi-register-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.gi-register-btn span a {
+    color: #64b496;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gi-register-btn span a:hover {
+    text-decoration: underline;
+}
+
+.gi-register-btn button.gi-btn-1 {
+    background-color: #5a6c7d;
+    color: #ffffff !important;
+    /* Force white text color */
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 140px;
+}
+
+.gi-register-btn button.gi-btn-1:hover:not(:disabled) {
+    background-color: #4a5a6a;
+}
+
+.gi-register-btn button.gi-btn-1:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Make sure loading text is also white */
+.gi-register-btn button.gi-btn-1 span {
+    color: #ffffff !important;
+}
+
+.gi-btn-1:hover {
+    background-color: #5caf90 !important;
+    color: #fff !important;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 767px) {
+    .gi-register-wrapper {
+        padding: 30px 20px;
+    }
+
+    .section-title-2 h2.gi-title {
+        font-size: 24px;
+    }
+
+    .gi-register-btn {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .gi-register-btn button.gi-btn-1 {
+        width: 100%;
+    }
+}
