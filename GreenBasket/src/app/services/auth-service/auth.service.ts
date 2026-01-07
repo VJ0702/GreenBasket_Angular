@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
+import { ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
 import { RegisterRequest, RegisterResponse } from '../../models/auth-models/register-request';
@@ -296,5 +296,30 @@ export class AuthService {
         return throwError(() => error);
       })
     );
+  }
+
+  // Forgot password - send reset link
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    console.log('Forgot password request for:', email);
+
+    const request: ForgotPasswordRequest = {
+      email: email.trim()
+    };
+
+    return this.apiService.post<ApiResponse<ForgotPasswordResponse>>('api/Auth/forgot-password', request)
+      .pipe(
+        map(response => {
+          if (response.success && response.data) {
+            console.log('Password reset email sent:', response);
+            return response.data;
+          } else {
+            throw new Error(response.message || 'Failed to send password reset email');
+          }
+        }),
+        catchError(error => {
+          console.error('Forgot password error:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }
