@@ -15,8 +15,8 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent, title: 'Login - GreenBasket' },
     { path: 'register', component: RegisterComponent, title: 'Register - GreenBasket' },
     { path: 'forgot-password', component: ForgotPasswordComponent, title: 'Forgot Password - GreenBasket' },
-    { path: 'reset-password/:token', component: ResetPasswordComponent, title: 'Reset Password - GreenBasket' },
-    { path: 'reset-password', redirectTo: '/', pathMatch: 'full' }, // Redirect if token is missing
+    //{ path: 'reset-password/:token', component: ResetPasswordComponent, title: 'Reset Password - GreenBasket' },
+    { path: 'reset-password', component: ResetPasswordComponent, title: 'Reset Password - GreenBasket' },
     { path: 'profile', component: ProfileComponent, title: 'Profile - GreenBasket' },
     { path: '**', redirectTo: '', pathMatch: 'full' } // Wildcard route for a 404 page can be added later
 ];

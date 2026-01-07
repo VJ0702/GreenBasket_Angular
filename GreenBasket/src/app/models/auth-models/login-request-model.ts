@@ -48,16 +48,3 @@ export interface Address {
     isBillingAddress: boolean;
     isShippingAddress: boolean;
 }
-
-
-export interface ForgotPasswordRequest {
-    // userId?: string; // Optional - can be omitted if API determines from email
-    email: string;
-}
-
-export interface ForgotPasswordResponse {
-    message: string;
-    maskedEmail: string;
-    tokenExpirationMinutes: number;
-    requestedAt: string;
-}

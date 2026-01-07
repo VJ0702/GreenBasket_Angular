@@ -1,12 +1,13 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
+import { LoginRequest, LoginResponse, UserProfile } from '../../models/auth-models/login-request-model';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
 import { RegisterRequest, RegisterResponse } from '../../models/auth-models/register-request';
+import { ForgotPasswordRequest, ForgotPasswordResponse, ResetPasswordRequest, ResetPasswordResponse } from '../../models/auth-models/forgot-password-model';
 
 @Injectable({
   providedIn: 'root'
@@ -321,5 +322,54 @@ export class AuthService {
           return throwError(() => error);
         })
       );
+  }
+
+  // Validate reset token
+  validateResetToken(email: string, token: string): Observable<boolean> {
+    console.log('Validating reset token for:', email);
+
+    const params = new URLSearchParams({
+      email: email,
+      token: token
+    });
+
+    return this.apiService.get<ApiResponse<boolean>>(
+      `api/Auth/validate-reset-token?${params.toString()}`
+    ).pipe(
+      map(response => {
+        if (response.success && response.data !== undefined) {
+          console.log('Token validation result:', response.data);
+          return response.data;
+        }
+        return false;
+      }),
+      catchError(error => {
+        console.error('Token validation error:', error);
+        return of(false);
+      })
+    );
+  }
+
+  // Reset password
+  resetPassword(resetRequest: ResetPasswordRequest): Observable<ResetPasswordResponse> {
+    console.log('Resetting password for:', resetRequest.email);
+
+    return this.apiService.post<ApiResponse<ResetPasswordResponse>>(
+      'api/Auth/reset-password',
+      resetRequest
+    ).pipe(
+      map(response => {
+        if (response.success && response.data) {
+          console.log('Password reset successful:', response);
+          return response.data;
+        } else {
+          throw new Error(response.message || 'Failed to reset password');
+        }
+      }),
+      catchError(error => {
+        console.error('Reset password error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }
