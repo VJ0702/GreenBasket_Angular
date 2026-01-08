@@ -37,13 +37,49 @@ export interface Address {
     lastName: string;
     email: string;
     phoneNumber: string;
-    companyName: string;
+    companyName?: string;
     countryId: string;
     stateProvinceId: string;
-    county: string;
+    county?: string;
     city: string;
     address1: string;
-    address2: string;
+    address2?: string;
+    zipPostalCode: string;
+    isBillingAddress: boolean;
+    isShippingAddress: boolean;
+}
+
+// Add update profile request
+export interface UpdateProfileRequest {
+    userId: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+}
+
+// Add change password request
+export interface ChangePasswordRequest {
+    userId: string;
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
+
+// Add address request
+export interface AddressRequest {
+    id?: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    companyName?: string;
+    countryId: string;
+    stateProvinceId: string;
+    county?: string;
+    city: string;
+    address1: string;
+    address2?: string;
     zipPostalCode: string;
     isBillingAddress: boolean;
     isShippingAddress: boolean;

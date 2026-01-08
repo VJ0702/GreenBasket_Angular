@@ -1,1 +1,472 @@
-<p>profile works!</p>
+<!-- Profile section -->
+<section class="gi-profile padding-tb-40">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="profile-header">
+            <h1 class="gi-title">My Account</h1>
+            <p>Manage your profile, addresses, and account settings</p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="loading-container">
+            <div class="spinner-large"></div>
+            <p>Loading your profile...</p>
+        </div>
+
+        <!-- Profile Container -->
+        <div *ngIf="!loading && userProfile" class="profile-container">
+            <!-- Sidebar Navigation -->
+            <div class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-picture-section">
+                        <img [src]="userProfile.profilePictureUrl || 'assets/img/common/user-default.png'"
+                            alt="Profile Picture" class="profile-avatar">
+                        <div class="profile-info-badge">
+                            <h3>{{ userProfile.firstName }} {{ userProfile.lastName }}</h3>
+                            <p>{{ userProfile.username }}</p>
+                            <span class="role-badge">{{ userProfile.roles }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <nav class="profile-nav">
+                        <button class="nav-btn" [class.active]="activeTab === 'profile'" (click)="switchTab('profile')">
+                            <i class="fi fi-rr-user"></i>
+                            <span>Profile Information</span>
+                        </button>
+                        <button class="nav-btn" [class.active]="activeTab === 'picture'" (click)="switchTab('picture')">
+                            <i class="fi fi-rr-camera"></i>
+                            <span>Profile Picture</span>
+                        </button>
+                        <button class="nav-btn" [class.active]="activeTab === 'addresses'"
+                            (click)="switchTab('addresses')">
+                            <i class="fi fi-rr-map-marker"></i>
+                            <span>My Addresses</span>
+                        </button>
+                        <button class="nav-btn" [class.active]="activeTab === 'password'"
+                            (click)="switchTab('password')">
+                            <i class="fi fi-rr-lock"></i>
+                            <span>Change Password</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="profile-content">
+
+                <!-- Profile Information Tab -->
+                <div *ngIf="activeTab === 'profile'" class="tab-content">
+                    <div class="content-header">
+                        <h2>Profile Information</h2>
+                        <p>Update your personal details</p>
+                    </div>
+
+                    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name*</label>
+                                <input type="text" formControlName="firstName" placeholder="Enter your first name"
+                                    [class.is-invalid]="profileSubmitted && pf['firstName'].errors" class="form-input">
+                                <div *ngIf="profileSubmitted && pf['firstName'].errors" class="invalid-feedback">
+                                    <div *ngIf="pf['firstName'].errors['required']">First name is required</div>
+                                    <div *ngIf="pf['firstName'].errors['minlength']">Minimum 2 characters required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Last Name*</label>
+                                <input type="text" formControlName="lastName" placeholder="Enter your last name"
+                                    [class.is-invalid]="profileSubmitted && pf['lastName'].errors" class="form-input">
+                                <div *ngIf="profileSubmitted && pf['lastName'].errors" class="invalid-feedback">
+                                    <div *ngIf="pf['lastName'].errors['required']">Last name is required</div>
+                                    <div *ngIf="pf['lastName'].errors['minlength']">Minimum 2 characters required</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email Address*</label>
+                                <input type="email" formControlName="email" placeholder="Your email address"
+                                    [disabled]="true" class="form-input">
+                                <small class="form-text">Email cannot be changed</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone Number*</label>
+                                <input type="tel" formControlName="phoneNumber"
+                                    placeholder="Enter 10-digit phone number"
+                                    [class.is-invalid]="profileSubmitted && pf['phoneNumber'].errors"
+                                    class="form-input">
+                                <div *ngIf="profileSubmitted && pf['phoneNumber'].errors" class="invalid-feedback">
+                                    <div *ngIf="pf['phoneNumber'].errors['required']">Phone number is required</div>
+                                    <div *ngIf="pf['phoneNumber'].errors['pattern']">Please enter a valid 10-digit phone
+                                        number</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Member Since:</span>
+                                <span class="meta-value">{{ userProfile.createdAt | date:'mediumDate' }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Last Updated:</span>
+                                <span class="meta-value">{{ userProfile.modifiedAt | date:'mediumDate' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" [disabled]="profileLoading">
+                                <span *ngIf="!profileLoading"><i class="fi fi-rr-check"></i> Save Changes</span>
+                                <span *ngIf="profileLoading">
+                                    <i class="fi fi-rr-spinner"></i> Saving...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Profile Picture Tab -->
+                <div *ngIf="activeTab === 'picture'" class="tab-content">
+                    <div class="content-header">
+                        <h2>Profile Picture</h2>
+                        <p>Upload or change your profile picture</p>
+                    </div>
+
+                    <div class="picture-section">
+                        <div class="picture-preview">
+                            <img [src]="previewUrl || userProfile.profilePictureUrl || 'assets/img/common/user-default.png'"
+                                alt="Profile Preview" class="preview-image">
+                            <div class="picture-overlay">
+                                <p>{{ previewUrl ? 'Preview' : 'Current Picture' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="picture-upload">
+                            <div class="upload-area">
+                                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*"
+                                    class="file-input">
+                                <div class="upload-content" (click)="fileInput.click()">
+                                    <i class="fi fi-rr-cloud-upload"></i>
+                                    <h4>Click to upload or drag and drop</h4>
+                                    <p>PNG, JPG, GIF up to 5MB</p>
+                                </div>
+                            </div>
+
+                            <div class="picture-info">
+                                <ul>
+                                    <li>✓ Image should be square (1:1 ratio)</li>
+                                    <li>✓ Minimum size: 200x200 pixels</li>
+                                    <li>✓ Maximum size: 5MB</li>
+                                    <li>✓ Supported formats: PNG, JPG, GIF</li>
+                                </ul>
+                            </div>
+
+                            <div class="picture-actions">
+                                <button type="button" class="btn btn-primary" (click)="uploadProfilePicture()"
+                                    [disabled]="!selectedFile || pictureLoading">
+                                    <span *ngIf="!pictureLoading"><i class="fi fi-rr-upload"></i> Upload Picture</span>
+                                    <span *ngIf="pictureLoading">
+                                        <i class="fi fi-rr-spinner"></i> Uploading...
+                                    </span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" (click)="fileInput.click()">
+                                    <i class="fi fi-rr-folder-open"></i> Choose Another
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Tab -->
+                <div *ngIf="activeTab === 'addresses'" class="tab-content">
+                    <div class="content-header">
+                        <h2>My Addresses</h2>
+                        <button type="button" class="btn btn-primary" (click)="openAddressModal()">
+                            <i class="fi fi-rr-plus"></i> Add New Address
+                        </button>
+                    </div>
+
+                    <div *ngIf="userProfile.addresses && userProfile.addresses.length > 0; else noAddresses"
+                        class="addresses-grid">
+                        <div *ngFor="let address of userProfile.addresses" class="address-card">
+                            <div class="address-header">
+                                <h3>{{ address.firstName }} {{ address.lastName }}</h3>
+                                <div class="address-badges">
+                                    <span *ngIf="address.isBillingAddress" class="badge badge-billing">Billing</span>
+                                    <span *ngIf="address.isShippingAddress" class="badge badge-shipping">Shipping</span>
+                                </div>
+                            </div>
+
+                            <div class="address-details">
+                                <p><strong>{{ address.companyName || 'N/A' }}</strong></p>
+                                <p>{{ address.address1 }}</p>
+                                <p *ngIf="address.address2">{{ address.address2 }}</p>
+                                <p>{{ address.city }}, {{ address.county || 'N/A' }} {{ address.zipPostalCode }}</p>
+                                <p class="contact-info">
+                                    <i class="fi fi-rr-envelope"></i> {{ address.email }}<br>
+                                    <i class="fi fi-rr-phone"></i> {{ address.phoneNumber }}
+                                </p>
+                            </div>
+
+                            <div class="address-actions">
+                                <button type="button" class="btn btn-sm btn-outline"
+                                    (click)="openAddressModal(address)">
+                                    <i class="fi fi-rr-edit"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="deleteAddress(address.id)">
+                                    <i class="fi fi-rr-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #noAddresses>
+                        <div class="empty-state">
+                            <i class="fi fi-rr-map-marker"></i>
+                            <h3>No Addresses</h3>
+                            <p>You haven't added any addresses yet</p>
+                            <button type="button" class="btn btn-primary" (click)="openAddressModal()">
+                                <i class="fi fi-rr-plus"></i> Add Your First Address
+                            </button>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Change Password Tab -->
+                <div *ngIf="activeTab === 'password'" class="tab-content">
+                    <div class="content-header">
+                        <h2>Change Password</h2>
+                        <p>Update your password to keep your account secure</p>
+                    </div>
+
+                    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="password-form">
+                        <div class="form-group">
+                            <label>Current Password*</label>
+                            <div class="password-wrapper">
+                                <input [type]="showCurrentPassword ? 'text' : 'password'"
+                                    formControlName="currentPassword" placeholder="Enter your current password"
+                                    [class.is-invalid]="passwordSubmitted && pwf['currentPassword'].errors"
+                                    class="form-input">
+                                <button type="button" class="password-toggle"
+                                    (click)="togglePasswordVisibility('current')" tabindex="-1">
+                                    <i [class]="showCurrentPassword ? 'fi fi-rr-eye-crossed' : 'fi fi-rr-eye'"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="passwordSubmitted && pwf['currentPassword'].errors" class="invalid-feedback">
+                                <div *ngIf="pwf['currentPassword'].errors['required']">Current password is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>New Password*</label>
+                            <div class="password-wrapper">
+                                <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword"
+                                    placeholder="Enter your new password"
+                                    [class.is-invalid]="passwordSubmitted && pwf['newPassword'].errors"
+                                    class="form-input">
+                                <button type="button" class="password-toggle" (click)="togglePasswordVisibility('new')"
+                                    tabindex="-1">
+                                    <i [class]="showNewPassword ? 'fi fi-rr-eye-crossed' : 'fi fi-rr-eye'"></i>
+                                </button>
+                            </div>
+
+                            <!-- Password Strength Indicator -->
+                            <div *ngIf="pwf['newPassword'].value" class="password-strength">
+                                <div class="strength-bar" [ngClass]="getPasswordStrength()">
+                                    <div class="strength-fill"></div>
+                                </div>
+                                <span class="strength-text" [ngClass]="getPasswordStrength()">
+                                    {{ getPasswordStrength() | titlecase }} Strength
+                                </span>
+                            </div>
+
+                            <div *ngIf="passwordSubmitted && pwf['newPassword'].errors" class="invalid-feedback">
+                                <div *ngIf="pwf['newPassword'].errors['required']">New password is required</div>
+                                <div *ngIf="pwf['newPassword'].errors['minlength']">Minimum 6 characters required</div>
+                                <div *ngIf="pwf['newPassword'].errors['passwordStrength']">Password must contain at
+                                    least one number and one letter</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm New Password*</label>
+                            <div class="password-wrapper">
+                                <input [type]="showConfirmPassword ? 'text' : 'password'"
+                                    formControlName="confirmPassword" placeholder="Re-enter your new password"
+                                    [class.is-invalid]="passwordSubmitted && (pwf['confirmPassword'].errors || passwordForm.errors?.['passwordMismatch'])"
+                                    class="form-input">
+                                <button type="button" class="password-toggle"
+                                    (click)="togglePasswordVisibility('confirm')" tabindex="-1">
+                                    <i [class]="showConfirmPassword ? 'fi fi-rr-eye-crossed' : 'fi fi-rr-eye'"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="passwordSubmitted && pwf['confirmPassword'].errors" class="invalid-feedback">
+                                <div *ngIf="pwf['confirmPassword'].errors['required']">Please confirm your password
+                                </div>
+                            </div>
+                            <div *ngIf="passwordSubmitted && passwordForm.errors?.['passwordMismatch'] && !pwf['confirmPassword'].errors"
+                                class="invalid-feedback">
+                                <div>Passwords do not match</div>
+                            </div>
+                        </div>
+
+                        <div class="password-requirements">
+                            <h4>Password Requirements:</h4>
+                            <ul>
+                                <li>At least 6 characters long</li>
+                                <li>Contains at least one number</li>
+                                <li>Contains at least one letter (uppercase or lowercase)</li>
+                                <li>Special characters are recommended</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" [disabled]="passwordLoading">
+                                <span *ngIf="!passwordLoading"><i class="fi fi-rr-lock"></i> Change Password</span>
+                                <span *ngIf="passwordLoading">
+                                    <i class="fi fi-rr-spinner"></i> Updating...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Address Modal -->
+<div *ngIf="showAddressModal" class="modal-overlay" (click)="closeAddressModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ editingAddress ? 'Edit Address' : 'Add New Address' }}</h2>
+            <button type="button" class="modal-close" (click)="closeAddressModal()">
+                <i class="fi fi-rr-cross"></i>
+            </button>
+        </div>
+
+        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="address-modal-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name*</label>
+                    <input type="text" formControlName="firstName" placeholder="First name"
+                        [class.is-invalid]="addressSubmitted && af['firstName'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['firstName'].errors" class="invalid-feedback">
+                        First name is required
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name*</label>
+                    <input type="text" formControlName="lastName" placeholder="Last name"
+                        [class.is-invalid]="addressSubmitted && af['lastName'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['lastName'].errors" class="invalid-feedback">
+                        Last name is required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email*</label>
+                    <input type="email" formControlName="email" placeholder="Email address"
+                        [class.is-invalid]="addressSubmitted && af['email'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['email'].errors" class="invalid-feedback">
+                        <div *ngIf="af['email'].errors['required']">Email is required</div>
+                        <div *ngIf="af['email'].errors['email']">Please enter a valid email</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number*</label>
+                    <input type="tel" formControlName="phoneNumber" placeholder="10-digit phone number"
+                        [class.is-invalid]="addressSubmitted && af['phoneNumber'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['phoneNumber'].errors" class="invalid-feedback">
+                        <div *ngIf="af['phoneNumber'].errors['required']">Phone number is required</div>
+                        <div *ngIf="af['phoneNumber'].errors['pattern']">Please enter a valid 10-digit phone number
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" formControlName="companyName" placeholder="Company name (optional)"
+                    class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label>Address Line 1*</label>
+                <input type="text" formControlName="address1" placeholder="Street address"
+                    [class.is-invalid]="addressSubmitted && af['address1'].errors" class="form-input">
+                <div *ngIf="addressSubmitted && af['address1'].errors" class="invalid-feedback">
+                    Address line 1 is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Address Line 2</label>
+                <input type="text" formControlName="address2" placeholder="Apartment, suite, etc. (optional)"
+                    class="form-input">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City*</label>
+                    <input type="text" formControlName="city" placeholder="City"
+                        [class.is-invalid]="addressSubmitted && af['city'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['city'].errors" class="invalid-feedback">
+                        City is required
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>State/Province</label>
+                    <input type="text" formControlName="stateProvinceId" placeholder="State/Province"
+                        class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Postal Code*</label>
+                    <input type="text" formControlName="zipPostalCode" placeholder="Postal code"
+                        [class.is-invalid]="addressSubmitted && af['zipPostalCode'].errors" class="form-input">
+                    <div *ngIf="addressSubmitted && af['zipPostalCode'].errors" class="invalid-feedback">
+                        Postal code is required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>County</label>
+                <input type="text" formControlName="county" placeholder="County (optional)" class="form-input">
+            </div>
+
+            <div class="address-type">
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="isBillingAddress">
+                    <span>Use as billing address</span>
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" formControlName="isShippingAddress">
+                    <span>Use as shipping address</span>
+                </label>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" (click)="closeAddressModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="addressLoading">
+                    <span *ngIf="!addressLoading">{{ editingAddress ? 'Update Address' : 'Add Address' }}</span>
+                    <span *ngIf="addressLoading"><i class="fi fi-rr-spinner"></i> Saving...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Profile section End -->
