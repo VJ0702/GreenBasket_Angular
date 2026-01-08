@@ -52,13 +52,13 @@ export class AuthService {
 
   // Login method
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
-    console.log('Login attempt with:', { username: loginRequest.username, rememberme: loginRequest.rememberme });
+    //console.log('Login attempt with:', { username: loginRequest.username, rememberme: loginRequest.rememberme });
 
     return this.apiService.post<ApiResponse<LoginResponse>>(this.logInEndpoint, loginRequest)
       .pipe(
         map(response => {
           if (response.success && response.data) {
-            console.log('Login successful', response);
+            //console.log('Login successful', response);
 
             // Extract user profile from response
             const userProfile: UserProfile = {
@@ -93,7 +93,7 @@ export class AuthService {
 
   // Logout method
   logout(): void {
-    console.log('Logging out...');
+    //console.log('Logging out...');
 
     // Clear local storage
     this.removeStorageItem(this.tokenKey);
@@ -105,7 +105,7 @@ export class AuthService {
 
     // Navigate to login
     this.router.navigate(['/login']);
-    console.log('Logged out successfully');
+    //console.log('Logged out successfully');
   }
 
   // Token management with browser check
@@ -210,7 +210,7 @@ export class AuthService {
 
   // Add this method to auth.service.ts
   register(registerRequest: RegisterRequest): Observable<RegisterResponse> {
-    console.log('Registration attempt for:', registerRequest.email);
+    //console.log('Registration attempt for:', registerRequest.email);
 
     // Set default role to Customer if not provided
     if (!registerRequest.roleName) {
@@ -221,7 +221,7 @@ export class AuthService {
       .pipe(
         map(response => {
           if (response.success && response.data) {
-            console.log('Registration successful', response);
+            //console.log('Registration successful', response);
             return response.data;
           } else {
             throw new Error(response.message || 'Registration failed');
@@ -301,7 +301,7 @@ export class AuthService {
 
   // Forgot password - send reset link
   forgotPassword(email: string): Observable<ForgotPasswordResponse> {
-    console.log('Forgot password request for:', email);
+    //console.log('Forgot password request for:', email);
 
     const request: ForgotPasswordRequest = {
       email: email.trim()
@@ -311,7 +311,7 @@ export class AuthService {
       .pipe(
         map(response => {
           if (response.success && response.data) {
-            console.log('Password reset email sent:', response);
+            //console.log('Password reset email sent:', response);
             return response.data;
           } else {
             throw new Error(response.message || 'Failed to send password reset email');
@@ -326,7 +326,7 @@ export class AuthService {
 
   // Validate reset token
   validateResetToken(email: string, token: string): Observable<boolean> {
-    console.log('Validating reset token for:', email);
+    //console.log('Validating reset token for:', email);
 
     const params = new URLSearchParams({
       email: email,
@@ -338,7 +338,7 @@ export class AuthService {
     ).pipe(
       map(response => {
         if (response.success && response.data !== undefined) {
-          console.log('Token validation result:', response.data);
+          //console.log('Token validation result:', response.data);
           return response.data;
         }
         return false;
@@ -352,7 +352,7 @@ export class AuthService {
 
   // Reset password
   resetPassword(resetRequest: ResetPasswordRequest): Observable<ResetPasswordResponse> {
-    console.log('Resetting password for:', resetRequest.email);
+    //console.log('Resetting password for:', resetRequest.email);
 
     return this.apiService.post<ApiResponse<ResetPasswordResponse>>(
       'api/Auth/reset-password',

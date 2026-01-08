@@ -28,7 +28,7 @@ export class ForgotPasswordComponent implements OnInit {
     private router: Router,
     private toastService: ToastService
   ) {
-    console.log('✅ ForgotPasswordComponent initialized');
+    //console.log('✅ ForgotPasswordComponent initialized');
   }
 
   ngOnInit(): void {
@@ -67,7 +67,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.authService.forgotPassword(email)
       .subscribe({
         next: (response) => {
-          console.log('Password reset email sent successfully:', response);
+          //console.log('Password reset email sent successfully:', response);
           this.loading = false;
           this.emailSent = true;
 

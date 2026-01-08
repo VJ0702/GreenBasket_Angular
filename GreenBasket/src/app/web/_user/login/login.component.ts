@@ -62,8 +62,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Form submitted');
-    console.log('Form values:', this.loginForm.value);
+    //console.log('Form submitted');
+    //console.log('Form values:', this.loginForm.value);
     this.submitted = true;
     this.errorMessage = '';
 
@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginRequest)
       .subscribe({
         next: (response) => {
-          console.log('Login successful, redirecting to:', this.returnUrl);
+          //console.log('Login successful, redirecting to:', this.returnUrl);
           this.loading = false;
 
           // Show success message

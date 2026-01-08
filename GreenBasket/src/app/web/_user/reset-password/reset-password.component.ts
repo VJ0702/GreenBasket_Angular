@@ -36,7 +36,6 @@ export class ResetPasswordComponent implements OnInit {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    console.log('✅ ResetPasswordComponent initialized');
   }
 
   ngOnInit(): void {
@@ -49,7 +48,7 @@ export class ResetPasswordComponent implements OnInit {
       this.email = params['email'] || '';
       this.token = params['token'] || '';
 
-      console.log('Reset password params:', { email: this.email, tokenLength: this.token?.length });
+      //console.log('Reset password params:', { email: this.email, tokenLength: this.token?.length });
 
       if (!this.email || !this.token) {
         this.tokenValidating = false;
@@ -120,7 +119,7 @@ export class ResetPasswordComponent implements OnInit {
             this.errorMessage = 'This password reset link has expired or is invalid. Please request a new one.';
             this.toastService.error('Invalid or expired reset link');
           } else {
-            console.log('✅ Token is valid');
+            //console.log('✅ Token is valid');
             this.toastService.success('You can now reset your password');
           }
         },
@@ -194,7 +193,7 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resetPassword(resetRequest)
       .subscribe({
         next: (response) => {
-          console.log('Password reset successful:', response);
+          //console.log('Password reset successful:', response);
           this.loading = false;
           this.resetSuccess = true;
 
