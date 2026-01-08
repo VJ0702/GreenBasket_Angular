@@ -30,15 +30,34 @@ export class UserService {
   }
 
   // Update user profile
+  // updateProfile(updateRequest: UpdateProfileRequest): Observable<UserProfile> {
+  //   return this.apiService.post<ApiResponse<UserProfile>>('api/User/profile', updateRequest)
+  //     .pipe(
+  //       map(response => {
+  //         if (response.success && response.data) {
+  //           console.log('Updated profile:', response.data);
+  //           return response.data;
+  //         }
+  //         throw new Error(response.message || 'Failed to update profile');
+  //       }),
+  //       catchError(error => {
+  //         console.error('Update profile error:', error);
+  //         return throwError(() => error);
+  //       })
+  //     );
+  // }
   updateProfile(updateRequest: UpdateProfileRequest): Observable<UserProfile> {
-    console.log('UpdateProfileRequest:', updateRequest);
-    return this.apiService.post<ApiResponse<UserProfile>>('api/User/profile', updateRequest)
+    return this.apiService.post<any>('api/User/profile', updateRequest)
       .pipe(
         map(response => {
-          console.log('Update profile response:', response);
-          if (response.success && response.data) {
-            console.log('UpdateProfileResponse:', response.data);
-            return response.data;
+          if (response.success) {
+            // Extract profile from nested structure
+            // Handle both: response.data.profile and response.profile
+            const profileData = response.data?.profile || response.profile || response.data;
+
+            if (profileData) {
+              return profileData as UserProfile;
+            }
           }
           throw new Error(response.message || 'Failed to update profile');
         }),

@@ -191,7 +191,6 @@ export class ProfileComponent implements OnInit {
           this.userProfile = updatedProfile;
           this.profileLoading = false;
           this.toastService.success('Profile updated successfully');
-          console.log('Updated Profile:', this.userProfile);
         },
         error: (error) => {
           console.error('Profile update failed:', error);
