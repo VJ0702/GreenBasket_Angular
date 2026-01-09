@@ -266,7 +266,7 @@ export class ProfileComponent implements OnInit {
     this.addressSubmitted = false;
   }
 
-  // Save address
+  // Save address - Updated to use single endpoint
   saveAddress(): void {
     this.addressSubmitted = true;
 
@@ -279,23 +279,30 @@ export class ProfileComponent implements OnInit {
     const currentUser = this.authService.currentUserValue;
     const addressData: AddressRequest = this.addressForm.value;
 
-    const saveObservable = this.editingAddress
-      ? this.userService.updateAddress(currentUser!.userId, this.editingAddress.id, addressData)
-      : this.userService.addAddress(currentUser!.userId, addressData);
+    // Set id to 0 for new address, keep existing id for update
+    const addressWithId = {
+      ...addressData,
+      id: this.editingAddress?.id || 0
+    };
 
-    saveObservable.subscribe({
-      next: () => {
-        this.addressLoading = false;
-        this.toastService.success(this.editingAddress ? 'Address updated successfully' : 'Address added successfully');
-        this.closeAddressModal();
-        this.loadUserProfile();
-      },
-      error: (error) => {
-        console.error('Address save failed:', error);
-        this.addressLoading = false;
-        this.toastService.error(error.error?.message || 'Failed to save address');
-      }
-    });
+    this.userService.saveAddress(currentUser!.userId, addressWithId)
+      .subscribe({
+        next: () => {
+          this.addressLoading = false;
+          this.toastService.success(
+            this.editingAddress
+              ? 'Address updated successfully'
+              : 'Address added successfully'
+          );
+          this.closeAddressModal();
+          this.loadUserProfile();
+        },
+        error: (error) => {
+          console.error('Address save failed:', error);
+          this.addressLoading = false;
+          this.toastService.error(error.error?.message || 'Failed to save address');
+        }
+      });
   }
 
   // Delete address

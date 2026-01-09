@@ -108,6 +108,32 @@ export class UserService {
       );
   }
 
+  // Update the address methods to use single endpoint
+  saveAddress(userId: string, address: AddressRequest): Observable<any> {
+    // Send address.id = 0 for new address, > 0 for update
+    const addressData = {
+      ...address,
+      id: address.id || 0,
+      userId: userId,
+      countryId: address.countryId || "India"
+    };
+
+    return this.apiService.post<ApiResponse<any>>('api/User/address', addressData)
+      .pipe(
+        map(response => {
+          if (response.success) {
+            //console.log('Address saved:', response.data);
+            return response.data;
+          }
+          throw new Error(response.message || 'Failed to save address');
+        }),
+        catchError(error => {
+          console.error('Save address error:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
   // Add address
   addAddress(userId: string, address: AddressRequest): Observable<any> {
     return this.apiService.post<ApiResponse<any>>(`api/User/${userId}/addresses`, address)
@@ -144,7 +170,7 @@ export class UserService {
 
   // Delete address
   deleteAddress(userId: string, addressId: number): Observable<any> {
-    return this.apiService.get<ApiResponse<any>>(`api/User/${userId}/addresses/${addressId}`)
+    return this.apiService.post<ApiResponse<any>>(`api/User/addresses/${addressId}?userId=${userId}`, {})
       .pipe(
         map(response => {
           if (response.success) {
