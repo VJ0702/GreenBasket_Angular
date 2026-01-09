@@ -83,4 +83,5 @@ export interface AddressRequest {
     zipPostalCode: string;
     isBillingAddress: boolean;
     isShippingAddress: boolean;
+    userId: string;
 }
