@@ -357,18 +357,29 @@ export class ProfileComponent implements OnInit {
     this.userService.uploadProfilePicture(currentUser!.userId, this.selectedFile)
       .subscribe({
         next: (profilePictureUrl) => {
-          this.pictureLoading = false;
+          //console.log('Profile picture uploaded:', profilePictureUrl);
+
+          // Update the userProfile with new picture URL
           if (this.userProfile) {
             this.userProfile.profilePictureUrl = profilePictureUrl;
           }
+
+          // Clear the selected file and preview
           this.selectedFile = null;
           this.previewUrl = null;
+
+          this.pictureLoading = false;
           this.toastService.success('Profile picture updated successfully');
         },
         error: (error) => {
           console.error('Profile picture upload failed:', error);
           this.pictureLoading = false;
-          this.toastService.error('Failed to upload profile picture');
+
+          // Handle specific error messages
+          const errorMessage = error.error?.message ||
+            error.error?.description ||
+            'Failed to upload profile picture';
+          this.toastService.error(errorMessage);
         }
       });
   }

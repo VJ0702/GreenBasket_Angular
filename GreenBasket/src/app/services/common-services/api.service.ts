@@ -26,4 +26,10 @@ export class ApiService {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, { headers });
   }
 
+  // POST with FormData (for file uploads)
+  postFormData<T>(endpoint: string, formData: FormData): Observable<T> {
+    // Don't set Content-Type header - let browser set it with boundary
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, formData);
+  }
+
 }

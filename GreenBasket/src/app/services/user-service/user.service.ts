@@ -89,11 +89,13 @@ export class UserService {
   uploadProfilePicture(userId: string, file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('userId', userId);
+    //formData.append('userId', userId);
 
-    return this.apiService.post<ApiResponse<{ profilePictureUrl: string }>>('api/User/upload-profile-picture', formData)
+    //return this.apiService.post<ApiResponse<{ profilePictureUrl: string }>>('api/User/upload-profile-picture', formData)
+    return this.apiService.postFormData<ApiResponse<any>>(`api/User/profile-picture/${userId}`, formData)
       .pipe(
         map(response => {
+          //console.log('Upload profile picture response:', response);
           if (response.success && response.data) {
             return response.data.profilePictureUrl;
           }
