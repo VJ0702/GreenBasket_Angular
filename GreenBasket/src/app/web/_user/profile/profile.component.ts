@@ -221,16 +221,44 @@ export class ProfileComponent implements OnInit {
 
     this.userService.changePassword(changePasswordRequest)
       .subscribe({
-        next: () => {
+        next: (response) => {
+          //console.log('Password change successful:', response);
+
           this.passwordLoading = false;
           this.toastService.success('Password changed successfully');
+
+          // Reset form and submitted flag
           this.passwordForm.reset();
           this.passwordSubmitted = false;
+
+          // Hide password fields
+          this.showCurrentPassword = false;
+          this.showNewPassword = false;
+          this.showConfirmPassword = false;
+
+          // Optional: Show security notice if available
+          if (response?.securityNotice) {
+            //console.log('Security Notice:', response.securityNotice);
+          }
         },
         error: (error) => {
           console.error('Password change failed:', error);
           this.passwordLoading = false;
-          this.toastService.error(error.error?.message || 'Failed to change password');
+
+          // Handle specific error cases
+          let errorMessage = 'Failed to change password';
+
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.error?.description) {
+            errorMessage = error.error.description;
+          } else if (error.status === 400) {
+            errorMessage = 'Invalid current password or password validation failed';
+          } else if (error.status === 401) {
+            errorMessage = 'Incorrect current password';
+          }
+
+          this.toastService.error(errorMessage);
         }
       });
   }
