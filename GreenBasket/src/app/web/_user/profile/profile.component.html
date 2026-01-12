@@ -168,13 +168,21 @@
                             <div class="picture-actions">
                                 <button type="button" class="btn btn-primary" (click)="uploadProfilePicture()"
                                     [disabled]="!selectedFile || pictureLoading">
-                                    <span *ngIf="!pictureLoading"><i class="fi fi-rr-upload"></i> Upload Picture</span>
+                                    <span *ngIf="!pictureLoading"><i class="fi fi-rr-upload"></i> Upload</span>
                                     <span *ngIf="pictureLoading">
                                         <i class="fi fi-rr-spinner"></i> Uploading...
                                     </span>
                                 </button>
                                 <button type="button" class="btn btn-secondary" (click)="fileInput.click()">
-                                    <i class="fi fi-rr-folder-open"></i> Choose Another
+                                    <i class="fi fi-rr-folder-open"></i> Change
+                                </button>
+                                <button type="button" class="btn btn-danger" (click)="deleteProfilePicture()"
+                                    [disabled]="deleteProfilePictureLoading">
+                                    <span *ngIf="!deleteProfilePictureLoading"><i class="fi fi-rr-trash"></i>
+                                        Delete</span>
+                                    <span *ngIf="deleteProfilePictureLoading">
+                                        <i class="fi fi-rr-spinner"></i> Deleting...
+                                    </span>
                                 </button>
                             </div>
                         </div>

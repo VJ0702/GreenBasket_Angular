@@ -184,4 +184,44 @@ export class UserService {
         })
       );
   }
+
+  // delete profile picture method
+  deleteProfilePicture(userId: string): Observable<string> {
+    return this.apiService.delete<ApiResponse<any>>(`api/User/profile-picture?userId=${userId}`)
+      .pipe(
+        map(response => {
+          //console.log('Delete profile picture response:', response);
+
+          if (response.success && response.data) {
+            const defaultImageUrl = response.data.profileImageUrl || response.data.profilePictureUrl;
+
+            if (defaultImageUrl) {
+              //console.log('Default profile image URL:', defaultImageUrl);
+              return defaultImageUrl;
+            }
+          }
+          throw new Error(response.message || 'Failed to delete profile picture');
+        }),
+        catchError(error => {
+          console.error('Delete profile picture error:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  // deleteProfilePicture(userId: string): Observable<string> {
+  //   return this.apiService.delete<ApiResponse<any>>(`api/User/profile-picture?userId=${userId}`)
+  //     .pipe(
+  //       map(response => {
+  //         if (response.success && response.data) {
+  //           return response.data.profileImageUrl;
+  //         }
+  //         throw new Error(response.message || 'Failed to delete profile picture');
+  //       }),
+  //       catchError(error => {
+  //         console.error('Delete profile picture error:', error);
+  //         return throwError(() => error);
+  //       })
+  //     );
+  // }
 }

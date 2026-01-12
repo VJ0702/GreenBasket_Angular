@@ -32,4 +32,22 @@ export class ApiService {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, formData);
   }
 
+  // Generic PUT method
+  put<T>(endpoint: string, body: any): Observable<T> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, { headers });
+  }
+
+  // Generic DELETE method
+  delete<T>(endpoint: string): Observable<T> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<T>(`${this.baseUrl}${endpoint}`, { headers });
+  }
+
+  // DELETE by full URL
+  deleteByFullUrl<T>(endpoint: string): Observable<T> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<T>(`${endpoint}`, { headers });
+  }
+
 }

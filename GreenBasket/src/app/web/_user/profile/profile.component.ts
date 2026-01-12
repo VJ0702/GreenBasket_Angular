@@ -42,6 +42,8 @@ export class ProfileComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
+  deleteProfilePictureLoading = false;
+
   private isBrowser: boolean;
 
   constructor(
@@ -434,6 +436,45 @@ export class ProfileComponent implements OnInit {
     if (password.length < 6) return 'weak';
     if (strength <= 2) return 'medium';
     return 'strong';
+  }
+
+
+  // Delete profile picture
+  deleteProfilePicture(): void {
+    if (!confirm('Are you sure you want to delete your profile picture? It will be replaced with the default image.')) {
+      return;
+    }
+
+    this.deleteProfilePictureLoading = true;
+    const currentUser = this.authService.currentUserValue;
+
+    this.userService.deleteProfilePicture(currentUser!.userId)
+      .subscribe({
+        next: (defaultImageUrl) => {
+          //console.log('Profile picture deleted, default image:', defaultImageUrl);
+
+          // Update the userProfile with default picture URL
+          if (this.userProfile) {
+            this.userProfile.profilePictureUrl = defaultImageUrl;
+          }
+
+          // Clear the selected file and preview
+          this.selectedFile = null;
+          this.previewUrl = null;
+
+          this.deleteProfilePictureLoading = false;
+          this.toastService.success('Profile picture deleted successfully');
+        },
+        error: (error) => {
+          console.error('Delete profile picture failed:', error);
+          this.deleteProfilePictureLoading = false;
+
+          const errorMessage = error.error?.message ||
+            error.error?.description ||
+            'Failed to delete profile picture';
+          this.toastService.error(errorMessage);
+        }
+      });
   }
 
   // Getters for forms
