@@ -17,6 +17,6 @@ export class ProductListingComponent implements OnInit {
   constructor(public utilityService: UtilityService) { }
 
   ngOnInit(): void {
-    console.log('Product in ProductListingComponent:', this.product);
+    //console.log('Product in ProductListingComponent:', this.product);
   }
 }
