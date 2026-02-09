@@ -28,7 +28,7 @@ export class HomePageLatestArrivalComponent implements OnDestroy {
   fetchProducts(): void {
     this.productService.getProducts().subscribe(productData => {
       //console.log(productData);
-      this.products = productData;  // Assign fetched categories to the categories array
+      this.products = productData.slice(0, 5);  // Assign fetched categories to the categories array
     });
   }
 

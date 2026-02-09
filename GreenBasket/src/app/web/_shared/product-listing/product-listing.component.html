@@ -1,0 +1,58 @@
+<div class="gi-product-content">
+    <div class="gi-product-inner">
+        <div class="gi-pro-image-outer">
+            <div class="gi-pro-image">
+                <a [routerLink]="['/product', product.urlHandle]" class="image" style="width: 294px;height: 297px;">
+                    <span class="label veg">
+                        <span class="dot"></span>
+                    </span>
+                    <img class="main-image" [src]="utilityService.getFullImageUrl(product.primaryImageUrl)"
+                        alt="Product" style="width: 294px;height: 297px;">
+                    <img class="hover-image" [src]="utilityService.getFullImageUrl(product.primaryImageUrl)"
+                        alt="Product" style="width: 294px;height: 297px;">
+                </a>
+                <span class="flags">
+                    <span class="sale">Sale</span>
+                </span>
+                <div class="gi-pro-actions">
+                    <a class="gi-btn-group wishlist" title="Wishlist"><i class="fi-rr-heart"></i></a>
+                    <a href="#" class="gi-btn-group quickview" data-link-action="quickview" title="Quick view"
+                        data-bs-toggle="modal" data-bs-target="#gi_quickview_modal"><i class="fi-rr-eye"></i></a>
+                    <a href="javascript:void(0)" class="gi-btn-group compare" title="Compare"><i
+                            class="fi fi-rr-arrows-repeat"></i></a>
+                    <a href="javascript:void(0)" title="Add To Cart" class="gi-btn-group add-to-cart"><i
+                            class="fi-rr-shopping-basket"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="gi-pro-content">
+            <a [routerLink]="['/product', product.urlHandle]">
+                <h6 class="gi-pro-stitle">{{product.sku}}</h6>
+            </a>
+            <h5 class="gi-pro-title"><a [routerLink]="['/product', product.urlHandle]">{{product.name}}</a></h5>
+            <div class="gi-pro-rat-price">
+                <span class="gi-pro-rating">
+                    <!-- Filled stars -->
+                    <i class="gicon gi-star fill"
+                        *ngFor="let star of utilityService.getFilledStars(product.rating.averageRating)"></i>
+
+                    <!-- Half star (if applicable) -->
+                    <i class="gicon gi-star-half fill"
+                        *ngIf="utilityService.hasHalfStar(product.rating.averageRating)"></i>
+                    <!-- Empty stars -->
+                    <i class="gicon gi-star"
+                        *ngFor="let star of utilityService.getEmptyStars(product.rating.averageRating)"></i>
+
+                    <!-- Review count (optional) -->
+                    <span class="review-count" *ngIf="product.rating.reviewCount > 0">
+                        ({{product.rating.reviewCount}})
+                    </span>
+                </span>
+                <span class="gi-price">
+                    <span class="new-price">${{product.price}}</span>
+                    <span *ngIf="product.oldPrice" class="old-price">${{product.oldPrice}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

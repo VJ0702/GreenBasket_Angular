@@ -30,7 +30,7 @@ export class HomeCategoriesComponent implements OnDestroy {
     this.loading = true;
     this.categoryService.getCategories().subscribe({
       next: (data) => {
-        this.categories = data;
+        this.categories = data.filter(category => category.imageUrl != null);  // Filter categories with non-null imageUrl
         this.loading = false;
       },
       error: (err) => {

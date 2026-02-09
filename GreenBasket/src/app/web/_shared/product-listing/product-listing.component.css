@@ -1,0 +1,37 @@
+/* Star rating container */
+.gi-pro-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Base star styling */
+.gi-pro-rating i.gicon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Filled stars */
+.gi-pro-rating .gi-star.fill,
+.gi-pro-rating .gi-star-half.fill {
+    color: #ffa500;
+}
+
+/* Empty stars */
+.gi-pro-rating .gi-star:not(.fill) {
+    color: #e0e0e0;
+}
+
+/* Half star specific */
+.gi-pro-rating .gi-star-half.fill {
+    color: #ffa500;
+}
+
+/* Review count */
+.gi-pro-rating .review-count {
+    font-size: 13px;
+    color: #666;
+    margin-left: 6px;
+    font-weight: 400;
+    line-height: 1;
+}

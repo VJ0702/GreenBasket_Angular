@@ -15,6 +15,7 @@ export class ProductService {
   private productEndpoint = 'api/Product/productList';
   private productDetailEndpoint = 'api/Product/productDetail';
   private productDetailBySlugEndpoint = 'api/Product/detail-by-slug';
+  private dealOfTheDayEndpoint = 'api/Product/deal-of-the-day';
 
   // // Method to get data from API using HttpClient
   getProducts(): Observable<Product[]> {
@@ -42,6 +43,24 @@ export class ProductService {
         // tap(response => {
         //   console.log('Product Detail Response:', response);
         // }),
+        map(response => response.data)
+      );
+  }
+
+  // Get Deal of the Day products (example method, adjust as needed)
+  getDealOfTheDayProducts(count?: number): Observable<Product[]> {
+    let endpoint = this.dealOfTheDayEndpoint;
+
+    if (count) {
+      endpoint = `${this.dealOfTheDayEndpoint}?count=${count}`;
+    }
+
+    return this.apiService
+      .get<ApiResponse<Product[]>>(endpoint)
+      .pipe(
+        tap(response => {
+          //console.log('Deal of the Day Response:', response);
+        }),
         map(response => response.data)
       );
   }
