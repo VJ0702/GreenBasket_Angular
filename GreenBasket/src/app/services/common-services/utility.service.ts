@@ -30,4 +30,15 @@ export class UtilityService {
     const emptyCount = 5 - filledStars - (hasHalf ? 1 : 0);
     return Array(emptyCount).fill(0);
   }
+
+  //Format price
+  formatPrice(price: number): string {
+    return `₹${price.toFixed(2)}`;
+  }
+
+  // Truncate text
+  truncateText(text: string, maxLength: number): string {
+    if (!text || text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  }
 }

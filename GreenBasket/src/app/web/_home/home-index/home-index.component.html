@@ -1,9 +1,36 @@
-<app-home-page-slider></app-home-page-slider>
-<app-home-categories></app-home-categories>
-<app-home-daily-deals></app-home-daily-deals>
-<app-home-banner-section></app-home-banner-section>
-<app-home-page-latest-arrival></app-home-page-latest-arrival>
-<app-home-offer-banner></app-home-offer-banner>
-<app-home-service-section></app-home-service-section>
-<app-home-trending-section></app-home-trending-section>
-<app-home-blog-section></app-home-blog-section>
+<div class="home-page">
+
+    <!-- Loading State -->
+    <div *ngIf="isLoadingBanners" class="loader-wrapper">
+        <div class="loader">
+            <div class="spinner"></div>
+            <p>Loading banners...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="bannerError && !isLoadingBanners" class="error-wrapper">
+        <div class="container">
+            <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fi-rr-exclamation-triangle fs-4"></i>
+                    <span>{{ bannerError }}</span>
+                </div>
+                <button class="btn btn-sm btn-outline-danger" (click)="retryLoadingBanners()">
+                    <i class="fi-rr-refresh"></i> Retry
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Slider Section - Pass banners data -->
+    <app-home-page-slider *ngIf="!isLoadingBanners && !bannerError" [banners]="sliderBanners">
+    </app-home-page-slider>
+    <app-home-categories></app-home-categories>
+    <app-home-daily-deals></app-home-daily-deals>
+    <app-home-banner-section></app-home-banner-section>
+    <app-home-page-latest-arrival></app-home-page-latest-arrival>
+    <app-home-offer-banner></app-home-offer-banner>
+    <app-home-service-section></app-home-service-section>
+    <app-home-trending-section></app-home-trending-section>
+    <app-home-blog-section></app-home-blog-section>

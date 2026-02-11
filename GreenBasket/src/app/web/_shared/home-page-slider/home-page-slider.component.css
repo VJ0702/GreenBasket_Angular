@@ -1,0 +1,72 @@
+/* Background Image for slides */
+.slider-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Ensure slide content is above background */
+.gi-slide-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* No Banners State */
+.no-banners {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-large {
+    font-size: 4rem;
+}
+
+/* Slide animation classes - matches theme */
+.slider-animation {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.slider-animation.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Different animation delays for child elements */
+.slider-animation.animate p:first-child {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.slider-animation.animate h1 {
+    animation: fadeInUp 0.8s ease-out 0.2s;
+    animation-fill-mode: both;
+}
+
+.slider-animation.animate p:not(:first-child) {
+    animation: fadeInUp 0.8s ease-out 0.3s;
+    animation-fill-mode: both;
+}
+
+.slider-animation.animate .gi-slide-btn {
+    animation: fadeInUp 0.8s ease-out 0.4s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

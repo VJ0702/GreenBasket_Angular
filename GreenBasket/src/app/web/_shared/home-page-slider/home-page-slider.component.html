@@ -1,35 +1,59 @@
-<!-- Hero Slider Start -->
-<section class="section gi-hero m-tb-40">
+<section class="section gi-hero m-tb-40" *ngIf="banners && banners.length > 0">
     <div class="container">
         <div class="gi-main-content">
-            <!-- Hero Slider Start -->
             <div class="gi-slider-content">
                 <div class="gi-main-slider">
-                    <div class="gi-slider swiper-container main-slider-nav main-slider-dot">
-                        <!-- Main slider  -->
+                    <div class="gi-slider swiper-container main-slider-nav main-slider-dot" #swiperContainer>
+
+                        <!-- Main slider -->
                         <div class="swiper-wrapper">
-                            <div class="gi-slide-item swiper-slide d-flex slide-1">
-                                <div class="gi-slide-content slider-animation">
-                                    <p>Starting at $ <b>20.00</b></p>
-                                    <h1 class="gi-slide-title">Organic & healthy vegetables</h1>
-                                    <div class="gi-slide-btn">
-                                        <a routerLink="/" class="gi-btn-1">Shop Now <i
-                                                class="fi-rr-angle-double-small-right" aria-hidden="true"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="gi-slide-item swiper-slide d-flex slide-2">
-                                <div class="gi-slide-content slider-animation">
-                                    <p>Starting at $ <b>29.99</b></p>
-                                    <h1 class="gi-slide-title">Explore fresh & juicy fruits</h1>
-                                    <div class="gi-slide-btn">
-                                        <a routerLink="/" class="gi-btn-1">Shop Now <i
-                                                class="fi-rr-angle-double-small-right" aria-hidden="true"></i></a>
+                            <div *ngFor="let banner of banners; let i = index" class="gi-slide-item swiper-slide d-flex"
+                                [ngClass]="'slide-' + (i + 1)"
+                                [ngStyle]="{'background-color': banner.backgroundColor || 'transparent'}">
+
+                                <!-- Background Image -->
+                                <picture>
+                                    <source media="(max-width: 767px)" [srcset]="getMobileImageUrl(banner)">
+                                    <img [src]="getImageUrl(banner)" [alt]="banner.imageAltText || banner.title"
+                                        class="slider-background" loading="lazy">
+                                </picture>
+
+                                <!-- Slide Content -->
+                                <div class="gi-slide-content slider-animation"
+                                    [ngStyle]="{'text-align': getTextAlignment(banner)}">
+
+                                    <!-- Price Text -->
+                                    <p *ngIf="banner.priceText" [innerHTML]="banner.priceText">
+                                        <!-- {{ banner.priceText }} -->
+                                    </p>
+
+                                    <!-- Title -->
+                                    <h1 class="gi-slide-title" [style.color]="banner.textColor || '#000'"
+                                        [innerHTML]="banner.title">
+                                    </h1>
+
+                                    <!-- Subtitle -->
+                                    <p *ngIf="banner.subTitle" [style.color]="banner.textColor || '#000'">
+                                        {{ banner.subTitle }}
+                                    </p>
+
+                                    <!-- Button -->
+                                    <div class="gi-slide-btn" *ngIf="hasButton(banner)">
+                                        <a [href]="banner.buttonUrl || '#'"
+                                            [target]="banner.openInNewTab ? '_blank' : '_self'"
+                                            [rel]="banner.openInNewTab ? 'noopener noreferrer' : ''" class="gi-btn-1">
+                                            {{ banner.buttonText }}
+                                            <i class="fi-rr-angle-double-small-right" aria-hidden="true"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Pagination -->
                         <div class="swiper-pagination swiper-pagination-white"></div>
+
+                        <!-- Navigation Buttons -->
                         <div class="swiper-buttons">
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
@@ -40,4 +64,13 @@
         </div>
     </div>
 </section>
-<!-- Hero Slider End -->
+
+<!-- No Banners Message -->
+<!-- <section class="section gi-hero m-tb-40 no-banners" *ngIf="!banners || banners.length === 0">
+    <div class="container">
+        <div class="text-center py-5">
+            <i class="fi-rr-picture icon-large text-muted"></i>
+            <p class="text-muted mt-3">No slider banners available</p>
+        </div>
+    </div>
+</section> -->
