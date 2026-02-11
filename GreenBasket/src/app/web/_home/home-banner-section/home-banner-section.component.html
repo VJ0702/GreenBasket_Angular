@@ -1,15 +1,38 @@
 <!-- Banner section -->
-<section class="gi-banner padding-tb-40 wow fadeInUp" data-wow-duration="2s">
+<section class="gi-banner padding-tb-40 wow fadeInUp" data-wow-duration="2s" *ngIf="selectedBanner">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="gi-animated-banner" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="200">
-                    <h2 class="d-none">Offers</h2>
-                    <div class="gi-bnr-detail">
+                <div class="gi-animated-banner" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="200"
+                    [ngStyle]="{
+            'background-color': selectedBanner.backgroundColor || 'transparent',
+            'background-image': 'url(' + getImageUrl(selectedBanner) + ')'
+          }">
+
+                    <h2 class="d-none">{{ selectedBanner.title }}</h2>
+
+                    <div class="gi-bnr-detail" [ngStyle]="{'text-align': getTextAlignment(selectedBanner)}">
                         <div class="gi-bnr-info">
-                            <h2>Fresh Fruits <br>Healthy Products</h2>
-                            <h3>30% off sale <span>Hurry up!!!</span></h3>
-                            <a href="shop-left-sidebar-col-3.html" class="gi-btn-2">Shop now</a>
+
+                            <!-- Title -->
+                            <h2 [style.color]="selectedBanner.textColor || '#000'" [innerHTML]="selectedBanner.title">
+                            </h2>
+
+                            <h6 *ngIf="selectedBanner.subTitle" [style.color]="selectedBanner.textColor || '#000'"
+                                [innerHTML]="selectedBanner.subTitle"></h6>
+
+                            <!-- Price Text and Subtitle -->
+                            <h3 *ngIf="selectedBanner.priceText" [innerHTML]="selectedBanner.priceText">
+                                <!-- <span *ngIf="selectedBanner.priceText">{{ selectedBanner.priceText }}</span> -->
+                                <!-- <span *ngIf="selectedBanner.subTitle">{{ selectedBanner.subTitle }}</span> -->
+                            </h3>
+
+                            <!-- Call to Action Button -->
+                            <a *ngIf="hasButton(selectedBanner)" [href]="selectedBanner.buttonUrl || '#'"
+                                [target]="selectedBanner.openInNewTab ? '_blank' : '_self'"
+                                [rel]="selectedBanner.openInNewTab ? 'noopener noreferrer' : ''" class="gi-btn-2">
+                                {{ selectedBanner.buttonText }}
+                            </a>
                         </div>
                     </div>
                 </div>

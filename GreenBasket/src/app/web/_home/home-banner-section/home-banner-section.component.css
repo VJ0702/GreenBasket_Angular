@@ -1,0 +1,16 @@
+/* Ensure banner content is above background */
+.gi-bnr-detail {
+    position: relative;
+    z-index: 1;
+}
+
+/* Additional responsive adjustments if needed */
+@media (max-width: 767px) {
+    .gi-bnr-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .gi-bnr-info h3 {
+        font-size: 1.2rem;
+    }
+}

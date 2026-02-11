@@ -21,8 +21,11 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   styleUrl: './home-index.component.css'
 })
 export class HomeIndexComponent implements OnInit {
-  // Slider Banners
+  // Banner Data
   sliderBanners: Banner[] = [];
+  midBanners: Banner[] = [];
+  offerBanners: Banner[] = [];
+  sideBanners: Banner[] = [];
 
   // Loading & Error States
   isLoadingBanners = true;
@@ -48,6 +51,8 @@ export class HomeIndexComponent implements OnInit {
 
   // Load slider banners with caching  
   loadSliderBanners(forceRefresh: boolean = false): void {
+    if (!this.isBrowser) return;
+
     this.isLoadingBanners = true;
     this.bannerError = null;
 
@@ -55,8 +60,11 @@ export class HomeIndexComponent implements OnInit {
       next: (response) => {
         if (response.success && response.data) {
           this.sliderBanners = response.data.sliderBanners || [];
-          console.log(`Loaded ${this.sliderBanners.length} slider banners`);
-        } else {
+          this.midBanners = response.data.midBanners || [];
+          this.offerBanners = response.data.offerBanners || [];
+          this.sideBanners = response.data.sideBanners || [];
+        }
+        else {
           this.bannerError = response.message || 'Failed to load banners';
         }
         this.isLoadingBanners = false;
