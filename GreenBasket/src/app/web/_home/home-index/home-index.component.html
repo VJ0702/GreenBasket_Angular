@@ -31,7 +31,7 @@
     <!-- Mid Banner Section - Pass midBanners array -->
     <app-home-banner-section *ngIf="!isLoadingBanners && !bannerError" [banners]="midBanners"></app-home-banner-section>
     <app-home-page-latest-arrival></app-home-page-latest-arrival>
-    <app-home-offer-banner></app-home-offer-banner>
+    <app-home-offer-banner *ngIf="!isLoadingBanners && !bannerError" [banners]="offerBanners"></app-home-offer-banner>
     <app-home-service-section></app-home-service-section>
     <app-home-trending-section></app-home-trending-section>
     <app-home-blog-section></app-home-blog-section>

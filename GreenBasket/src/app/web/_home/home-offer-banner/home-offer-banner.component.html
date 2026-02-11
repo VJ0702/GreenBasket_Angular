@@ -1,39 +1,38 @@
-<!-- Offer Banner Section Start -->
-<section class="gi-offer-section padding-tb-40">
+<section class="gi-offer-section padding-tb-40" *ngIf="selectedBanners && selectedBanners.length > 0">
     <div class="container">
-        <!--  Offer banners -->
         <div class="row">
-            <div class="col-md-6 wow fadeInLeft" data-wow-duration="2s">
-                <div class="gi-ofr-banners">
+            <div *ngFor="let banner of selectedBanners; let i = index" class="col-md-6" [class.wow]="true"
+                [attr.data-wow-duration]="'2s'" [ngClass]="i === 0 ? 'fadeInLeft' : 'fadeInRight'">
+
+                <div class="gi-ofr-banners" [class.m-t-767]="i > 0"
+                    [ngStyle]="{'background-color': banner.backgroundColor || 'transparent'}">
                     <div class="gi-bnr-body">
+
+                        <!-- Banner Image -->
                         <div class="gi-bnr-img">
-                            <span class="lbl">70% Off</span>
-                            <img src="images/banner/2.jpg" alt="banner">
+                            <span *ngIf="banner.priceText" class="lbl">
+                                {{ banner.priceText }}
+                            </span>
+                            <img [src]="getImageUrl(banner)" [alt]="banner.imageAltText || banner.title">
                         </div>
+
+                        <!-- Banner Details -->
                         <div class="gi-bnr-detail">
-                            <h5>Tasty Snack & Fastfood</h5>
-                            <p>The flavor of something special</p>
-                            <a href="shop-left-sidebar-col-3.html" class="gi-btn-2">Shop Now</a>
+                            <h5 [style.color]="banner.textColor || '#000'" [innerHTML]="banner.title">
+                            </h5>
+                            <p *ngIf="banner.subTitle" [style.color]="banner.textColor || '#000'"
+                                [innerHTML]="banner.subTitle">
+                            </p>
+                            <a *ngIf="hasButton(banner)" [href]="banner.buttonUrl || '#'"
+                                [target]="banner.openInNewTab ? '_blank' : '_self'"
+                                [rel]="banner.openInNewTab ? 'noopener noreferrer' : ''" class="gi-btn-2">
+                                {{ banner.buttonText }}
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 wow fadeInRight" data-wow-duration="2s">
-                <div class="gi-ofr-banners m-t-767">
-                    <div class="gi-bnr-body">
-                        <div class="gi-bnr-img">
-                            <span class="lbl">50% Off</span>
-                            <img src="images/banner/3.jpg" alt="banner">
-                        </div>
-                        <div class="gi-bnr-detail">
-                            <h5>Fresh Fruits & veggies</h5>
-                            <p>A healthy meal for every one</p>
-                            <a href="shop-left-sidebar-col-3.html" class="gi-btn-2">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </section>
-<!-- Offer section end -->
