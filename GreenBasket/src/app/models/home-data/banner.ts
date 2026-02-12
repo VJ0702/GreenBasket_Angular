@@ -21,3 +21,15 @@ export interface HomeBannersData {
     sideBanners: Banner[];
     offerBanners: Banner[];
 }
+
+export enum BannerType {
+    HomeSliderBanner = 'HomeSliderBanner',
+    HomeMidBanner = 'HomeMidBanner',
+    HomeOfferBanner = 'HomeOfferBanner',
+    HomeSideBanner = 'HomeSideBanner'
+}
+
+export interface BannerCache {
+    data: Banner[];
+    timestamp: number;
+}
