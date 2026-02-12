@@ -8,6 +8,8 @@ import { Category } from '../../../models/category-models/category-search-reques
 import { AuthService } from '../../../services/auth-service/auth.service';
 import { UserProfile } from '../../../models/auth-models/login-request-model';
 import { ToastService } from '../../../services/common-services/toast.service';
+import { HeaderConfig, SiteConfig } from '../../../models/home-data/site-config';
+import { SiteConfigService } from '../../../services/home-data/site-config.service';
 
 @Component({
   selector: 'app-external-header',
@@ -24,15 +26,40 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   userDisplayName: string = '';
   private destroy$ = new Subject<void>();
 
+  // Configuration properties with defaults
+  siteName: string = 'GreenBasket';
+  siteTagline: string = "India's Largest Organic Fruits & Vegs Store";
+  logoUrl: string = '';
+  phone1: string = '';
+  phone2: string = '';
+  email: string = '';
+  showSearchBar: boolean = true;
+  showCartIcon: boolean = true;
+  showWishlistIcon: boolean = true;
+
   constructor(private categoryService: CategoryService
     , public authService: AuthService
     , private cdr: ChangeDetectorRef
     , private toastService: ToastService
-  ) { }
+    , private siteConfigService: SiteConfigService
+  ) {
+    // Get config synchronously (instantly available from localStorage or default)
+    this.updateConfigData();
+  }
 
   ngOnInit(): void {
     this.fetchCategories();
     this.subscribeToUser();
+
+    // Subscribe to config updates (background refresh)
+    this.siteConfigService.config$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(config => {
+        if (config) {
+          this.updateConfigData();
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -80,5 +107,21 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   toggleMobileMenu(): void {
     console.log('Toggle mobile menu');
     // Implement mobile menu toggle logic
+  }
+
+  private updateConfigData(): void {
+    const config = this.siteConfigService.getCurrentConfig();
+
+    if (config) {
+      this.showSearchBar = config.header?.showSearchBar ?? true;
+      this.showCartIcon = config.header?.showCartIcon ?? true;
+      this.showWishlistIcon = config.header?.showWishlistIcon ?? true;
+      this.siteName = config.siteName || 'GreenBasket';
+      this.siteTagline = config.siteTagline || config.header?.tagline || "India's Largest Organic Fruits & Vegs Store";
+      this.logoUrl = config.logoUrl || '';
+      this.phone1 = config.phone1 || '';
+      this.phone2 = config.phone2 || '';
+      this.email = config.email || '';
+    }
   }
 }

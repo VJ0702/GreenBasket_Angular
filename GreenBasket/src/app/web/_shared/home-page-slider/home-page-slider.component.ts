@@ -111,8 +111,6 @@ export class HomePageSliderComponent implements OnInit, AfterViewInit, OnDestroy
           }
         }
       });
-
-      console.log('Swiper initialized successfully');
     } catch (error) {
       console.error('Error initializing Swiper:', error);
     }
