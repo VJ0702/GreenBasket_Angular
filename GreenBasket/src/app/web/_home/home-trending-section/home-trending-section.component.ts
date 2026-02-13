@@ -26,6 +26,14 @@ export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDe
   topRatedItems: Product[] = [];
   topSellingItems: Product[] = [];
 
+  // Pagination indexes for each section
+  trendingCurrentIndex = 0;
+  topRatedCurrentIndex = 0;
+  topSellingCurrentIndex = 0;
+
+  // Number of products to show at a time
+  readonly productsPerPage = 3;
+
   isLoadingProducts = true;
   productsError: string | null = null;
 
@@ -62,14 +70,10 @@ export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDe
 
     this.productService.getHomepageProducts(9, 9, 9, forceRefresh).subscribe({
       next: (response) => {
-        console.log('Homepage products response:', response);
         if (response.success && response.data) {
           this.trendingItems = response.data.trendingItems || [];
-          console.log('✅ Successfully loaded homepage trending products', this.trendingItems);
           this.topRatedItems = response.data.topRated || [];
-          console.log('✅ Successfully loaded homepage top rated products', this.topRatedItems);
           this.topSellingItems = response.data.topSelling || [];
-          console.log('✅ Successfully loaded homepage top selling products', this.topSellingItems);
         } else {
           this.productsError = response.message || 'Failed to load products';
         }
@@ -205,13 +209,13 @@ export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDe
   }
 
   // ========== HELPERS ==========
-  getProductUrl(product: Product): string {
-    return `/product/${product.urlHandle}`;
-  }
+  // getProductUrl(product: Product): string {
+  //   return `/product/${product.urlHandle}`;
+  // }
 
-  getCategoryUrl(category: any): string {
-    return `/category/${category.urlHandle}`;
-  }
+  // getCategoryUrl(category: any): string {
+  //   return `/category/${category.urlHandle}`;
+  // }
 
   formatPrice(price: number): string {
     return `$${price.toFixed(2)}`;
@@ -250,6 +254,119 @@ export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDe
       grouped.push(products.slice(i, i + 3));
     }
     return grouped;
+  }
+
+  /**
+   * Retry loading products after error
+   */
+  retryLoadProducts(): void {
+    this.loadHomepageProducts(true);
+  }
+
+  /**
+   * Add product to cart
+   */
+  addToCart(product: Product): void {
+    // TODO: Implement cart service integration
+    console.log('Adding to cart:', product);
+    // Example: this.cartService.addToCart(product, 1);
+  }
+
+  // ========== PAGINATION NAVIGATION ==========
+
+  /**
+   * Get visible products for a section based on current index
+   */
+  getVisibleProducts(section: 'trending' | 'topRated' | 'topSelling'): Product[] {
+    let items: Product[];
+    let currentIndex: number;
+
+    switch (section) {
+      case 'trending':
+        items = this.trendingItems;
+        currentIndex = this.trendingCurrentIndex;
+        break;
+      case 'topRated':
+        items = this.topRatedItems;
+        currentIndex = this.topRatedCurrentIndex;
+        break;
+      case 'topSelling':
+        items = this.topSellingItems;
+        currentIndex = this.topSellingCurrentIndex;
+        break;
+    }
+
+    const startIndex = currentIndex * this.productsPerPage;
+    return items.slice(startIndex, startIndex + this.productsPerPage);
+  }
+
+  /**
+   * Get total number of slides for a section
+   */
+  getTotalSlides(section: 'trending' | 'topRated' | 'topSelling'): number {
+    let items: Product[];
+
+    switch (section) {
+      case 'trending':
+        items = this.trendingItems;
+        break;
+      case 'topRated':
+        items = this.topRatedItems;
+        break;
+      case 'topSelling':
+        items = this.topSellingItems;
+        break;
+    }
+
+    return Math.ceil(items.length / this.productsPerPage);
+  }
+
+  /**
+   * Navigate to next slide
+   */
+  nextSlide(section: 'trending' | 'topRated' | 'topSelling'): void {
+    const totalSlides = this.getTotalSlides(section);
+
+    switch (section) {
+      case 'trending':
+        if (this.trendingCurrentIndex < totalSlides - 1) {
+          this.trendingCurrentIndex++;
+        }
+        break;
+      case 'topRated':
+        if (this.topRatedCurrentIndex < totalSlides - 1) {
+          this.topRatedCurrentIndex++;
+        }
+        break;
+      case 'topSelling':
+        if (this.topSellingCurrentIndex < totalSlides - 1) {
+          this.topSellingCurrentIndex++;
+        }
+        break;
+    }
+  }
+
+  /**
+   * Navigate to previous slide
+   */
+  prevSlide(section: 'trending' | 'topRated' | 'topSelling'): void {
+    switch (section) {
+      case 'trending':
+        if (this.trendingCurrentIndex > 0) {
+          this.trendingCurrentIndex--;
+        }
+        break;
+      case 'topRated':
+        if (this.topRatedCurrentIndex > 0) {
+          this.topRatedCurrentIndex--;
+        }
+        break;
+      case 'topSelling':
+        if (this.topSellingCurrentIndex > 0) {
+          this.topSellingCurrentIndex--;
+        }
+        break;
+    }
   }
 
 }
