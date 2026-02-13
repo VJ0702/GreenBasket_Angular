@@ -3,18 +3,26 @@
     <div class="container">
         <div class="row m-b-minus-15px">
             <div class="col-xl-12 border-content-color">
-                <div class="gi-category-block owl-carousel">
-                    <div *ngFor="let item of categories; let i = index" class="gi-cat-box gi-cat-box-{{(i % 6) + 1}}">
-                        <div class="gi-cat-icon">
-                            <span *ngIf="item.discountRate" class="gi-lbl">{{item.discountRate}}%</span>
-                            <i class="{{item.iconClass}}"></i>
-                            <div class="gi-cat-detail">
-                                <a [routerLink]="['/category', item.urlHandle]">
-                                    <h4 class="gi-cat-title">{{item.name}}</h4>
-                                </a>
-                                <p class="items">{{item.productCount}} Items</p>
+                <!-- Scrollable container -->
+                <div class="gi-category-scroll-wrapper" #scrollContainer (mousedown)="onMouseDown($event)"
+                    (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()" (mouseleave)="onMouseUp()">
+                    <div class="gi-category-block">
+                        <!-- Triple the categories for infinite scroll effect -->
+                        <ng-container *ngFor="let repeat of [0, 1, 2]">
+                            <div *ngFor="let item of categories; let i = index"
+                                class="gi-cat-box gi-cat-box-{{(i % 6) + 1}}">
+                                <div class="gi-cat-icon">
+                                    <span *ngIf="item.discountRate" class="gi-lbl">{{item.discountRate}}%</span>
+                                    <i class="{{getIconClass(item.iconClass)}}"></i>
+                                    <div class="gi-cat-detail">
+                                        <a [routerLink]="['/category', item.urlHandle]">
+                                            <h4 class="gi-cat-title">{{item.name}}</h4>
+                                        </a>
+                                        <p class="items">{{item.productCount}} Items</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </ng-container>
                     </div>
                 </div>
             </div>
