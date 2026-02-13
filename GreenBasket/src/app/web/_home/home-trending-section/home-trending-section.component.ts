@@ -218,7 +218,7 @@ export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDe
   // }
 
   formatPrice(price: number): string {
-    return `$${price.toFixed(2)}`;
+    return `₹${price.toFixed(2)}`;
   }
 
   hasOldPrice(product: Product): boolean {
