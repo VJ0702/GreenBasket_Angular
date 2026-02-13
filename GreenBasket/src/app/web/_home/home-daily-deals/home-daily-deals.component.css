@@ -1,0 +1,161 @@
+/* Day of Deal - Horizontal Scroll Slider */
+
+.gi-deal-block {
+    position: relative;
+    margin: 0 -12px;
+}
+
+.gi-deal-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px;
+    margin: 0 -12px;
+
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.gi-deal-scroll-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.gi-deal-scroll-container:active {
+    cursor: grabbing;
+}
+
+.gi-deal-scroll-track {
+    display: flex;
+    gap: 24px;
+    padding-right: 50px;
+    /* Extra space for partial 5th product visibility */
+}
+
+.gi-deal-product-item {
+    flex: 0 0 calc((100% - 96px) / 4.5);
+    /* Show ~4.5 products to hint scrolling */
+    min-width: 220px;
+    max-width: 300px;
+}
+
+/* Timer styling */
+.dealend-timer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #444;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.dealend-timer .days,
+.dealend-timer .hours,
+.dealend-timer .minutes,
+.dealend-timer .seconds {
+    background: #5caf90;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+}
+
+.dealend-timer .days {
+    background: #e74c3c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1199px) {
+    .gi-deal-product-item {
+        flex: 0 0 calc((100% - 72px) / 3.5);
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 991px) {
+    .gi-deal-product-item {
+        flex: 0 0 calc((100% - 48px) / 2.5);
+        min-width: 180px;
+    }
+
+    .dealend-timer {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .dealend-timer .days,
+    .dealend-timer .hours,
+    .dealend-timer .minutes,
+    .dealend-timer .seconds {
+        padding: 4px 8px;
+        min-width: 35px;
+    }
+}
+
+@media (max-width: 767px) {
+    .gi-deal-scroll-container {
+        scroll-snap-type: x mandatory;
+    }
+
+    .gi-deal-scroll-track {
+        gap: 20px;
+        padding: 0 calc(50% - 150px);
+        /* Center first/last items */
+    }
+
+    .gi-deal-product-item {
+        flex: 0 0 300px;
+        /* Fixed width for 1 product */
+        max-width: 300px;
+        min-width: 280px;
+        scroll-snap-align: center;
+    }
+
+    .section-title {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .dealend-timer {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .gi-deal-scroll-track {
+        gap: 15px;
+        padding: 0 calc(50% - 130px);
+    }
+
+    .gi-deal-product-item {
+        flex: 0 0 260px;
+        max-width: 260px;
+        min-width: 240px;
+    }
+
+    .dealend-timer {
+        font-size: 12px;
+        padding: 6px 12px;
+        gap: 3px;
+    }
+
+    .dealend-timer .days,
+    .dealend-timer .hours,
+    .dealend-timer .minutes,
+    .dealend-timer .seconds {
+        padding: 3px 6px;
+        min-width: 28px;
+        font-size: 11px;
+    }
+}

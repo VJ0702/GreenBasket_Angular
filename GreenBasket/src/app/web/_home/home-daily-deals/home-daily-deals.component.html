@@ -6,10 +6,15 @@
                 <div class="gi-products">
                     <div class="section-title" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="200">
                         <div class="section-detail">
-                            <h2 class="gi-title">Day of the <span>deal</span></h2>
+                            <h2 class="gi-title">Day Of The <span>Deal</span></h2>
                             <p>Don't wait. The time will never be just right.</p>
                         </div>
-                        <div id="dealend" class="dealend-timer"></div>
+                        <div class="dealend-timer">
+                            <span class="days">{{ timerDays }}</span> Days
+                            <span class="hours">{{ timerHours }}</span> :
+                            <span class="minutes">{{ timerMinutes }}</span> :
+                            <span class="seconds">{{ timerSeconds }}</span>
+                        </div>
                     </div>
 
                     <!-- Loading State -->
@@ -22,71 +27,18 @@
                         {{ error }}
                     </div>
 
-                    <!-- Products List -->
-                    <div *ngIf="!loading && !error && products.length > 0" class="gi-deal-block m-minus-lr-12"
-                        data-aos="fade-up" data-aos-duration="2000" data-aos-delay="300">
-                        <div class="deal-slick-carousel gi-product-slider" style="display: flex; gap: 20px;">
-                            <div class="col-md-4 col-sm-6 col-xs-6 gi-col-5 gi-product-box"
-                                *ngFor="let product of products">
-                                <app-product-listing [product]="product"></app-product-listing>
-                            </div>
-                            <!-- <div *ngFor="let product of products" class="gi-product-content">
-                                <div class="gi-product-inner">
-                                    <div class="gi-pro-image-outer">
-                                        <div class="gi-pro-image">
-                                            <a [href]="'/product/' + product.urlHandle" class="image">
-                                                <span *ngIf="product.categories && product.categories.length > 0"
-                                                    class="label veg">
-                                                    <span class="dot"></span>
-                                                </span>
-                                                <img class="main-image"
-                                                    [src]="utilityService.getFullImageUrl(product.primaryImageUrl)"
-                                                    [alt]="product.name">
-                                                <img class="hover-image"
-                                                    [src]="utilityService.getFullImageUrl(product.primaryImageUrl)"
-                                                    [alt]="product.name">
-                                            </a>
-                                            <span class="flags">
-                                                <span class="sale">Sale</span>
-                                            </span>
-                                            <div class="gi-pro-actions">
-                                                <a class="gi-btn-group wishlist" title="Wishlist"><i
-                                                        class="fi-rr-heart"></i></a>
-                                                <a href="#" class="gi-btn-group quickview" data-link-action="quickview"
-                                                    title="Quick view" data-bs-toggle="modal"
-                                                    data-bs-target="#gi_quickview_modal"><i class="fi-rr-eye"></i></a>
-                                                <a href="javascript:void(0)" class="gi-btn-group compare"
-                                                    title="Compare"><i class="fi fi-rr-arrows-repeat"></i></a>
-                                                <a href="javascript:void(0)" title="Add To Cart"
-                                                    class="gi-btn-group add-to-cart"><i
-                                                        class="fi-rr-shopping-basket"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="gi-pro-content">
-                                        <a *ngIf="product.categories && product.categories.length > 0"
-                                            [href]="'/shop/' + product.categories[0].urlHandle">
-                                            <h6 class="gi-pro-stitle">{{ product.categories[0].name }}</h6>
-                                        </a>
-                                        <h5 class="gi-pro-title"><a [href]="'/product/' + product.urlHandle">
-                                                {{ product.name }}</a></h5>
-                                        <div class="gi-pro-rat-price">
-                                            <span class="gi-pro-rating">
-                                                <i *ngFor="let i of [1,2,3,4,5]"
-                                                    [ngClass]="i <= product.rating.averageRating ? 'gicon gi-star fill' : 'gicon gi-star'"></i>
-                                            </span>
-                                            <span class="gi-price">
-                                                <span class="new-price">${{ product.price | number:'1.2-2' }}</span>
-                                                <span *ngIf="product.oldPrice" class="old-price">${{ product.oldPrice |
-                                                    number:'1.2-2' }}</span>
-                                            </span>
-                                        </div>
-                                    </div>
+                    <!-- Products Scroll Container -->
+                    <div *ngIf="!loading && !error && products.length > 0" class="gi-deal-block" data-aos="fade-up"
+                        data-aos-duration="2000" data-aos-delay="300">
+                        <div class="gi-deal-scroll-container" #scrollContainer (mousedown)="onMouseDown($event)"
+                            (mouseleave)="onMouseLeave()" (mouseup)="onMouseUp()" (mousemove)="onMouseMove($event)">
+                            <div class="gi-deal-scroll-track">
+                                <div class="gi-deal-product-item" *ngFor="let product of products">
+                                    <app-product-listing [product]="product"></app-product-listing>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
-
                     <!-- No Products State -->
                     <div *ngIf="!loading && !error && products.length === 0" class="alert alert-info">
                         No products available at the moment.
@@ -96,4 +48,4 @@
         </div>
     </div>
 </section>
-<!--  Day Of The Deal Start End -->
+<!--  Day Of The Deal End -->
