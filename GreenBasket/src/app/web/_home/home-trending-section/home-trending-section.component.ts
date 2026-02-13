@@ -1,28 +1,132 @@
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { BannerService } from '../../../services/home-data/banner.service';
 import { UtilityService } from '../../../services/common-services/utility.service';
 import { Banner } from '../../../models/home-data/banner';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ProductService } from '../../../services/product-service/product.service';
+import { Product } from '../../../models/product-models/product-details-request';
+import { RouterModule } from '@angular/router';
+
+// ✅ Declare jQuery
+declare var $: any;
 
 @Component({
   selector: 'app-home-trending-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home-trending-section.component.html',
   styleUrl: './home-trending-section.component.css'
 })
-export class HomeTrendingSectionComponent implements OnDestroy {
+export class HomeTrendingSectionComponent implements OnInit, AfterViewInit, OnDestroy {
   // Single banner object (not array)
   selectedBanner: Banner | null = null;
   banners: Banner[] = [];
 
+  trendingItems: Product[] = [];
+  topRatedItems: Product[] = [];
+  topSellingItems: Product[] = [];
+
+  isLoadingProducts = true;
+  productsError: string | null = null;
+
+  private isBrowser: boolean;
+  private carouselsInitialized = false;
+
   constructor(private bannerService: BannerService,
-    public utilityService: UtilityService) { }
+    public utilityService: UtilityService,
+    private productService: ProductService,
+    @Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     this.fetchSideBanner();
+    if (this.isBrowser) {
+      this.loadHomepageProducts();
+    }
   }
 
+  ngAfterViewInit(): void {
+    // Carousel init happens after products load
+  }
+
+  ngOnDestroy(): void {
+    if (this.isBrowser && typeof $ !== 'undefined') {
+      $('.gi-trending-slider, .gi-rated-slider, .gi-selling-slider').trigger('destroy.owl.carousel');
+    }
+  }
+
+  private loadHomepageProducts(forceRefresh: boolean = false): void {
+    this.isLoadingProducts = true;
+    this.productsError = null;
+
+    this.productService.getHomepageProducts(9, 9, 9, forceRefresh).subscribe({
+      next: (response) => {
+        console.log('Homepage products response:', response);
+        if (response.success && response.data) {
+          this.trendingItems = response.data.trendingItems || [];
+          console.log('✅ Successfully loaded homepage trending products', this.trendingItems);
+          this.topRatedItems = response.data.topRated || [];
+          console.log('✅ Successfully loaded homepage top rated products', this.topRatedItems);
+          this.topSellingItems = response.data.topSelling || [];
+          console.log('✅ Successfully loaded homepage top selling products', this.topSellingItems);
+        } else {
+          this.productsError = response.message || 'Failed to load products';
+        }
+        this.isLoadingProducts = false;
+
+        // Init carousels after data is ready
+        // if (this.isBrowser) {
+        //   setTimeout(() => this.initializeCarousels(), 100);
+        // }
+      },
+      error: (err) => {
+        this.productsError = 'Failed to load products';
+        this.isLoadingProducts = false;
+        console.error('Error loading homepage products:', err);
+      }
+    });
+  }
+
+  // ========== OWL CAROUSEL ==========
+  private initializeCarousels(): void {
+    if (this.carouselsInitialized || typeof $ === 'undefined' || typeof $.fn.owlCarousel === 'undefined') {
+      return;
+    }
+
+    try {
+      const commonConfig = {
+        loop: false,
+        margin: 0,
+        nav: true,
+        dots: false,
+        navText: ['<i class="fi-rr-angle-small-left"></i>', '<i class="fi-rr-angle-small-right"></i>'],
+        items: 1,
+        autoHeight: false
+      };
+
+      const $trending = $('.gi-trending-slider');
+      const $rated = $('.gi-rated-slider');
+      const $selling = $('.gi-selling-slider');
+
+      if ($trending.length && !$trending.hasClass('owl-loaded')) {
+        $trending.owlCarousel(commonConfig);
+      }
+
+      if ($rated.length && !$rated.hasClass('owl-loaded')) {
+        $rated.owlCarousel(commonConfig);
+      }
+
+      if ($selling.length && !$selling.hasClass('owl-loaded')) {
+        $selling.owlCarousel(commonConfig);
+      }
+
+      this.carouselsInitialized = true;
+      console.log('✅ Owl Carousels initialized');
+    } catch (error) {
+      console.error('❌ Error initializing Owl Carousels:', error);
+    }
+  }
 
   fetchSideBanner(): void {
 
@@ -100,6 +204,52 @@ export class HomeTrendingSectionComponent implements OnDestroy {
     return !!banner.buttonText;
   }
 
-  ngOnDestroy(): void {
+  // ========== HELPERS ==========
+  getProductUrl(product: Product): string {
+    return `/product/${product.urlHandle}`;
   }
+
+  getCategoryUrl(category: any): string {
+    return `/category/${category.urlHandle}`;
+  }
+
+  formatPrice(price: number): string {
+    return `$${price.toFixed(2)}`;
+  }
+
+  hasOldPrice(product: Product): boolean {
+    return product.oldPrice !== null && product.oldPrice > product.price;
+  }
+
+  getDiscountPercent(product: Product): number {
+    if (!product.oldPrice || product.oldPrice <= product.price) return 0;
+    return Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
+  }
+
+  /**
+ * Group products into sets of 3 for carousel slides
+ */
+  getTrendingGroups(): Product[][] {
+    return this.groupProducts(this.trendingItems);
+  }
+
+  getTopRatedGroups(): Product[][] {
+    return this.groupProducts(this.topRatedItems);
+  }
+
+  getTopSellingGroups(): Product[][] {
+    return this.groupProducts(this.topSellingItems);
+  }
+
+  /**
+   * Helper method to group products into chunks of 3
+   */
+  private groupProducts(products: Product[]): Product[][] {
+    const grouped: Product[][] = [];
+    for (let i = 0; i < products.length; i += 3) {
+      grouped.push(products.slice(i, i + 3));
+    }
+    return grouped;
+  }
+
 }

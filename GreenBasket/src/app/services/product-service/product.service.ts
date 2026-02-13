@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { ApiService } from '../common-services/api.service';
-import { Product, ProductDetail, ProductDetailsRequest, ProductResponse } from '../../models/product-models/product-details-request';
+import { HomepageProductsResponse, Product, ProductDetail, ProductDetailsRequest, ProductResponse } from '../../models/product-models/product-details-request';
 import { ApiResponse } from '../../models/common/api-response.model';
 
 @Injectable({
@@ -16,6 +16,12 @@ export class ProductService {
   private productDetailEndpoint = 'api/Product/productDetail';
   private productDetailBySlugEndpoint = 'api/Product/detail-by-slug';
   private dealOfTheDayEndpoint = 'api/Product/deal-of-the-day';
+  private homepageProductsEndpoint = 'api/Product/homepage-products';
+
+  // Cache: 5 minutes
+  private homepageCache = new Map<string, { data: HomepageProductsResponse; timestamp: number }>();
+  private cacheExpiryMs = 5 * 60 * 1000;
+
 
   // // Method to get data from API using HttpClient
   getProducts(): Observable<Product[]> {
@@ -63,6 +69,54 @@ export class ProductService {
         }),
         map(response => response.data)
       );
+  }
+
+  //Get homepage products (trending/topRated/topSelling) with caching   
+  getHomepageProducts(
+    trendingCount?: number,
+    topRatedCount?: number,
+    topSellingCount?: number,
+    forceRefresh: boolean = false
+  ): Observable<ApiResponse<HomepageProductsResponse>> {
+    const key = `t:${trendingCount ?? 'all'}|r:${topRatedCount ?? 'all'}|s:${topSellingCount ?? 'all'}`;
+    const now = Date.now();
+
+    if (!forceRefresh) {
+      const cached = this.homepageCache.get(key);
+      if (cached && (now - cached.timestamp) < this.cacheExpiryMs) {
+        return of({
+          success: true,
+          statusCode: 200,
+          message: 'Data from cache',
+          errorCode: '',
+          description: '',
+          data: cached.data
+        });
+      }
+    }
+
+    const params: string[] = [];
+    if (trendingCount && trendingCount > 0) params.push(`trendingCount=${trendingCount}`);
+    if (topRatedCount && topRatedCount > 0) params.push(`topRatedCount=${topRatedCount}`);
+    if (topSellingCount && topSellingCount > 0) params.push(`topSellingCount=${topSellingCount}`);
+
+    const url = params.length
+      ? `${this.homepageProductsEndpoint}?${params.join('&')}`
+      : this.homepageProductsEndpoint;
+
+    return this.apiService.get<ApiResponse<HomepageProductsResponse>>(url).pipe(
+      tap(response => {
+        if (response.success && response.data) {
+          this.homepageCache.set(key, { data: response.data, timestamp: now });
+        }
+      }),
+      shareReplay(1)
+    );
+  }
+
+  // Optional: clear cache for homepage
+  clearHomepageCache(): void {
+    this.homepageCache.clear();
   }
 
 }

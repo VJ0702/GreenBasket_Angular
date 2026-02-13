@@ -78,14 +78,14 @@ export class SiteConfigService {
 
         // Use cached data immediately (even if expired, we'll update in background)
         this.configSubject.next(config);
-        console.log('💾 Using cached site configuration from localStorage');
+        //console.log('💾 Using cached site configuration from localStorage');
 
         // Check if cache is still valid
         if (now - cacheTime < this.CACHE_DURATION) {
-          console.log('✅ Cache is still valid (within 1 hour)');
+          //console.log('✅ Cache is still valid (within 1 hour)');
           return;
         } else {
-          console.log('⏰ Cache expired, will fetch fresh data in background');
+          //console.log('⏰ Cache expired, will fetch fresh data in background');
         }
       } else {
         console.log('📭 No cached configuration found');
@@ -111,13 +111,13 @@ export class SiteConfigService {
 
       // Only fetch if cache is expired or doesn't exist
       if (!timestamp || (now - parseInt(timestamp, 10) >= this.CACHE_DURATION)) {
-        console.log('🔄 Fetching fresh configuration in background...');
+        //console.log('🔄 Fetching fresh configuration in background...');
         this.loadConfig(true).subscribe({
           next: () => console.log('✅ Site configuration updated in background'),
           error: (err) => console.error('❌ Failed to update site configuration:', err)
         });
       } else {
-        console.log('⏭️ Skipping background fetch, cache is still valid');
+        //console.log('⏭️ Skipping background fetch, cache is still valid');
       }
     } catch (error) {
       console.error('❌ Error in background config load:', error);
@@ -187,7 +187,7 @@ export class SiteConfigService {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
       localStorage.setItem(this.STORAGE_TIMESTAMP_KEY, Date.now().toString());
-      console.log('💾 Site configuration saved to localStorage');
+      //console.log('💾 Site configuration saved to localStorage');
     } catch (error) {
       console.error('❌ Error saving config to localStorage:', error);
     }
