@@ -43,3 +43,159 @@
         max-width: 100px;
     }
 }
+
+/* ==============================
+   Nav Menu Categories - Cascade Dropdown
+   ============================== */
+
+/* Custom mega menu for nav Categories only */
+.gi-nav-mega-menu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    border: 1px solid #eee;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+    padding: 0 !important;
+}
+
+.gi-main-menu ul li.dropdown:hover .gi-nav-mega-menu {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 0;
+}
+
+.gi-nav-cascade-menu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.gi-nav-cascade-col {
+    min-width: 200px;
+    max-width: 220px;
+    background: #fff;
+    border-right: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+.gi-nav-cascade-col:last-child {
+    border-right: none;
+}
+
+.gi-nav-cascade-col:nth-child(2) {
+    background: #fafafa;
+}
+
+.gi-nav-cascade-col:nth-child(3) {
+    background: #f5f5f5;
+}
+
+.gi-nav-cascade-list {
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.gi-nav-cascade-item {
+    position: relative;
+    width: 100%;
+}
+
+.gi-nav-cascade-item a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: all 0.15s ease;
+    border-left: 3px solid transparent;
+    height: auto;
+    line-height: 1.4;
+}
+
+.gi-nav-cascade-item a span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gi-nav-cascade-item a:hover {
+    background-color: #e8f5ef;
+    color: #5caf90;
+    border-left-color: #5caf90;
+}
+
+.gi-nav-cascade-item.active>a {
+    background-color: #e8f5ef;
+    color: #5caf90;
+    border-left-color: #5caf90;
+    font-weight: 500;
+}
+
+.gi-nav-cascade-item a .arrow-icon {
+    font-size: 11px;
+    color: #999;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.gi-nav-cascade-item.active a .arrow-icon,
+.gi-nav-cascade-item a:hover .arrow-icon {
+    color: #5caf90;
+}
+
+/* Scrollbar styling */
+.gi-nav-cascade-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.gi-nav-cascade-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.gi-nav-cascade-list::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+}
+
+.gi-nav-cascade-list::-webkit-scrollbar-thumb:hover {
+    background: #5caf90;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gi-nav-cascade-menu {
+        flex-direction: column;
+        max-width: 280px;
+    }
+
+    .gi-nav-cascade-col {
+        min-width: 100%;
+        max-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .gi-nav-cascade-col:last-child {
+        border-bottom: none;
+    }
+
+    .gi-nav-cascade-list {
+        max-height: 200px;
+    }
+}

@@ -27,6 +27,10 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   userDisplayName: string = '';
   private destroy$ = new Subject<void>();
 
+  // Mega menu selection tracking
+  selectedCategoryIndex: number = 0;
+  selectedChildIndex: number = 0;
+
   // Configuration properties with defaults
   siteName: string = 'GreenBasket';
   siteTagline: string = "India's Largest Organic Fruits & Vegs Store";
@@ -110,6 +114,42 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
   toggleMobileMenu(): void {
     console.log('Toggle mobile menu');
     // Implement mobile menu toggle logic
+  }
+
+  // Mega menu selection methods
+  selectCategory(index: number): void {
+    this.selectedCategoryIndex = index;
+    this.selectedChildIndex = 0; // Reset child selection when parent changes
+  }
+
+  selectChild(index: number): void {
+    this.selectedChildIndex = index;
+  }
+
+  resetMenuSelection(): void {
+    this.selectedCategoryIndex = 0;
+    this.selectedChildIndex = 0;
+  }
+
+  // Safe getters for selected categories
+  get selectedCategory(): Category | null {
+    return this.categories[this.selectedCategoryIndex] || null;
+  }
+
+  get selectedCategoryChildren(): Category[] {
+    return this.selectedCategory?.subCategories || [];
+  }
+
+  get selectedChild(): Category | null {
+    return this.selectedCategoryChildren[this.selectedChildIndex] || null;
+  }
+
+  get selectedChildSubCategories(): Category[] {
+    return this.selectedChild?.subCategories || [];
+  }
+
+  hasSubCategories(category: Category | null): boolean {
+    return !!(category?.subCategories && category.subCategories.length > 0);
   }
 
   private updateConfigData(): void {
