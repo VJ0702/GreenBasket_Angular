@@ -117,3 +117,9 @@ export interface ProductSpecification {
     displayOrder: number;
     isVisible: boolean;
 }
+
+export interface HomepageProductsResponse {
+    trendingItems: Product[];
+    topRated: Product[];
+    topSelling: Product[];
+}
