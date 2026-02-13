@@ -21,6 +21,7 @@ import { SiteConfigService } from '../../../services/home-data/site-config.servi
 export class ExternalHeaderComponent implements OnInit, OnDestroy {
   //private getCategorySubscription?: Subscription;
   categories: Category[] = [];
+  mainCategories: Category[] = [];
   currentUser: UserProfile | null = null;
   isLoggedIn: boolean = false;
   userDisplayName: string = '';
@@ -72,7 +73,9 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          this.categories = data;
+          this.mainCategories = data.filter(
+            c => c.iconClass && c.iconClass.trim() !== '');
+          this.categories = data; // For now, main categories are the ones we show in header
           this.cdr.markForCheck();
         },
         error: (error) => {
