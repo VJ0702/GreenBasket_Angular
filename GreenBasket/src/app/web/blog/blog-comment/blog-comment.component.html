@@ -1,1 +1,87 @@
-<p>blog-comment works!</p>
+<!-- Comments Section -->
+<div class="gi-blog-comments m-t-80">
+    <!-- Comments Preview -->
+    <div class="gi-blog-cmt-preview">
+        <div class="gi-blog-comment-wrapper">
+            <h4 class="gi-blog-dgi-title">Comments : {{commentCount | number:'2.0-0'}}</h4>
+
+            <!-- No Comments Message -->
+            <div *ngIf="comments.length === 0" class="no-comments mt-35">
+                <p>No comments yet. Be the first to comment!</p>
+            </div>
+
+            <!-- Comments List -->
+            <div class="gi-single-comment-wrapper mt-35" *ngFor="let comment of comments">
+                <div class="gi-blog-user-img">
+                    <img [src]="comment.avatarUrl || 'images/user/1.jpg'" alt="User avatar">
+                </div>
+                <div class="gi-blog-comment-content">
+                    <h5>{{comment.customerName}}</h5>
+                    <span>{{utilityService.formatDate(comment.createdOn)}}</span>
+                    <p>{{comment.commentText}}</p>
+                    <div class="gi-blog-details-btn">
+                        <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
+                    </div>
+                </div>
+
+                <!-- Nested Replies -->
+                <div class="gi-comment-replies" *ngIf="comment.replies && comment.replies.length > 0">
+                    <div class="gi-single-comment-wrapper gi-reply-comment" *ngFor="let reply of comment.replies">
+                        <div class="gi-blog-user-img">
+                            <img [src]="reply.avatarUrl || 'assets/images/user/default-avatar.png'" alt="User avatar">
+                        </div>
+                        <div class="gi-blog-comment-content">
+                            <h5>{{reply.customerName}}</h5>
+                            <span>{{utilityService.formatDate(reply.createdOn)}}</span>
+                            <p>{{reply.commentText}}</p>
+                            <div class="gi-blog-details-btn">
+                                <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Form -->
+    <div class="gi-blog-cmt-form">
+        <div class="gi-blog-reply-wrapper mt-50">
+            <h4 class="gi-blog-dgi-title">
+                <span *ngIf="!replyingToCommentId">Leave A Reply</span>
+                <span *ngIf="replyingToCommentId">
+                    Replying to {{replyingToUserName}}
+                    <a href="javascript:void(0)" (click)="cancelReply()" class="cancel-reply">
+                        (Cancel)
+                    </a>
+                </span>
+            </h4>
+            <form class="gi-blog-form" (ngSubmit)="submitComment()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="gi-leave-form">
+                            <input type="text" placeholder="Full Name" [(ngModel)]="customerName" name="customerName"
+                                [readonly]="isLoggedIn" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="gi-leave-form">
+                            <input type="email" placeholder="Email Address" [(ngModel)]="customerEmail"
+                                name="customerEmail" [readonly]="isLoggedIn" required>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="gi-text-leave">
+                            <textarea placeholder="Write your comment here..." [(ngModel)]="commentText"
+                                name="commentText" required></textarea>
+                            <button type="submit" class="gi-btn-2" [disabled]="isSubmitting">
+                                <span *ngIf="!isSubmitting">Submit</span>
+                                <span *ngIf="isSubmitting">Submitting...</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

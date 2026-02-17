@@ -7,11 +7,12 @@ import { BlogService } from '../../../services/blog-service/blog.service';
 import { UtilityService } from '../../../services/common-services/utility.service';
 import { BlogDetail } from '../../../models/blog-models/blog.model';
 import { BlogSidebarComponent } from '../blog-sidebar/blog-sidebar.component';
+import { BlogCommentComponent } from '../blog-comment/blog-comment.component';
 
 @Component({
   selector: 'app-blog-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, BlogSidebarComponent],
+  imports: [CommonModule, RouterModule, BlogSidebarComponent, BlogCommentComponent],
   templateUrl: './blog-details.component.html',
   styleUrl: './blog-details.component.css'
 })
@@ -95,6 +96,15 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
       this.router.navigate(['/blogs'], { queryParams: { category: categorySlug } });
     } else {
       this.router.navigate(['/blogs']);
+    }
+  }
+
+  /**
+   * Refresh blog details after a comment is posted
+   */
+  onCommentPosted(): void {
+    if (this.blog) {
+      this.fetchBlogDetails(this.blog.urlSlug);
     }
   }
 

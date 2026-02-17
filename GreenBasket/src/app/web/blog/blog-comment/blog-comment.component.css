@@ -1,0 +1,49 @@
+/* Reply comments nested styling */
+.gi-comment-replies {
+    margin-left: 60px;
+    margin-top: 20px;
+    padding-left: 20px;
+    border-left: 2px solid #eee;
+}
+
+.gi-reply-comment {
+    margin-top: 15px;
+}
+
+/* Cancel reply link */
+.cancel-reply {
+    color: #dc3545;
+    font-size: 14px;
+    font-weight: normal;
+    margin-left: 10px;
+}
+
+.cancel-reply:hover {
+    color: #c82333;
+    text-decoration: underline;
+}
+
+/* Readonly input styling for logged-in users */
+input[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+/* Submit button disabled state */
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* No comments message */
+.no-comments {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.no-comments p {
+    margin: 0;
+    color: #777;
+}

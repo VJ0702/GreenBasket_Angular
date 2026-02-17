@@ -86,63 +86,10 @@
                         </div>
                     </div>
 
-                    <!-- Comments Section Start -->
-                    <div class="gi-blog-comments m-t-80" *ngIf="blog.allowComments">
-                        <div class="gi-blog-cmt-preview">
-                            <div class="gi-blog-comment-wrapper">
-                                <h4 class="gi-blog-dgi-title">Comments : {{blog.commentCount | number:'2.0-0'}}</h4>
-
-                                <!-- No Comments Message -->
-                                <div *ngIf="blog.comments.length === 0" class="no-comments mt-35">
-                                    <p>No comments yet. Be the first to comment!</p>
-                                </div>
-
-                                <!-- Comments List -->
-                                <div class="gi-single-comment-wrapper mt-35" *ngFor="let comment of blog.comments">
-                                    <div class="gi-blog-user-img">
-                                        <img [src]="comment.avatarUrl || 'images/user/default-avatar.png'"
-                                            alt="User avatar">
-                                    </div>
-                                    <div class="gi-blog-comment-content">
-                                        <h5>{{comment.userName}}</h5>
-                                        <span>{{utilityService.formatDate(comment.createdOn)}}</span>
-                                        <p>{{comment.message}}</p>
-                                        <div class="gi-blog-details-btn">
-                                            <a href="javascript:void(0)">Reply</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Comment Form -->
-                        <div class="gi-blog-cmt-form">
-                            <div class="gi-blog-reply-wrapper mt-50">
-                                <h4 class="gi-blog-dgi-title">Leave A Reply</h4>
-                                <form class="gi-blog-form">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="gi-leave-form">
-                                                <input type="text" placeholder="Full Name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="gi-leave-form">
-                                                <input type="email" placeholder="Email Address" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="gi-text-leave">
-                                                <textarea placeholder="Message" required></textarea>
-                                                <button type="submit" class="gi-btn-2">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Comments Section End -->
+                    <!-- Comments Section (using reusable component) -->
+                    <app-blog-comment *ngIf="blog.allowComments" [blogPostId]="blog.id" [comments]="blog.comments"
+                        [commentCount]="blog.commentCount" (commentPosted)="onCommentPosted()">
+                    </app-blog-comment>
                 </div>
                 <!-- Blog Content End -->
             </div>

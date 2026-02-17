@@ -55,14 +55,14 @@ export interface BlogImage {
 // Blog Comment
 export interface BlogComment {
     id: number;
-    blogId: number;
-    userName: string;
-    userEmail?: string;
-    avatarUrl?: string;
-    message: string;
+    customerName: string;
+    commentText: string;
     createdOn: string;
-    parentId: number | null;
     replies?: BlogComment[];
+    blogPostId: number;
+    customerEmail?: string;
+    parentCommentId: number | null;
+    avatarUrl?: string;
 }
 
 // Blog Category with count (matches API response)
@@ -93,11 +93,12 @@ export interface BlogListParams {
     pageSize?: number;
 }
 
-// Create Comment Request
+// Create Comment Request (matches API)
 export interface CreateCommentRequest {
-    blogId: number;
-    userName: string;
-    userEmail: string;
-    message: string;
-    parentId?: number | null;
+    blogPostId: number;
+    parentCommentId: number | null;
+    customerName: string;
+    customerEmail: string;
+    commentText: string;
+    userId: string | null;
 }
