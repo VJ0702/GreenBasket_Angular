@@ -61,8 +61,8 @@
                                     <!-- Title -->
                                     <h3>{{blog.title}}</h3>
 
-                                    <!-- Blog Body Content (HTML from API) -->
-                                    <div [innerHTML]="blog.body"></div>
+                                    <!-- Blog Body Content (HTML from API - sanitized) -->
+                                    <div [innerHTML]="sanitizedBody"></div>
 
                                     <!-- Blog Images (if any) -->
                                     <div class="sub-img" *ngIf="blog.images && blog.images.length > 0">

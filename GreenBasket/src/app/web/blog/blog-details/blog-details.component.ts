@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { BlogService } from '../../../services/blog-service/blog.service';
 import { UtilityService } from '../../../services/common-services/utility.service';
@@ -18,12 +19,14 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   blog: BlogDetail | null = null;
+  sanitizedBody: SafeHtml | null = null;
   loading: boolean = true;
   error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private blogService: BlogService,
+    private sanitizer: DomSanitizer,
     public utilityService: UtilityService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -46,6 +49,8 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
     const sub = this.blogService.getBlogBySlug(slug).subscribe({
       next: (blog) => {
         this.blog = blog;
+        // Bypass security for trusted HTML content from API
+        this.sanitizedBody = this.sanitizer.bypassSecurityTrustHtml(blog.body || '');
         this.loading = false;
         this.cdr.markForCheck();
         //console.log('Blog details fetched:', this.blog);
