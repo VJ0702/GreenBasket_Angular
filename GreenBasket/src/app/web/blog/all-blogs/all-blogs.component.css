@@ -1,3 +1,9 @@
 .blog-img {
     height: 381.98px !important;
 }
+
+/* Pagination Prev button - icon on left */
+.gi-pro-pagination ul li a.next i.gi-angle-left {
+    margin-left: 0;
+    margin-right: 10px;
+}
