@@ -1,1 +1,136 @@
-<p>all-blogs works!</p>
+<!-- Breadcrumb start -->
+<div class="gi-breadcrumb m-b-40">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row gi_breadcrumb_inner">
+                    <div class="col-md-6 col-sm-12">
+                        <h2 class="gi-breadcrumb-title">Blog Page</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <!-- gi-breadcrumb-list start -->
+                        <ul class="gi-breadcrumb-list">
+                            <li class="gi-breadcrumb-item"><a routerLink="/">Home</a></li>
+                            <li class="gi-breadcrumb-item" *ngIf="selectedCategoryName">
+                                <a routerLink="/blogs">Blogs</a>
+                            </li>
+                            <li class="gi-breadcrumb-item active">
+                                {{ selectedCategoryName || 'Blog Page' }}
+                            </li>
+                        </ul>
+                        <!-- gi-breadcrumb-list end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb end -->
+
+<!-- Blog section -->
+<section class="gi-blog padding-tb-40">
+    <div class="container">
+        <div class="row">
+            <div class="gi-blogs-rightside col-lg-8 order-lg-last col-md-12 order-md-first">
+
+                <!-- Loading State -->
+                <div *ngIf="loading" class="text-center py-5">
+                    <p>Loading blogs...</p>
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="error && !loading" class="text-center py-5">
+                    <p class="text-danger">{{error}}</p>
+                </div>
+
+                <!-- No Results -->
+                <div *ngIf="!loading && !error && blogs.length === 0" class="text-center py-5">
+                    <p>No blogs found.</p>
+                    <a routerLink="/blogs" class="gi-btn-2 mt-3">View All Blogs</a>
+                </div>
+
+                <!-- Blog content Start -->
+                <div class="gi-blogs-content" *ngIf="!loading && !error && blogs.length > 0">
+                    <div class="gi-blogs-inner">
+                        <div class="row">
+                            <!-- Blog Item Loop -->
+                            <div class="col-md-6 col-sm-12 mb-6 gi-blog-block" *ngFor="let blog of blogs">
+                                <div class="gi-blog-item">
+                                    <div class="blog-info">
+                                        <figure class="blog-img">
+                                            <a [routerLink]="['/blog', blog.urlSlug]">
+                                                <img [src]="utilityService.getFullImageUrl(blog.featuredImageUrl)"
+                                                    [alt]="blog.title">
+                                            </a>
+                                        </figure>
+                                        <div class="detail">
+                                            <label>
+                                                {{utilityService.formatDate(blog.publishDate)}} -
+                                                <a [routerLink]="['/blogs']"
+                                                    [queryParams]="{category: blog.categorySlug}">
+                                                    {{blog.categoryName}}
+                                                </a>
+                                            </label>
+                                            <h3>
+                                                <a [routerLink]="['/blog', blog.urlSlug]">{{blog.title}}</a>
+                                            </h3>
+                                            <p class="text-length" *ngIf="blog.shortDescription">
+                                                {{blog.shortDescription}}
+                                            </p>
+                                            <div class="more-info">
+                                                <a [routerLink]="['/blog', blog.urlSlug]">
+                                                    Read More<i class="gicon gi-angle-double-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination Start -->
+                    <div class="gi-pro-pagination" *ngIf="totalPages > 1">
+                        <span>Showing {{showingStart}}-{{showingEnd}} of {{totalCount}} items</span>
+                        <ul class="gi-pro-pagination-inner">
+                            <!-- Previous Button -->
+                            <li *ngIf="hasPreviousPage">
+                                <a class="prev" href="javascript:void(0)" (click)="previousPage()">
+                                    <i class="gicon gi-angle-left"></i> Prev
+                                </a>
+                            </li>
+
+                            <!-- Page Numbers -->
+                            <ng-container *ngFor="let page of getPageNumbers()">
+                                <li *ngIf="page === -1">
+                                    <span>...</span>
+                                </li>
+                                <li *ngIf="page !== -1">
+                                    <a href="javascript:void(0)" [class.active]="page === currentPage"
+                                        (click)="goToPage(page)">{{page}}</a>
+                                </li>
+                            </ng-container>
+
+                            <!-- Next Button -->
+                            <li *ngIf="hasNextPage">
+                                <a class="next" href="javascript:void(0)" (click)="nextPage()">
+                                    Next <i class="gicon gi-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Pagination End -->
+                </div>
+                <!--Blog content End -->
+            </div>
+
+            <!-- Sidebar Area Start -->
+            <div class="col-lg-4 order-lg-first col-md-12 order-md-last m-t-991">
+                <app-blog-sidebar [selectedCategorySlug]="selectedCategorySlug" (searchQueryChange)="onSearch($event)"
+                    (categorySelect)="onCategorySelect($event)">
+                </app-blog-sidebar>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Blog section End -->

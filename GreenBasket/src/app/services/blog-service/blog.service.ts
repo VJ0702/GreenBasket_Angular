@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map, shareReplay } from 'rxjs';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
-import { Blog, BlogDetail, BlogCategory } from '../../models/blog-models/blog.model';
+import { Blog, BlogDetail, BlogCategory, PaginatedBlogs, BlogListParams } from '../../models/blog-models/blog.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,7 @@ export class BlogService {
   private readonly recentBlogsEndpoint = 'api/Blog/recent';
   private readonly blogDetailEndpoint = 'api/Blog/post';
   private readonly categoriesEndpoint = 'api/Blog/categories';
+  private readonly blogListEndpoint = 'api/Blog/list';
 
   // Cache for recent blogs (shared across components to avoid multiple API calls)
   private recentBlogsCache$: Observable<Blog[]> | null = null;
@@ -59,6 +60,35 @@ export class BlogService {
   getBlogBySlug(slug: string): Observable<BlogDetail> {
     return this.apiService
       .get<ApiResponse<BlogDetail>>(`${this.blogDetailEndpoint}/${slug}`)
+      .pipe(
+        map(response => response.data)
+      );
+  }
+
+  /**
+   * Get paginated list of blogs with optional filters
+   * @param params - Optional filter parameters (search, categoryId, pageNumber, pageSize)
+   */
+  getBlogList(params?: BlogListParams): Observable<PaginatedBlogs> {
+    // Build query string from params
+    const queryParams: string[] = [];
+    if (params?.search) {
+      queryParams.push(`search=${encodeURIComponent(params.search)}`);
+    }
+    if (params?.categoryId) {
+      queryParams.push(`categoryId=${params.categoryId}`);
+    }
+    if (params?.pageNumber) {
+      queryParams.push(`pageNumber=${params.pageNumber}`);
+    }
+    if (params?.pageSize) {
+      queryParams.push(`pageSize=${params.pageSize}`);
+    }
+
+    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+    return this.apiService
+      .get<ApiResponse<PaginatedBlogs>>(`${this.blogListEndpoint}${queryString}`)
       .pipe(
         map(response => response.data)
       );

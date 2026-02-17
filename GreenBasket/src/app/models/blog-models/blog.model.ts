@@ -74,13 +74,23 @@ export interface BlogCategory {
     postCount: number;
 }
 
-// Paginated Blogs Response
+// Paginated Blogs Response (matches API response)
 export interface PaginatedBlogs {
-    blogs: Blog[];
+    posts: Blog[];
     totalCount: number;
     pageNumber: number;
     pageSize: number;
     totalPages: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
+// Blog List Request Params
+export interface BlogListParams {
+    search?: string;
+    categoryId?: number;
+    pageNumber?: number;
+    pageSize?: number;
 }
 
 // Create Comment Request
