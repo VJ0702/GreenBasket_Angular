@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BlogService } from '../../../services/blog-service/blog.service';
+import { UtilityService } from '../../../services/common-services/utility.service';
 import { Blog } from '../../../models/blog-models/blog.model';
 
 @Component({
   selector: 'app-home-blog-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home-blog-section.component.html',
   styleUrl: './home-blog-section.component.css'
 })
@@ -20,8 +22,10 @@ export class HomeBlogSectionComponent implements OnInit, OnDestroy {
 
   constructor(
     private blogService: BlogService,
+    public utilityService: UtilityService,
     private cdr: ChangeDetectorRef
   ) { }
+
 
   ngOnInit(): void {
     this.fetchRecentBlogs();
