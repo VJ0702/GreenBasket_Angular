@@ -8,12 +8,11 @@
                         <h2 class="gi-breadcrumb-title">Blog Page</h2>
                     </div>
                     <div class="col-md-6 col-sm-12">
-                        <!-- gi-breadcrumb-list start -->
                         <ul class="gi-breadcrumb-list">
-                            <li class="gi-breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="gi-breadcrumb-item active">Blog Page</li>
+                            <li class="gi-breadcrumb-item"><a routerLink="/">Home</a></li>
+                            <li class="gi-breadcrumb-item"><a routerLink="/blogs">Blogs</a></li>
+                            <li class="gi-breadcrumb-item active" *ngIf="blog">{{blog.title}}</li>
                         </ul>
-                        <!-- gi-breadcrumb-list end -->
                     </div>
                 </div>
             </div>
@@ -22,103 +21,92 @@
 </div>
 <!-- Breadcrumb end -->
 
-
 <!-- Blog section -->
 <section class="gi-blog padding-tb-40">
     <div class="container">
         <div class="row">
+            <!-- Right Side - Blog Content (Dynamic) -->
             <div class="gi-blogs-rightside col-lg-8 order-lg-last col-md-12 order-md-first">
 
-                <!-- Blog content Start -->
-                <div class="gi-blogs-content">
+                <!-- Loading State -->
+                <div *ngIf="loading" class="text-center py-5">
+                    <p>Loading blog...</p>
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="error && !loading" class="text-center py-5">
+                    <p class="text-danger">{{error}}</p>
+                </div>
+
+                <!-- Blog Content Start -->
+                <div class="gi-blogs-content" *ngIf="!loading && !error && blog">
                     <div class="gi-blogs-inner">
                         <div class="gi-single-blog-item">
                             <div class="single-blog-info">
-                                <figure class="blog-img"><a href="#"><img src="images/blog/8.jpg" alt="news imag"></a>
+                                <!-- Featured Image -->
+                                <figure class="blog-img">
+                                    <img [src]="utilityService.getFullImageUrl(blog.featuredImageUrl)"
+                                        [alt]="blog.featuredImageAlt || blog.title">
                                 </figure>
+
                                 <div class="single-blog-detail">
-                                    <label>June 30,2022 - <a href="#">Organic</a></label>
-                                    <h3>Marketing Guide: 5 Steps to Success.</h3>
-                                    <p class="gi-text">"Lorem Ipsum is simply dummy text of the printing and
-                                        typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                        text ever since the 1500s, when an unknown printer took a galley of type and
-                                        scrambled it to make a type specimen book. It has survived not only five
-                                        centuries, but also the leap into electronic typesetting, remaining
-                                        essentially unchanged. It was popularised in the 1960s with the release of
-                                        Letraset sheets containing Lorem Ipsum passages, and more recently with
-                                        desktop publishing software like Aldus PageMaker including versions of Lorem
-                                        Ipsum.</p>
-                                    <p class="gi-text-highlight">The standard chunk of Lorem Ipsum used since the
-                                        1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33
-                                        from "de Finibus Bonorum et Malorum" by Cicero.</p>
-                                    <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has
-                                        roots in a piece of passages of Lorem Ipsum classical Latin literature from
-                                        45 BC, making it over 2000 years old. Richard McClintock, a Latin professor
-                                        at Hampden-Sydney College in Virginia</p>
-                                    <div class="sub-img">
+                                    <!-- Date & Category -->
+                                    <label>
+                                        {{utilityService.formatDate(blog.publishDate)}} -
+                                        <a [routerLink]="['/blogs']" [queryParams]="{category: blog.categorySlug}">
+                                            {{blog.categoryName}}
+                                        </a>
+                                    </label>
+
+                                    <!-- Title -->
+                                    <h3>{{blog.title}}</h3>
+
+                                    <!-- Blog Body Content (HTML from API) -->
+                                    <div [innerHTML]="blog.body"></div>
+
+                                    <!-- Blog Images (if any) -->
+                                    <div class="sub-img" *ngIf="blog.images && blog.images.length > 0">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <img src="images/blog/3.jpg" alt="blog">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <img src="images/blog/4.jpg" alt="blog">
+                                            <div class="col-md-6" *ngFor="let image of blog.images">
+                                                <img [src]="utilityService.getFullImageUrl(image.imageUrl)"
+                                                    [alt]="image.altText || 'Blog image'">
                                             </div>
                                         </div>
                                     </div>
-                                    <p>It is a long established fact that a reader will be distracted by the
-                                        readable content of a page distracted by the readable when looking at its
-                                        layout. The point of using Lorem Ipsum is that it has a more-or-less normal
-                                        distribution of letters, as opposed to using.</p>
-                                    <p>There are many variations of passages of Lorem Ipsum available, but the
-                                        majority have suffered distracted by the readable alteration in some form,
-                                        by injected humour.</p>
+
+                                    <!-- Tags -->
+                                    <div class="blog-tags" *ngIf="blog.tagList && blog.tagList.length > 0">
+                                        <span class="tag-label">Tags: </span>
+                                        <span *ngFor="let tag of blog.tagList; let last = last">
+                                            <a href="javascript:void(0)">{{tag}}</a>{{last ? '' : ', '}}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Pagination Start -->
-                    <div class="gi-pro-pagination">
-                        <span>Showing 1-6 of 20 items</span>
-                        <ul class="gi-pro-pagination-inner">
-                            <li><a class="active" href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><span>...</span></li>
-                            <li><a href="#">8</a></li>
-                            <li><a class="next" href="#">Next <i class="gicon gi-angle-right"></i></a></li>
-                        </ul>
-                    </div>
-                    <!-- Pagination End -->
-                    <!-- Comments Start -->
-                    <div class="gi-blog-comments m-t-80">
+
+                    <!-- Comments Section Start -->
+                    <div class="gi-blog-comments m-t-80" *ngIf="blog.allowComments">
                         <div class="gi-blog-cmt-preview">
                             <div class="gi-blog-comment-wrapper">
-                                <h4 class="gi-blog-dgi-title">Comments : 05</h4>
-                                <div class="gi-single-comment-wrapper mt-35">
-                                    <div class="gi-blog-user-img">
-                                        <img src="images/user/1.jpg" alt="blog image">
-                                    </div>
-                                    <div class="gi-blog-comment-content">
-                                        <h5>John Deo</h5>
-                                        <span>October 14, 2018 </span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolor magna aliqua. Ut enim
-                                            ad minim veniam. </p>
-                                        <div class="gi-blog-details-btn">
-                                            <a href="javascript:void(0)">Reply</a>
-                                        </div>
-                                    </div>
+                                <h4 class="gi-blog-dgi-title">Comments : {{blog.commentCount | number:'2.0-0'}}</h4>
+
+                                <!-- No Comments Message -->
+                                <div *ngIf="blog.comments.length === 0" class="no-comments mt-35">
+                                    <p>No comments yet. Be the first to comment!</p>
                                 </div>
-                                <div class="gi-single-comment-wrapper sub-cmt">
+
+                                <!-- Comments List -->
+                                <div class="gi-single-comment-wrapper mt-35" *ngFor="let comment of blog.comments">
                                     <div class="gi-blog-user-img">
-                                        <img src="images/user/2.jpg" alt="blog image">
+                                        <img [src]="comment.avatarUrl || 'images/user/default-avatar.png'"
+                                            alt="User avatar">
                                     </div>
                                     <div class="gi-blog-comment-content">
-                                        <h5>Jenifer lowes</h5>
-                                        <span>October 14, 2018 </span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolor magna aliqua. labore et
-                                            dolor magna aliqua.</p>
+                                        <h5>{{comment.userName}}</h5>
+                                        <span>{{utilityService.formatDate(comment.createdOn)}}</span>
+                                        <p>{{comment.message}}</p>
                                         <div class="gi-blog-details-btn">
                                             <a href="javascript:void(0)">Reply</a>
                                         </div>
@@ -126,25 +114,27 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Comment Form -->
                         <div class="gi-blog-cmt-form">
                             <div class="gi-blog-reply-wrapper mt-50">
                                 <h4 class="gi-blog-dgi-title">Leave A Reply</h4>
-                                <form class="gi-blog-form" action="#">
+                                <form class="gi-blog-form">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="gi-leave-form">
-                                                <input type="text" placeholder="Full Name">
+                                                <input type="text" placeholder="Full Name" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="gi-leave-form">
-                                                <input type="email" placeholder="Email Address ">
+                                                <input type="email" placeholder="Email Address" required>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="gi-text-leave">
-                                                <textarea placeholder="Message"></textarea>
-                                                <a href="#" class="gi-btn-2">Submit</a>
+                                                <textarea placeholder="Message" required></textarea>
+                                                <button type="submit" class="gi-btn-2">Submit</button>
                                             </div>
                                         </div>
                                     </div>
@@ -152,21 +142,23 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Comments End -->
+                    <!-- Comments Section End -->
                 </div>
-                <!--Blog content End -->
+                <!-- Blog Content End -->
             </div>
 
-            <!-- Sidebar Area Start -->
+            <!-- Left Sidebar (Static for now) -->
             <div class="gi-blogs-sidebar gi-blogs-leftside col-lg-4 order-lg-first col-md-12 order-md-last m-t-991">
+                <!-- Search Box -->
                 <div class="gi-blog-search">
-                    <form class="gi-blog-search-form" action="#">
+                    <form class="gi-blog-search-form">
                         <input class="form-control" placeholder="Search Our Blog" type="text">
                         <button class="submit" type="submit"><i class="gicon gi-search"></i></button>
                     </form>
                 </div>
+
                 <div class="gi-blog-sidebar-wrap">
-                    <!-- Sidebar Recent Blog Block -->
+                    <!-- Sidebar Recent Blog Block (Static) -->
                     <div class="gi-sidebar-block gi-sidebar-recent-blog">
                         <div class="gi-sb-title">
                             <h3 class="gi-sidebar-title">Recent Articles</h3>
@@ -174,63 +166,58 @@
                         <div class="gi-blog-block-content gi-sidebar-dropdown">
                             <div class="gi-sidebar-block-item">
                                 <div class="gi-sidebar-block-img">
-                                    <img src="images/blog/6.jpg" alt="blog imag">
+                                    <img src="images/blog/6.jpg" alt="blog image">
                                 </div>
                                 <div class="gi-sidebar-block-detial">
-                                    <h5 class="gi-blog-title"><a href="blog-detail-left-sidebar.html">The best
-                                            fashion influencers.</a></h5>
+                                    <h5 class="gi-blog-title"><a href="#">The best fashion influencers.</a></h5>
                                     <div class="gi-blog-date">February 10, 2021-2022</div>
-                                    <a href="blog-left-sidebar.html">- Organic</a>
+                                    <a href="#">- Organic</a>
                                 </div>
                             </div>
                             <div class="gi-sidebar-block-item">
                                 <div class="gi-sidebar-block-img">
-                                    <img src="images/blog/5.jpg" alt="blog imag">
+                                    <img src="images/blog/5.jpg" alt="blog image">
                                 </div>
                                 <div class="gi-sidebar-block-detial">
-                                    <h5 class="gi-blog-title"><a href="blog-detail-left-sidebar.html">Vogue Shopping
-                                            Weekend.</a></h5>
+                                    <h5 class="gi-blog-title"><a href="#">Vogue Shopping Weekend.</a></h5>
                                     <div class="gi-blog-date">March 14, 2021-2022</div>
-                                    <a href="blog-left-sidebar.html">- Fruits</a>
+                                    <a href="#">- Fruits</a>
                                 </div>
                             </div>
                             <div class="gi-sidebar-block-item">
                                 <div class="gi-sidebar-block-img">
-                                    <img src="images/blog/4.jpg" alt="blog imag">
+                                    <img src="images/blog/4.jpg" alt="blog image">
                                 </div>
                                 <div class="gi-sidebar-block-detial">
-                                    <h5 class="gi-blog-title"><a href="blog-detail-left-sidebar.html">Fashion Market
-                                            Reveals Her Jacket.</a></h5>
+                                    <h5 class="gi-blog-title"><a href="#">Fashion Market Reveals Her Jacket.</a></h5>
                                     <div class="gi-blog-date">June 09, 2021-2022</div>
-                                    <a href="blog-left-sidebar.html">- Vegetables</a>
+                                    <a href="#">- Vegetables</a>
                                 </div>
                             </div>
                             <div class="gi-sidebar-block-item">
                                 <div class="gi-sidebar-block-img">
-                                    <img src="images/blog/3.jpg" alt="blog imag">
+                                    <img src="images/blog/3.jpg" alt="blog image">
                                 </div>
                                 <div class="gi-sidebar-block-detial">
-                                    <h5 class="gi-blog-title"><a href="blog-detail-left-sidebar.html">Summer
-                                            Trending Fashion Market.</a></h5>
+                                    <h5 class="gi-blog-title"><a href="#">Summer Trending Fashion Market.</a></h5>
                                     <div class="gi-blog-date">July 17, 2021-2022</div>
-                                    <a href="blog-left-sidebar.html">- Fastfood</a>
+                                    <a href="#">- Fastfood</a>
                                 </div>
                             </div>
                             <div class="gi-sidebar-block-item">
                                 <div class="gi-sidebar-block-img">
-                                    <img src="images/blog/2.jpg" alt="blog imag">
+                                    <img src="images/blog/2.jpg" alt="blog image">
                                 </div>
                                 <div class="gi-sidebar-block-detial">
-                                    <h5 class="gi-blog-title"><a href="blog-detail-left-sidebar.html">Winter 2021
-                                            Trending Fashion Market.</a></h5>
+                                    <h5 class="gi-blog-title"><a href="#">Winter 2021 Trending Fashion Market.</a></h5>
                                     <div class="gi-blog-date">August 02, 2021-2022</div>
-                                    <a href="blog-left-sidebar.html">- Vegetables</a>
+                                    <a href="#">- Vegetables</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Sidebar Recent Blog Block -->
-                    <!-- Sidebar Category Block -->
+
+                    <!-- Sidebar Category Block (Static) -->
                     <div class="gi-sidebar-block">
                         <div class="gi-sb-title">
                             <h3 class="gi-sidebar-title">Categories</h3>
@@ -239,57 +226,63 @@
                             <ul>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox" checked> <a href="javascript:void(0)">Dairy &
-                                            Milk<span title="Products">- 68</span></a><span class="checked"></span>
+                                        <input type="checkbox" checked>
+                                        <a href="javascript:void(0)">Dairy & Milk<span>- 68</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">Seafood<span
-                                                title="Products">- 58</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Seafood<span>- 58</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">Bakery<span
-                                                title="Products">- 84</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Bakery<span>- 84</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">cosmetics<span
-                                                title="Products">- 63</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Cosmetics<span>- 63</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">electrics<span
-                                                title="Products">- 75</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Electrics<span>- 75</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">phones<span
-                                                title="Products">- 26</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Phones<span>- 26</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">Clothes<span
-                                                title="Products">- 39</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Clothes<span>- 39</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
                                 <li>
                                     <div class="gi-sidebar-block-item">
-                                        <input type="checkbox"> <a href="javascript:void(0)">Watch<span
-                                                title="Products">- 48</span></a><span class="checked"></span>
+                                        <input type="checkbox">
+                                        <a href="javascript:void(0)">Watch<span>- 48</span></a>
+                                        <span class="checked"></span>
                                     </div>
                                 </li>
-
                             </ul>
                         </div>
                     </div>
-                    <!-- Sidebar Category Block -->
                 </div>
             </div>
         </div>
