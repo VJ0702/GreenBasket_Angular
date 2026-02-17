@@ -50,8 +50,16 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
     // Load categories first for mapping
     this.loadCategories();
 
-    // Subscribe to query params for category filter
+    // Subscribe to query params for category and search filter
     const paramSub = this.route.queryParams.subscribe(params => {
+      // Handle search query param
+      if (params['search']) {
+        this.searchQuery = params['search'];
+      } else {
+        this.searchQuery = '';
+      }
+
+      // Handle category param
       if (params['category']) {
         // Find category ID from slug
         this.findCategoryBySlug(params['category']);
@@ -172,7 +180,16 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
   onSearch(query: string): void {
     this.searchQuery = query;
     this.currentPage = 1;
-    this.loadBlogs();
+    
+    // Update URL with search param
+    const queryParams: any = {};
+    if (query && query.trim()) {
+      queryParams.search = query.trim();
+    }
+    if (this.selectedCategorySlug) {
+      queryParams.category = this.selectedCategorySlug;
+    }
+    this.router.navigate(['/blogs'], { queryParams });
   }
 
   onCategorySelect(categorySlug: string | null): void {

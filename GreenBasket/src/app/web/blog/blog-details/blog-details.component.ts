@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { BlogService } from '../../../services/blog-service/blog.service';
@@ -25,6 +25,7 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private blogService: BlogService,
     private sanitizer: DomSanitizer,
     public utilityService: UtilityService,
@@ -75,6 +76,26 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
       day: '2-digit',
       year: 'numeric'
     });
+  }
+
+  /**
+   * Handle search from sidebar - navigate to all-blogs with search query
+   */
+  onSearch(query: string): void {
+    if (query && query.trim()) {
+      this.router.navigate(['/blogs'], { queryParams: { search: query.trim() } });
+    }
+  }
+
+  /**
+   * Handle category selection from sidebar - navigate to all-blogs with category filter
+   */
+  onCategorySelect(categorySlug: string | null): void {
+    if (categorySlug) {
+      this.router.navigate(['/blogs'], { queryParams: { category: categorySlug } });
+    } else {
+      this.router.navigate(['/blogs']);
+    }
   }
 
   ngOnDestroy(): void {
