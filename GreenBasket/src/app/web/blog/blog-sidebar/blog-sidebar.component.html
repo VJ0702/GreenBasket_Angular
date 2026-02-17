@@ -1,1 +1,67 @@
-<p>blog-sidebar works!</p>
+<!-- Blog Sidebar -->
+<div class="gi-blogs-sidebar gi-blogs-leftside">
+    <!-- Search Box -->
+    <div class="gi-blog-search">
+        <form class="gi-blog-search-form" (ngSubmit)="onSearch()">
+            <input class="form-control" placeholder="Search Our Blog" type="text" [(ngModel)]="searchQuery"
+                name="searchQuery">
+            <button class="submit" type="submit"><i class="gicon gi-search"></i></button>
+        </form>
+    </div>
+
+    <div class="gi-blog-sidebar-wrap">
+        <!-- Sidebar Recent Blog Block -->
+        <div class="gi-sidebar-block gi-sidebar-recent-blog">
+            <div class="gi-sb-title">
+                <h3 class="gi-sidebar-title">Recent Articles</h3>
+            </div>
+            <div class="gi-blog-block-content gi-sidebar-dropdown">
+                <!-- Loading State -->
+                <div *ngIf="loadingBlogs" class="text-center py-3">
+                    <small>Loading...</small>
+                </div>
+
+                <!-- Recent Blogs List -->
+                <app-blog-card *ngFor="let blog of recentBlogs" [blog]="blog">
+                </app-blog-card>
+
+                <!-- No blogs message -->
+                <div *ngIf="!loadingBlogs && recentBlogs.length === 0" class="text-center py-3">
+                    <small>No recent articles found.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Category Block -->
+        <div class="gi-sidebar-block">
+            <div class="gi-sb-title">
+                <h3 class="gi-sidebar-title">Categories</h3>
+            </div>
+            <div class="gi-blog-block-content gi-sidebar-dropdown">
+                <!-- Loading State -->
+                <div *ngIf="loadingCategories" class="text-center py-3">
+                    <small>Loading...</small>
+                </div>
+
+                <!-- Categories List -->
+                <ul *ngIf="!loadingCategories">
+                    <li *ngFor="let category of categories">
+                        <div class="gi-sidebar-block-item">
+                            <input type="checkbox" [checked]="isCategorySelected(category.urlSlug)"
+                                (change)="onCategorySelect(isCategorySelected(category.urlSlug) ? null : category.urlSlug)">
+                            <a [routerLink]="['/blogs']" [queryParams]="{category: category.urlSlug}">
+                                {{category.name}}<span>- {{category.postCount}}</span>
+                            </a>
+                            <span class="checked"></span>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- No categories message -->
+                <div *ngIf="!loadingCategories && categories.length === 0" class="text-center py-3">
+                    <small>No categories found.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

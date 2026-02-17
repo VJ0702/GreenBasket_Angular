@@ -65,12 +65,13 @@ export interface BlogComment {
     replies?: BlogComment[];
 }
 
-// Blog Category with count
+// Blog Category with count (matches API response)
 export interface BlogCategory {
     id: number;
     name: string;
-    slug: string;
-    blogCount: number;
+    urlSlug: string;
+    imageUrl: string;
+    postCount: number;
 }
 
 // Paginated Blogs Response

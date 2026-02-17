@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map, shareReplay } from 'rxjs';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
-import { Blog, BlogDetail } from '../../models/blog-models/blog.model';
+import { Blog, BlogDetail, BlogCategory } from '../../models/blog-models/blog.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +11,12 @@ export class BlogService {
   // API Endpoints
   private readonly recentBlogsEndpoint = 'api/Blog/recent';
   private readonly blogDetailEndpoint = 'api/Blog/post';
+  private readonly categoriesEndpoint = 'api/Blog/categories';
 
   // Cache for recent blogs (shared across components to avoid multiple API calls)
   private recentBlogsCache$: Observable<Blog[]> | null = null;
+  // Cache for categories
+  private categoriesCache$: Observable<BlogCategory[]> | null = null;
 
   constructor(private apiService: ApiService) { }
 
@@ -34,6 +37,22 @@ export class BlogService {
   }
 
   /**
+   * Get all blog categories with post count
+   * Uses shareReplay to cache the response
+   */
+  getCategories(): Observable<BlogCategory[]> {
+    if (!this.categoriesCache$) {
+      this.categoriesCache$ = this.apiService
+        .get<ApiResponse<BlogCategory[]>>(this.categoriesEndpoint)
+        .pipe(
+          map(response => response.data),
+          shareReplay({ bufferSize: 1, refCount: true })
+        );
+    }
+    return this.categoriesCache$;
+  }
+
+  /**
    * Get blog details by slug
    * @param slug - The URL slug of the blog post
    */
@@ -50,5 +69,6 @@ export class BlogService {
    */
   clearCache(): void {
     this.recentBlogsCache$ = null;
+    this.categoriesCache$ = null;
   }
 }

@@ -5,11 +5,12 @@ import { Subscription } from 'rxjs';
 import { BlogService } from '../../../services/blog-service/blog.service';
 import { UtilityService } from '../../../services/common-services/utility.service';
 import { BlogDetail } from '../../../models/blog-models/blog.model';
+import { BlogSidebarComponent } from '../blog-sidebar/blog-sidebar.component';
 
 @Component({
   selector: 'app-blog-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BlogSidebarComponent],
   templateUrl: './blog-details.component.html',
   styleUrl: './blog-details.component.css'
 })
@@ -57,6 +58,18 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(sub);
+  }
+
+  /**
+   * Format date for display (e.g., "Feb 16, 2026")
+   */
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    });
   }
 
   ngOnDestroy(): void {

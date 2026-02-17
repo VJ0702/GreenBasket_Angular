@@ -1,1 +1,15 @@
-<p>blog-card works!</p>
+<!-- Sidebar Blog Card Item -->
+<div class="gi-sidebar-block-item" *ngIf="blog">
+    <div class="gi-sidebar-block-img">
+        <a [routerLink]="['/blog', blog.urlSlug]">
+            <img [src]="utilityService.getFullImageUrl(blog.featuredImageUrl)" [alt]="blog.title" style="height: 75px;">
+        </a>
+    </div>
+    <div class="gi-sidebar-block-detial">
+        <h5 class="gi-blog-title">
+            <a [routerLink]="['/blog', blog.urlSlug]">{{blog.title}}</a>
+        </h5>
+        <div class="gi-blog-date">{{utilityService.formatDate(blog.publishDate)}}</div>
+        <a [routerLink]="['/blogs']" [queryParams]="{category: blog.categorySlug}">- {{blog.categoryName}}</a>
+    </div>
+</div>
