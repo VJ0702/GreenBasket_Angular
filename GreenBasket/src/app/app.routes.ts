@@ -7,6 +7,8 @@ import { RegisterComponent } from './web/_user/register/register.component';
 import { ForgotPasswordComponent } from './web/_user/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './web/_user/reset-password/reset-password.component';
 import { ProfileComponent } from './web/_user/profile/profile.component';
+import { AllBlogsComponent } from './web/blog/all-blogs/all-blogs.component';
+import { BlogDetailsComponent } from './web/blog/blog-details/blog-details.component';
 
 export const routes: Routes = [
     { path: '', component: HomeIndexComponent, title: 'Home - GreenBasket' }, // Default route
@@ -18,5 +20,7 @@ export const routes: Routes = [
     //{ path: 'reset-password/:token', component: ResetPasswordComponent, title: 'Reset Password - GreenBasket' },
     { path: 'reset-password', component: ResetPasswordComponent, title: 'Reset Password - GreenBasket' },
     { path: 'profile', component: ProfileComponent, title: 'Profile - GreenBasket' },
+    { path: 'blogs', component: AllBlogsComponent, title: 'Blogs - GreenBasket' },
+    { path: 'blog/:urlSlug', component: BlogDetailsComponent, title: 'Blog Details - GreenBasket' },
     { path: '**', redirectTo: '', pathMatch: 'full' } // Wildcard route for a 404 page can be added later
 ];
