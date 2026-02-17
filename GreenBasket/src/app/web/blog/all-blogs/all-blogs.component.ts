@@ -180,7 +180,7 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
   onSearch(query: string): void {
     this.searchQuery = query;
     this.currentPage = 1;
-    
+
     // Update URL with search param
     const queryParams: any = {};
     if (query && query.trim()) {

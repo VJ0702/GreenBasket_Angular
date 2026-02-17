@@ -149,10 +149,8 @@
 
             <!-- Left Sidebar (Dynamic) -->
             <div class="col-lg-4 order-lg-first col-md-12 order-md-last m-t-991">
-                <app-blog-sidebar 
-                    [selectedCategorySlug]="blog?.categorySlug || null"
-                    (searchQueryChange)="onSearch($event)"
-                    (categorySelect)="onCategorySelect($event)">
+                <app-blog-sidebar [selectedCategorySlug]="blog?.categorySlug || null"
+                    (searchQueryChange)="onSearch($event)" (categorySelect)="onCategorySelect($event)">
                 </app-blog-sidebar>
             </div>
         </div>

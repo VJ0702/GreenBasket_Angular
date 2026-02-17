@@ -46,9 +46,9 @@
                 <!-- Categories List -->
                 <ul *ngIf="!loadingCategories">
                     <li *ngFor="let category of categories">
-                        <div class="gi-sidebar-block-item" 
-                             (click)="onCategorySelect(isCategorySelected(category.urlSlug) ? null : category.urlSlug)"
-                             style="cursor: pointer;">
+                        <div class="gi-sidebar-block-item"
+                            (click)="onCategorySelect(isCategorySelected(category.urlSlug) ? null : category.urlSlug)"
+                            style="cursor: pointer;">
                             <input type="checkbox" [checked]="isCategorySelected(category.urlSlug)" readonly>
                             <a href="javascript:void(0)">
                                 {{category.name}}<span>- {{category.postCount}}</span>
