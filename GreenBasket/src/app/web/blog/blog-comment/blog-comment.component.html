@@ -13,7 +13,7 @@
             <!-- Comments List -->
             <div class="gi-single-comment-wrapper mt-35" *ngFor="let comment of comments">
                 <div class="gi-blog-user-img">
-                    <img [src]="comment.avatarUrl || 'images/user/1.jpg'" alt="User avatar">
+                    <img [src]="getAvatarUrl(comment.avatarUrl)" alt="User avatar">
                 </div>
                 <div class="gi-blog-comment-content">
                     <h5>{{comment.customerName}}</h5>
@@ -28,7 +28,7 @@
                 <div class="gi-comment-replies" *ngIf="comment.replies && comment.replies.length > 0">
                     <div class="gi-single-comment-wrapper gi-reply-comment" *ngFor="let reply of comment.replies">
                         <div class="gi-blog-user-img">
-                            <img [src]="reply.avatarUrl || 'assets/images/user/default-avatar.png'" alt="User avatar">
+                            <img [src]="getAvatarUrl(reply.avatarUrl)" alt="User avatar">
                         </div>
                         <div class="gi-blog-comment-content">
                             <h5>{{reply.customerName}}</h5>

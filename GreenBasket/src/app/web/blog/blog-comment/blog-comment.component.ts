@@ -146,4 +146,12 @@ export class BlogCommentComponent implements OnInit {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
+
+
+  getAvatarUrl(avatarUrl: string | null | undefined): string {
+    if (avatarUrl) {
+      return this.utilityService.getFullImageUrl(avatarUrl);
+    }
+    return 'images/user/1.jpg';
+  }
 }
