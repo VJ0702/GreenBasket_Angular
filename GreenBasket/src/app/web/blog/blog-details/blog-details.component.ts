@@ -8,11 +8,13 @@ import { UtilityService } from '../../../services/common-services/utility.servic
 import { BlogDetail } from '../../../models/blog-models/blog.model';
 import { BlogSidebarComponent } from '../blog-sidebar/blog-sidebar.component';
 import { BlogCommentComponent } from '../blog-comment/blog-comment.component';
+import { BreadcrumbComponent } from '../../_shared/breadcrumb/breadcrumb.component';
+import { BreadcrumbItem } from '../../../models/common/breadcrumb.model';
 
 @Component({
   selector: 'app-blog-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, BlogSidebarComponent, BlogCommentComponent],
+  imports: [CommonModule, RouterModule, BlogSidebarComponent, BlogCommentComponent, BreadcrumbComponent],
   templateUrl: './blog-details.component.html',
   styleUrl: './blog-details.component.css'
 })
@@ -24,6 +26,9 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   error: string | null = null;
 
+  // Breadcrumb configuration
+  breadcrumbItems: BreadcrumbItem[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -34,6 +39,13 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // Initialize default breadcrumbs
+    this.breadcrumbItems = [
+      { label: 'Home', url: '/' },
+      { label: 'Blogs', url: '/blogs' },
+      { label: 'Loading...', url: null, isActive: true }
+    ];
+
     // Subscribe to route params to get the blog slug
     const routeSub = this.route.params.subscribe(params => {
       const slug = params['urlSlug'];
@@ -53,9 +65,16 @@ export class BlogDetailsComponent implements OnInit, OnDestroy {
         this.blog = blog;
         // Bypass security for trusted HTML content from API
         this.sanitizedBody = this.sanitizer.bypassSecurityTrustHtml(blog.body || '');
+
+        // Update breadcrumbs with actual blog title
+        this.breadcrumbItems = [
+          { label: 'Home', url: '/' },
+          { label: 'Blogs', url: '/blogs' },
+          { label: blog.title, url: null, isActive: true }
+        ];
+
         this.loading = false;
         this.cdr.markForCheck();
-        //console.log('Blog details fetched:', this.blog);
       },
       error: (err) => {
         console.error('Error fetching blog details:', err);

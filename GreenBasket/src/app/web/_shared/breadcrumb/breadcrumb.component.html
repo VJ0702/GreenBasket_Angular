@@ -1,0 +1,34 @@
+<!-- Breadcrumb Section -->
+<div class="gi-breadcrumb m-b-40">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row gi_breadcrumb_inner">
+                    <!-- Page Title (Left Side) -->
+                    <div class="col-md-6 col-sm-12">
+                        <h2 class="gi-breadcrumb-title">{{ pageTitle }}</h2>
+                    </div>
+
+                    <!-- Breadcrumb List (Right Side) -->
+                    <div class="col-md-6 col-sm-12">
+                        <ul class="gi-breadcrumb-list">
+                            <ng-container *ngFor="let item of items; let isLast = last">
+                                <!-- Clickable Item (with link) -->
+                                <li class="gi-breadcrumb-item" *ngIf="item.url && !item.isActive">
+                                    <a [routerLink]="item.url" [queryParams]="item.queryParams || null">
+                                        {{ item.label }}
+                                    </a>
+                                </li>
+
+                                <!-- Active/Current Item (no link) -->
+                                <li class="gi-breadcrumb-item active" *ngIf="!item.url || item.isActive">
+                                    {{ item.label }}
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

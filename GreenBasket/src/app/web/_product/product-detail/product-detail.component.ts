@@ -5,13 +5,15 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ProductDetail, ProductSpecification, ProductVariant } from '../../../models/product-models/product-details-request';
 import { Subscription } from 'rxjs';
 import { UtilityService } from '../../../services/common-services/utility.service';
+import { BreadcrumbComponent } from '../../_shared/breadcrumb/breadcrumb.component';
+import { BreadcrumbItem } from '../../../models/common/breadcrumb.model';
 
 declare const $: any;
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BreadcrumbComponent],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
@@ -21,6 +23,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   selectedVariant?: ProductVariant;
   selectedImage?: string;
   topSpecifications?: ProductSpecification[];
+
+  // Breadcrumb items
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Home', url: '/' },
+    { label: 'Loading...', isActive: true }
+  ];
 
   // Cached computed values
   private _currentPrice?: number;
@@ -65,6 +73,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.initializeProductData(data);
         this.loading = false;
 
+        // Update breadcrumbs with product info
+        this.updateBreadcrumbs();
+
         if (this.isBrowser) {
           setTimeout(() => this.initializeSlickSliders(), 100);
         }
@@ -74,6 +85,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
     });
+  }
+
+  private updateBreadcrumbs(): void {
+    if (this.product) {
+      this.breadcrumbItems = [
+        { label: 'Home', url: '/' },
+        { label: this.product.name, isActive: true }
+      ];
+    }
   }
 
   private initializeProductData(data: ProductDetail): void {

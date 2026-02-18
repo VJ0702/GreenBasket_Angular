@@ -1,26 +1,5 @@
-<!-- Breadcrumb start -->
-<div class="gi-breadcrumb m-b-40">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="row gi_breadcrumb_inner">
-                    <div class="col-md-6 col-sm-12">
-                        <h2 class="gi-breadcrumb-title">Category</h2>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <!-- gi-breadcrumb-list start -->
-                        <ul class="gi-breadcrumb-list">
-                            <li class="gi-breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
-                            <li class="gi-breadcrumb-item active">{{category?.name}}</li>
-                        </ul>
-                        <!-- gi-breadcrumb-list end -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Breadcrumb end -->
+<!-- Breadcrumb -->
+<app-breadcrumb [pageTitle]="category?.name || 'Category'" [items]="breadcrumbItems"></app-breadcrumb>
 
 
 <!-- Shop section -->

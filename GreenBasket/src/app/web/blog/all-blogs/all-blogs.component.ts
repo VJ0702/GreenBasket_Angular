@@ -6,11 +6,13 @@ import { BlogService } from '../../../services/blog-service/blog.service';
 import { UtilityService } from '../../../services/common-services/utility.service';
 import { Blog, PaginatedBlogs, BlogCategory } from '../../../models/blog-models/blog.model';
 import { BlogSidebarComponent } from '../blog-sidebar/blog-sidebar.component';
+import { BreadcrumbComponent } from '../../_shared/breadcrumb/breadcrumb.component';
+import { BreadcrumbItem } from '../../../models/common/breadcrumb.model';
 
 @Component({
   selector: 'app-all-blogs',
   standalone: true,
-  imports: [CommonModule, RouterModule, BlogSidebarComponent],
+  imports: [CommonModule, RouterModule, BlogSidebarComponent, BreadcrumbComponent],
   templateUrl: './all-blogs.component.html',
   styleUrl: './all-blogs.component.css'
 })
@@ -39,6 +41,9 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
   // Categories for mapping ID to name
   categories: BlogCategory[] = [];
 
+  // Breadcrumb configuration
+  breadcrumbItems: BreadcrumbItem[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -47,6 +52,9 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // Initialize default breadcrumbs
+    this.updateBreadcrumbs();
+
     // Load categories first for mapping
     this.loadCategories();
 
@@ -67,10 +75,31 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
         this.selectedCategoryId = null;
         this.selectedCategoryName = '';
         this.selectedCategorySlug = null;
+        this.updateBreadcrumbs();
         this.loadBlogs();
       }
     });
     this.subscriptions.push(paramSub);
+  }
+
+  /**
+   * Update breadcrumbs based on current state
+   */
+  private updateBreadcrumbs(): void {
+    if (this.selectedCategoryName) {
+      // With category filter: Home > Blogs > Category Name
+      this.breadcrumbItems = [
+        { label: 'Home', url: '/' },
+        { label: 'Blogs', url: '/blogs' },
+        { label: this.selectedCategoryName, url: null, isActive: true }
+      ];
+    } else {
+      // No filter: Home > Blogs
+      this.breadcrumbItems = [
+        { label: 'Home', url: '/' },
+        { label: 'Blogs', url: null, isActive: true }
+      ];
+    }
   }
 
   private loadCategories(): void {
@@ -100,6 +129,7 @@ export class AllBlogsComponent implements OnInit, OnDestroy {
       this.selectedCategorySlug = null;
     }
     this.currentPage = 1;
+    this.updateBreadcrumbs();
     this.loadBlogs();
   }
 
