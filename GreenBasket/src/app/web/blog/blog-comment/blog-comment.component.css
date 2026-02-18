@@ -1,13 +1,6 @@
-/* Reply comments nested styling */
-.gi-comment-replies {
-    margin-left: 60px;
-    margin-top: 20px;
-    padding-left: 20px;
-    border-left: 2px solid #eee;
-}
-
-.gi-reply-comment {
-    margin-top: 15px;
+/* Sub-comment (reply) styling - matches theme */
+.gi-single-comment-wrapper.sub-cmt {
+    margin-left: 80px;
 }
 
 /* Cancel reply link */

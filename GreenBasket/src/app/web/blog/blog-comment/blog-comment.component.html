@@ -11,36 +11,37 @@
             </div>
 
             <!-- Comments List -->
-            <div class="gi-single-comment-wrapper mt-35" *ngFor="let comment of comments">
-                <div class="gi-blog-user-img">
-                    <img [src]="getAvatarUrl(comment.avatarUrl)" alt="User avatar">
-                </div>
-                <div class="gi-blog-comment-content">
-                    <h5>{{comment.customerName}}</h5>
-                    <span>{{utilityService.formatDate(comment.createdOn)}}</span>
-                    <p>{{comment.commentText}}</p>
-                    <div class="gi-blog-details-btn">
-                        <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
+            <ng-container *ngFor="let comment of comments">
+                <!-- Parent Comment -->
+                <div class="gi-single-comment-wrapper mt-35">
+                    <div class="gi-blog-user-img">
+                        <img [src]="getAvatarUrl(comment.avatarUrl)" alt="User avatar">
+                    </div>
+                    <div class="gi-blog-comment-content">
+                        <h5>{{comment.customerName}}</h5>
+                        <span>{{utilityService.formatDate(comment.createdOn)}}</span>
+                        <p>{{comment.commentText}}</p>
+                        <div class="gi-blog-details-btn">
+                            <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Nested Replies -->
-                <div class="gi-comment-replies" *ngIf="comment.replies && comment.replies.length > 0">
-                    <div class="gi-single-comment-wrapper gi-reply-comment" *ngFor="let reply of comment.replies">
-                        <div class="gi-blog-user-img">
-                            <img [src]="getAvatarUrl(reply.avatarUrl)" alt="User avatar">
-                        </div>
-                        <div class="gi-blog-comment-content">
-                            <h5>{{reply.customerName}}</h5>
-                            <span>{{utilityService.formatDate(reply.createdOn)}}</span>
-                            <p>{{reply.commentText}}</p>
-                            <div class="gi-blog-details-btn">
-                                <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
-                            </div>
+                <!-- Reply Comments (with sub-cmt class for indentation) -->
+                <div class="gi-single-comment-wrapper sub-cmt" *ngFor="let reply of comment.replies">
+                    <div class="gi-blog-user-img">
+                        <img [src]="getAvatarUrl(reply.avatarUrl)" alt="User avatar">
+                    </div>
+                    <div class="gi-blog-comment-content">
+                        <h5>{{reply.customerName}}</h5>
+                        <span>{{utilityService.formatDate(reply.createdOn)}}</span>
+                        <p>{{reply.commentText}}</p>
+                        <div class="gi-blog-details-btn">
+                            <a href="javascript:void(0)" (click)="startReply(comment)">Reply</a>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
         </div>
     </div>
 
@@ -72,8 +73,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="gi-text-leave">
-                            <textarea placeholder="Write your comment here..." [(ngModel)]="commentText"
-                                name="commentText" required></textarea>
+                            <textarea placeholder="Message" [(ngModel)]="commentText" name="commentText"
+                                required></textarea>
                             <button type="submit" class="gi-btn-2" [disabled]="isSubmitting">
                                 <span *ngIf="!isSubmitting">Submit</span>
                                 <span *ngIf="isSubmitting">Submitting...</span>
