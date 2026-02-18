@@ -1,1 +1,90 @@
-<p>contact-us works!</p>
+<!-- Breadcrumb -->
+<app-breadcrumb pageTitle="Contact Us" [items]="breadcrumbItems"></app-breadcrumb>
+
+<!-- Contact us section -->
+<section class="gi-contact padding-tb-40">
+    <div class="container">
+        <div class="section-title-2">
+            <h2 class="gi-title">Get in <span>Touch</span></h2>
+            <p>Please select a topic below related to you inquiry. If you don't fint what you need, fill out our
+                contact form.</p>
+        </div>
+        <div class="row gi-contact-detail m-tb-minus-12">
+            <div class="col-xs-12 col-sm-6 col-lg-4 p-tp-12">
+                <div class="gi-box">
+                    <div class="detail">
+                        <div class="icon"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                        <div class="info">
+                            <h3 class="title">Mail & Website</h3>
+                            <p>
+                                <i class="fa fa-envelope" aria-hidden="true"></i> &nbsp; mail.example&#64;gmail.com
+                            </p>
+                            <p>
+                                <i class="fa fa-globe" aria-hidden="true"></i> &nbsp; www.yourdomain.com
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space"></div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-lg-4 p-tp-12">
+                <div class="gi-box">
+                    <div class="detail">
+                        <div class="icon"><i class="fa fa-mobile" aria-hidden="true"></i></div>
+                        <div class="info">
+                            <h3 class="title">Contact</h3>
+                            <p>
+                                <i class="fa fa-mobile" aria-hidden="true"></i> &nbsp; (+91)-9876XXXXX
+                            </p>
+                            <p>
+                                <i class="fa fa-mobile" aria-hidden="true"></i> &nbsp; (+91)-987654XXXX
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space"></div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-lg-4 p-tp-12 m-auto">
+                <div class="gi-box">
+                    <div class="detail">
+                        <div class="icon"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                        <div class="info">
+                            <h3 class="title">Address</h3>
+                            <p>
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp; Ruami Mello Moraes Filho,
+                                987 - Salvador - MA, 40352, Brazil.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row p-t-80">
+            <div class="col-md-6">
+                <iframe src="http://maps.google.com/maps?q=-12.942227,-38.480291&amp;z=15&amp;output=embed"
+                    allowfullscreen=""></iframe>
+            </div>
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="fname" placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="umail" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phone" placeholder="Phone">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                            placeholder="Message"></textarea>
+                    </div>
+                    <button type="submit" class="gi-btn-2">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
