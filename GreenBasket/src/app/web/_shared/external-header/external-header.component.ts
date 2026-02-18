@@ -10,6 +10,7 @@ import { UserProfile } from '../../../models/auth-models/login-request-model';
 import { ToastService } from '../../../services/common-services/toast.service';
 import { HeaderConfig, SiteConfig } from '../../../models/home-data/site-config';
 import { SiteConfigService } from '../../../services/home-data/site-config.service';
+import { UtilityService } from '../../../services/common-services/utility.service';
 
 @Component({
   selector: 'app-external-header',
@@ -47,6 +48,7 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
     , private cdr: ChangeDetectorRef
     , private toastService: ToastService
     , private siteConfigService: SiteConfigService
+    , private utilityService: UtilityService
   ) {
     // Get config synchronously (instantly available from localStorage or default)
     this.updateConfigData();
@@ -150,6 +152,12 @@ export class ExternalHeaderComponent implements OnInit, OnDestroy {
 
   hasSubCategories(category: Category | null): boolean {
     return !!(category?.subCategories && category.subCategories.length > 0);
+  }
+
+  //Get full image URL for logo and other images   
+  getFullImageUrl(imageUrl: string | undefined): string {
+    if (!imageUrl) return 'images/logo/logo.png';
+    else return this.utilityService.getFullImageUrl(imageUrl);
   }
 
   private updateConfigData(): void {

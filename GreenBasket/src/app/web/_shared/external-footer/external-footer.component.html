@@ -6,15 +6,16 @@
                 <div class="row m-minus-991">
                     <div class="col-sm-12 col-lg-3 gi-footer-cat wow fadeInUp">
                         <div class="gi-footer-widget gi-footer-company">
-                            <img src="/images/logo/logo.png" class="gi-footer-logo" alt="footer logo">
-                            <p class="gi-footer-detail">Grabit is the biggest market of grocery products. Get your
-                                daily
-                                needs from our store.</p>
+                            <img [src]="getFullImageUrl(siteConfig?.logoUrl)" class="gi-footer-logo" alt="footer logo">
+                            <p class="gi-footer-detail">{{ siteConfig?.footer?.aboutText || 'Green Basket store.' }}</p>
                             <div class="gi-app-store">
-                                <a href="#" class="app-img"><img src="images/app/android.png" class="adroid"
-                                        alt="apple"></a>
-                                <a href="#" class="app-img"><img src="images/app/apple.png" class="apple"
-                                        alt="apple"></a>
+                                <a [href]="siteConfig?.androidAppUrl || '#'" class="app-img" target="_blank"
+                                    rel="noopener">
+                                    <img src="images/app/android.png" class="adroid" alt="android app">
+                                </a>
+                                <a [href]="siteConfig?.iosAppUrl || '#'" class="app-img" target="_blank" rel="noopener">
+                                    <img src="images/app/apple.png" class="apple" alt="ios app">
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -23,17 +24,12 @@
                             <h4 class="gi-footer-heading">Category</h4>
                             <div class="gi-footer-links gi-footer-dropdown">
                                 <ul class="align-itegi-center">
-                                    <li class="gi-footer-link"><a href="shop-left-sidebar-col-3.html">Dairy &
-                                            Milk</a></li>
-                                    <li class="gi-footer-link"><a href="shop-banner-left-sidebar-col-3.html">Snack &
-                                            Spice</a></li>
-                                    <li class="gi-footer-link"><a href="shop-full-width-col-5.html">Fast Food</a>
+                                    <li class="gi-footer-link" *ngFor="let category of footerCategories">
+                                        <a [routerLink]="['/category', category.urlHandle]">{{ category.name }}</a>
                                     </li>
-                                    <li class="gi-footer-link"><a href="shop-list-left-sidebar.html">Juice &
-                                            Drinks</a></li>
-                                    <li class="gi-footer-link"><a href="shop-list-full-col-2.html">Bakery</a></li>
-                                    <li class="gi-footer-link"><a
-                                            href="shop-banner-right-sidebar-col-4.html">Seafood</a></li>
+                                    <li class="gi-footer-link" *ngIf="footerCategories.length === 0">
+                                        <a routerLink="/categories">Browse Categories</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -43,13 +39,13 @@
                             <h4 class="gi-footer-heading">Company</h4>
                             <div class="gi-footer-links gi-footer-dropdown">
                                 <ul class="align-itegi-center">
-                                    <li class="gi-footer-link"><a href="about-us.html">About us</a></li>
-                                    <li class="gi-footer-link"><a href="track-order.html">Delivery</a></li>
-                                    <li class="gi-footer-link"><a href="privacy-policy.html">Legal Notice</a></li>
-                                    <li class="gi-footer-link"><a href="terms-condition.html">Terms & conditions</a>
+                                    <li class="gi-footer-link"><a routerLink="/about-us">About us</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/track-order">Delivery</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/privacy-policy">Legal Notice</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/terms-condition">Terms & conditions</a>
                                     </li>
-                                    <li class="gi-footer-link"><a href="checkout.html">Secure payment</a></li>
-                                    <li class="gi-footer-link"><a href="contact-us.html">Contact us</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/checkout">Secure payment</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/contact-us">Contact us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -59,12 +55,12 @@
                             <h4 class="gi-footer-heading">Account</h4>
                             <div class="gi-footer-links gi-footer-dropdown">
                                 <ul class="align-itegi-center">
-                                    <li class="gi-footer-link"><a href="register.html">Sign In</a></li>
-                                    <li class="gi-footer-link"><a href="cart.html">View Cart</a></li>
-                                    <li class="gi-footer-link"><a href="privacy-policy.html">Return Policy</a></li>
-                                    <li class="gi-footer-link"><a href="#">Become a Vendor</a></li>
-                                    <li class="gi-footer-link"><a href="#">Affiliate Program</a></li>
-                                    <li class="gi-footer-link"><a href="checkout.html">Payments</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/register">Sign In</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/cart">View Cart</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/privacy-policy">Return Policy</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/vendor">Become a Vendor</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/affiliate">Affiliate Program</a></li>
+                                    <li class="gi-footer-link"><a routerLink="/checkout">Payments</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -79,19 +75,21 @@
                                             <span>
                                                 <i class="fi fi-rr-marker location svg_img foo_svg"></i>
                                             </span>
-                                            <p>2548 Broaddus Maple Court, Madisonville KY 4783, USA.</p>
+                                            <p>{{ siteConfig?.address || 'India' }}</p>
                                         </li>
                                         <li class="gi-footer-link gi-foo-call">
                                             <span>
                                                 <i class="fi fi-brands-whatsapp svg_img foo_svg"></i>
                                             </span>
-                                            <a href="tel:+009876543210">+00 9876543210</a>
+                                            <a [href]="'tel:' + (siteConfig?.phone1 || '+91 969 454 9559')">{{
+                                                siteConfig?.phone1 || '+91 969 454 9559' }}</a>
                                         </li>
                                         <li class="gi-footer-link gi-foo-mail">
                                             <span>
                                                 <i class="fi fi-rr-envelope"></i>
                                             </span>
-                                            <a href="mailto:example@email.com">example&#64;email.com</a>
+                                            <a [href]="'mailto:' + (siteConfig?.email || 'support@greenbasket.com')">{{
+                                                siteConfig?.email || 'support&#64;greenbasket.com' }}</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -101,14 +99,36 @@
                             <div class="gi-footer-widget">
                                 <div class="gi-footer-links gi-footer-dropdown">
                                     <ul class="align-itegi-center">
-                                        <li class="gi-footer-link"><a href="#"><i class="gicon gi-facebook"
-                                                    aria-hidden="true"></i></a></li>
-                                        <li class="gi-footer-link"><a href="#"><i class="gicon gi-twitter"
-                                                    aria-hidden="true"></i></a></li>
-                                        <li class="gi-footer-link"><a href="#"><i class="gicon gi-linkedin"
-                                                    aria-hidden="true"></i></a></li>
-                                        <li class="gi-footer-link"><a href="#"><i class="gicon gi-instagram"
-                                                    aria-hidden="true"></i></a></li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.facebookUrl">
+                                            <a [href]="siteConfig?.social?.facebookUrl" target="_blank" rel="noopener">
+                                                <i class="gicon gi-facebook" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.twitterUrl">
+                                            <a [href]="siteConfig?.social?.twitterUrl" target="_blank" rel="noopener">
+                                                <i class="gicon gi-twitter" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.linkedInUrl">
+                                            <a [href]="siteConfig?.social?.linkedInUrl" target="_blank" rel="noopener">
+                                                <i class="gicon gi-linkedin" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.instagramUrl">
+                                            <a [href]="siteConfig?.social?.instagramUrl" target="_blank" rel="noopener">
+                                                <i class="gicon gi-instagram" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.youTubeUrl">
+                                            <a [href]="siteConfig?.social?.youTubeUrl" target="_blank" rel="noopener">
+                                                <i class="gicon gi-youtube" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="gi-footer-link" *ngIf="siteConfig?.social?.whatsAppNumber">
+                                            <a [href]="getWhatsAppLink()" target="_blank" rel="noopener">
+                                                <i class="fi fi-brands-whatsapp" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -124,9 +144,10 @@
                         <!-- Footer Copyright Start -->
                         <div class="footer-copy">
                             <div class="footer-bottom-copy ">
-                                <div class="gi-copy">Copyright © <a class="site-name" href="index.html">Grabit</a>
-                                    all
-                                    rights reserved. Powered by Grabit.</div>
+                                <div class="gi-copy">
+                                    {{ siteConfig?.footer?.copyright || ('© ' + getCurrentYear() + ' ' +
+                                    (siteConfig?.siteName || 'GreenBasket') + '. All rights reserved.') }}
+                                </div>
                             </div>
                         </div>
                         <!-- Footer Copyright End -->

@@ -323,6 +323,8 @@ export class SiteConfigService {
       siteTagline: "India's Largest Organic Fruits & Vegs Store",
       logoUrl: '',
       faviconUrl: '',
+      androidAppUrl: '#',
+      iosAppUrl: '#',
       phone1: '+91 969 454 9559',
       phone2: '+91 969 454 9559',
       email: 'support@greenbasket.com',

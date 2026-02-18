@@ -106,8 +106,7 @@
                     <!-- Header Logo Start -->
                     <div class="align-self-center gi-header-logo">
                         <div class="header-logo">
-                            <a routerLink="/"><img src="/images/logo/logo.png" alt="Site Logo"
-                                    style="height: 39px;"></a>
+                            <a routerLink="/"><img [src]="getFullImageUrl(logoUrl)" alt="Site Logo"></a>
                         </div>
                     </div>
                     <!-- Header Logo End -->

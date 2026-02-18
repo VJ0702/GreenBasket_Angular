@@ -3,6 +3,8 @@ export interface SiteConfig {
     siteTagline: string;
     logoUrl: string;
     faviconUrl: string;
+    androidAppUrl: string;
+    iosAppUrl: string;
     phone1: string;
     phone2: string;
     email: string;

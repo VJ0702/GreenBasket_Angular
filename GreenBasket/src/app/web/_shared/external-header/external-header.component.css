@@ -37,6 +37,14 @@
     display: inline-block;
 }
 
+.header-logo a img {
+    height: 100px !important;
+}
+
+.gi-header-bottom {
+    padding: 10px 0;
+}
+
 /* Mobile user info */
 @media (max-width: 991px) {
     .gi-btn-stitle {
