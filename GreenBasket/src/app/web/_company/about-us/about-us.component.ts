@@ -58,7 +58,7 @@ export class AboutUsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (typeof $ !== 'undefined' && $('.gi-team.owl-carousel').length) {
       $('.gi-team.owl-carousel').owlCarousel({
         loop: true,
-        nav: true,
+        nav: false,
         dots: false,
         autoplay: true,
         autoplayTimeout: 4000,
