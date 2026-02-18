@@ -15,7 +15,7 @@ import { UtilityService } from '../../../services/common-services/utility.servic
 @Component({
   selector: 'app-external-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, CategoryMenuItemComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './external-header.component.html',
   styleUrl: './external-header.component.css'
 })
