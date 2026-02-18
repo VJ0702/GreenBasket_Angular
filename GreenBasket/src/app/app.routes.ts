@@ -9,6 +9,12 @@ import { ResetPasswordComponent } from './web/_user/reset-password/reset-passwor
 import { ProfileComponent } from './web/_user/profile/profile.component';
 import { AllBlogsComponent } from './web/blog/all-blogs/all-blogs.component';
 import { BlogDetailsComponent } from './web/blog/blog-details/blog-details.component';
+import { AboutUsComponent } from './web/_company/about-us/about-us.component';
+import { ContactUsComponent } from './web/_company/contact-us/contact-us.component';
+import { PrivacyPolicyComponent } from './web/_company/privacy-policy/privacy-policy.component';
+import { TermsConditionComponent } from './web/_company/terms-condition/terms-condition.component';
+import { TrackOrderComponent } from './web/_company/track-order/track-order.component';
+import { PaymentTermsComponent } from './web/_company/payment-terms/payment-terms.component';
 
 export const routes: Routes = [
     { path: '', component: HomeIndexComponent, title: 'Home - GreenBasket' }, // Default route
@@ -22,5 +28,12 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent, title: 'Profile - GreenBasket' },
     { path: 'blogs', component: AllBlogsComponent, title: 'Blogs - GreenBasket' },
     { path: 'blog/:urlSlug', component: BlogDetailsComponent, title: 'Blog Details - GreenBasket' },
+
+    { path: 'about-us', component: AboutUsComponent, title: 'About Us - GreenBasket' },
+    { path: 'contact-us', component: ContactUsComponent, title: 'Contact Us - GreenBasket' },
+    { path: 'privacy-policy', component: PrivacyPolicyComponent, title: 'Privacy Policy - GreenBasket' },
+    { path: 'terms-and-conditions', component: TermsConditionComponent, title: 'Terms and Conditions - GreenBasket' },
+    { path: 'track-order', component: TrackOrderComponent, title: 'Track Order - GreenBasket' },
+    { path: 'payment-terms', component: PaymentTermsComponent, title: 'Payment Terms - GreenBasket' },
     { path: '**', redirectTo: '', pathMatch: 'full' } // Wildcard route for a 404 page can be added later
 ];
