@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ContactUsPage } from '../../models/cms/contact-us';
+import { ContactRequest, ContactResponseData, ContactUsPage } from '../../models/cms/contact-us';
 import { map, Observable, shareReplay } from 'rxjs';
 import { ApiService } from '../common-services/api.service';
 import { ApiResponse } from '../../models/common/api-response.model';
@@ -10,6 +10,7 @@ import { ApiResponse } from '../../models/common/api-response.model';
 export class CMSService {
   // API Endpoints
   private readonly contactUsPageContent = 'api/CMS/contact-us';
+  private readonly contactPostEndpoint = 'api/CMS/contact';
 
   private contactUsCache$?: Observable<ContactUsPage>;
 
@@ -26,4 +27,14 @@ export class CMSService {
     }
     return this.contactUsCache$;
   }
+
+  postContact(request: ContactRequest): Observable<ApiResponse<ContactResponseData>> {
+    return this.apiService
+      .post<ApiResponse<ContactResponseData>>(`${this.contactPostEndpoint}`, request);
+    //.pipe(map(res => res?.data as ContactResponseData));
+  }
+
+  // postComment(comment: CreateCommentRequest): Observable<ApiResponse<number>> {
+  //     return this.apiService.post<ApiResponse<number>>(this.commentEndpoint, comment);
+  //   }
 }

@@ -24,3 +24,21 @@ export interface ContactUsPage {
     metaTitle?: string | null;
     metaDescription?: string | null;
 }
+
+export interface ContactRequest {
+    name: string;
+    email: string;
+    phone?: string | null;
+    company?: string | null;
+    subject?: string | null;
+    inquiryType?: string | null;
+    message: string;
+    sourceUrl?: string | null;
+    referrer?: string | null;
+}
+
+export interface ContactResponseData {
+    id: number;
+    message: string;
+    referenceNumber?: string | null;
+}
